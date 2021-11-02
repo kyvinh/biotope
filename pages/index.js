@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { HumeursList } from '../components/humeur-list';
 
 export default function Home() {
   return (
@@ -30,8 +31,7 @@ export default function Home() {
           <Link href="/humeurs/">
             <div className="card">
               <h3>Humeurs &rarr;</h3>
-              <p>Encore une belle crotte devant chez moi!</p>
-              <p>Merci pour l'épicier!</p>
+              <HumeursList />
             </div>
           </Link>
 
