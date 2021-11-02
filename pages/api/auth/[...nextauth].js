@@ -22,7 +22,7 @@ export default NextAuth({
   // The secret should be set to a reasonably long random string.
   // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
   // a separate secret is defined explicitly for encrypting the JWT.
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 
   session: {
     // Use JSON Web Tokens for session instead of database sessions.
@@ -82,8 +82,8 @@ export default NextAuth({
 
   // You can set the theme to 'light', 'dark' or use 'auto' to default to the
   // whatever prefers-color-scheme is set to in the browser. Default is 'auto'
-  theme: 'light',
+  theme: 'auto',
 
   // Enable debug messages in the console if you are having problems
-  debug: false,
+  debug: process.env.NEXTAUTH_DEBUG,
 })
