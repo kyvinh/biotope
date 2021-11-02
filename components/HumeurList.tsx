@@ -1,6 +1,6 @@
 import { useHumeurs } from './util/hooks';
 
-export const HumeursList = () => {
+export const HumeurList = () => {
     const { humeurs } = useHumeurs();
     return humeurs ? (
         <>

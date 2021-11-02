@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { HumeursList } from '../components/humeur-list';
-import { PropositionsList } from '../components/propositions-list';
+import { HumeurList } from '../components/HumeurList';
+import { PropositionList } from '../components/PropositionList';
 
 export default function Home() {
   return (
@@ -32,14 +32,14 @@ export default function Home() {
           <Link href="/humeurs/">
             <div className="card">
               <h3>Humeurs &rarr;</h3>
-              <HumeursList />
+              <HumeurList />
             </div>
           </Link>
 
           <Link href="/propositions">
             <div className="card">
               <h3>Propositions &rarr;</h3>
-              <PropositionsList />
+              <PropositionList />
             </div>
           </Link>
 
