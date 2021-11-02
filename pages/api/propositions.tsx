@@ -70,6 +70,6 @@ export default (req, res) => res.json([
         title: "Création d'une plateforme d'e-commerce (style Amazon) et de livraison (style DPD) pour tous les commerces Etterbeekois et ses riverains.",
         author: {
             displayName: "Benjamin"
-        },
+        }
     }
 ]);
