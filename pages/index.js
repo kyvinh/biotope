@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { HumeursList } from '../components/humeur-list';
+import { PropositionsList } from '../components/propositions-list';
 
 export default function Home() {
   return (
@@ -24,7 +25,7 @@ export default function Home() {
           <Link href="/profile">
             <div className="card">
               <h3>Vous &rarr;</h3>
-              <p>Votre compte, votre cercle, vos biotopes.</p>
+              <p>Votre compte, vos cercles, vos biotopes.</p>
             </div>
           </Link>
 
@@ -38,9 +39,7 @@ export default function Home() {
           <Link href="/propositions">
             <div className="card">
               <h3>Propositions &rarr;</h3>
-              <p>Soutien pour la directrice faisant-fonction de Claire-Joie</p>
-              <p>Activités Claire-Joie</p>
-              <p>CST dans l'HORECA</p>
+              <PropositionsList />
             </div>
           </Link>
 
