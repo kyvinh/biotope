@@ -1,11 +1,12 @@
-/*
-export const PropositionListItemBrief = ({ greeting, isShow }) =>
-    isShow ? <h1>{greeting}</h1> : null;
- */
+
 export const PropositionListItemBrief = ({proposition}) => {
 
     return <div><h4>{proposition.title}</h4>
-        <span>{typeof proposition.author === "string" ? proposition.author : proposition.author.displayName}</span>
+        <div>From: {proposition.author}</div>
+        <div>Description: {proposition.text}</div>
+        <ul>{!!proposition.constituents ? proposition.constituents.map((constituent, i) => (
+            <li key={i}>{constituent}</li>
+        )) : null}</ul>
     </div>
 
 };
