@@ -2,12 +2,26 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { HumeurList } from '../components/HumeurList';
 import { PropositionList } from '../components/PropositionList';
-import { useSession, signIn } from "next-auth/client"
+import { useSession, signIn } from "next-auth/react"
 import React, { useEffect } from 'react';
 
-export default function Home() {
+/*
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
+export const getServerSideProps = async ({ req }) => {
+  const allUsers = await prisma.user.findMany({
+    select: {
+      email: true,
+      name: true,
+    }
+  })
+  return { props: { allUsers } }
+}
+*/
 
-  const [session, loading ] = useSession()
+export default function Home(allUsers) {
+
+  const { session: session, loading } = useSession()
 
   /*
   const isUser = !!session?.user
