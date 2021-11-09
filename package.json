@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "dependencies": {
     "@next-auth/prisma-adapter": "^0.5.2-next.19",
     "@prisma/client": "^3.4.1",

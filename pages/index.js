@@ -5,7 +5,7 @@ import { PropositionList } from '../components/PropositionList';
 import { useSession, signIn } from "next-auth/react"
 import React, { useEffect } from 'react';
 
-/*
+/* Sample page code: return all users
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 export const getServerSideProps = async ({ req }) => {
@@ -23,13 +23,15 @@ export default function Home(allUsers) {
 
   const { session: session, loading } = useSession()
 
-  /*
+  /*  Requires auth?
+
   const isUser = !!session?.user
   React.useEffect(() => {
     if (status === "loading") return // Do nothing while loading
     if (!isUser) signIn() // If not authenticated, force log in
   }, [isUser, status])
   */
+
   return (
     <div className="container">
       <Head>

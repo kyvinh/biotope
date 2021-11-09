@@ -40,13 +40,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Cercle        Cercle[]
+  Invitation    Invitation[]
 }
 
 model VerificationToken {
@@ -55,4 +57,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Cercle {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  contact    String?
+  creator    User?         @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  creatorId  String?
+  createdOn  DateTime     @default(now())
+  Invitation Invitation[]
+}
+
+enum InvitationType {
+  EMAIL
+}
+
+model Invitation {
+  id        String         @id @default(cuid())
+  type      InvitationType @default(EMAIL)
+  creator   User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String
+  cercle    Cercle         @relation(fields: [cercleId], references: [id], onDelete: Cascade)
+  cercleId  String
+  createdOn DateTime       @default(now())
 }
