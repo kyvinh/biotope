@@ -15,11 +15,7 @@ export const getServerSideProps = async ({ req }) => {
       email: "kyvinh@gmail.com",
     },
     include: {
-      cerclesCreated: {
-        select: {
-          id: true, name: true, // TODO How to pass dates from prisma DTO to nextjs Home param?
-        }
-      }
+      cerclesCreated: true
     }
   })
   const test =  userWithCirclesDTO.cerclesCreated;
