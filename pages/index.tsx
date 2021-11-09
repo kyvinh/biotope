@@ -6,7 +6,6 @@ import { useSession, signIn } from "next-auth/react"
 import React, { useEffect } from 'react';
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-//import superjson from 'superjson'
 
 export const getServerSideProps = async ({ req }) => {
   // TODO This only fetches the admin's circle
@@ -19,14 +18,15 @@ export const getServerSideProps = async ({ req }) => {
     }
   })
   const test =  userWithCirclesDTO.cerclesCreated;
-  return { props: { test } }
+  return { props: { circles: test } }
 }
 
-export default function Home(test) {
+export default function Home(circles) {
 
-  const { session: session, loading } = useSession();
+  const { data: session, status } = useSession({ required: false});
 
-  console.dir(test)
+  console.dir(session)
+  console.dir(circles)
 
   /*  Requires auth?
 
