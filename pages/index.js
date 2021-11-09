@@ -4,24 +4,33 @@ import { HumeurList } from '../components/HumeurList';
 import { PropositionList } from '../components/PropositionList';
 import { useSession, signIn } from "next-auth/react"
 import React, { useEffect } from 'react';
-
-/* Sample page code: return all users
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
+//import superjson from 'superjson'
+
 export const getServerSideProps = async ({ req }) => {
-  const allUsers = await prisma.user.findMany({
-    select: {
-      email: true,
-      name: true,
+  // TODO This only fetches the admin's circle
+  const userWithCirclesDTO = await prisma.user.findUnique({
+    where: {
+      email: "kyvinh@gmail.com",
+    },
+    include: {
+      cerclesCreated: {
+        select: {
+          id: true, name: true, // TODO How to pass dates from prisma DTO to nextjs Home param?
+        }
+      }
     }
   })
-  return { props: { allUsers } }
+  const test =  userWithCirclesDTO.cerclesCreated;
+  return { props: { test } }
 }
-*/
 
-export default function Home(allUsers) {
+export default function Home(test) {
 
-  const { session: session, loading } = useSession()
+  const { session: session, loading } = useSession();
+
+  console.dir(test)
 
   /*  Requires auth?
 
