@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ /* req */ }) => {
   // TODO This only fetches the admin's circle
   const userWithCirclesDTO = await prisma.user.findUnique({
     where: {
@@ -25,8 +25,8 @@ export default function Home(circles) {
 
   const { data: session, status } = useSession({ required: false});
 
-  console.dir(session)
-  console.dir(circles)
+  // console.dir(session)
+  // console.dir(circles)
 
   /*  Requires auth?
 
@@ -76,6 +76,12 @@ export default function Home(circles) {
             <div className="card">
               <h3>Humeurs &rarr;</h3>
               <HumeurList />
+            </div>
+          </Link>
+
+          <Link href="/b/bx">
+            <div className="card">
+              <h3>BX &rarr;</h3>
             </div>
           </Link>
 
