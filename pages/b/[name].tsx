@@ -8,14 +8,24 @@ export const getServerSideProps = async (req) => {
             name: req.query.name
         },
         include: {
-            creator: true
+            creator: true,
+            questionnaires: {
+                include: {
+                    creator: true,
+                    questions: {
+                        include: {
+                            creator: true
+                        }
+                    }
+                }
+            }
         }
     })
     return { props: { biotope: b } }
 }
 
 export default function BiotopeHome({ biotope: b }) {
-    // console.dir(b)
+    console.dir(b)
 
     return b ? (
         <div className="container">
@@ -24,6 +34,16 @@ export default function BiotopeHome({ biotope: b }) {
                     { b.contact ?
                         <div>Contact possible: {b.contact}</div>
                         : <div/>}
+                    <div>
+                    { b.questionnaires ? b.questionnaires.map((questionnaire, i) => {
+                        return <div key={i}>
+                            <h5>{questionnaire.name}</h5>
+                            { questionnaire.questions?.map((question, i) => {
+                                return <div id={i}>{question.name}</div>
+                            })}
+                        </div>
+                    }) : null}
+                    </div>
         </div>
     ) : null
 }

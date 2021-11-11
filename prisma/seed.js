@@ -21,6 +21,29 @@ async function main() {
             creatorId: admin.id
         },
     })
+    const questionnaire = await prisma.questionnaire.upsert({
+        where: { cercleId_name: { name: 'bx-questionnaire-1' , cercleId: cercleBx.id} },
+        update: {},
+        create: {
+            name: 'bx-questionnaire-1',
+            welcomeText: 'Welcome 1 2 ...',
+            creatorId: admin.id,
+            cercleId: cercleBx.id,
+
+        }
+    })
+    const q1 = await prisma.question.upsert({
+        where: { questionnaireId_name: { name: 'Comment jugez-vous la propreté de la rue?' , questionnaireId: questionnaire.id}},
+        update: {},
+        create: {
+            name: 'Comment jugez-vous la propreté de la rue?',
+            type: "LIKERT",
+            description: 'Welcome 1 2 ...',
+            creatorId: admin.id,
+            questionnaireId: questionnaire.id
+        }
+    })
+
 }
 
 main()
