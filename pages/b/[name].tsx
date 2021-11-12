@@ -35,11 +35,11 @@ export default function BiotopeHome({ biotope: b }) {
                         <div>Contact possible: {b.contact}</div>
                         : <div/>}
                     <div>
-                    { b.questionnaires ? b.questionnaires.map((questionnaire, i) => {
-                        return <div key={i}>
+                    { b.questionnaires ? b.questionnaires.map((questionnaire) => {
+                        return <div key={questionnaire.id}>
                             <h5>{questionnaire.name}</h5>
-                            { questionnaire.questions?.map((question, i) => {
-                                return <div id={i}>{question.name}</div>
+                            { questionnaire.questions?.map((question) => {
+                                return <div key={question.id}>{question.name}</div>
                             })}
                         </div>
                     }) : null}
