@@ -10,3 +10,8 @@ export function usePropositions() {
     const { data: propositions } = useSWR('/api/propositions', fetcher);
     return { propositions };
 }
+
+export function useBiotope(name) {
+    const { data: biotope } = useSWR('/api/b/' + name, fetcher);
+    return { biotope };
+}

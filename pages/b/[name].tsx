@@ -1,36 +1,15 @@
 import { Question } from '../../components/Question'
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import {useBiotope} from "../../components/util/hooks";
+import {useRouter} from "next/router";
 
-export const getServerSideProps = async (req) => {
-    const b = await prisma.cercle.findUnique({
-        where: {
-            name: req.query.name
-        },
-        include: {
-            creator: true,
-            questionnaires: {
-                include: {
-                    creator: true,
-                    questions: {
-                        include: {
-                            creator: true
-                        },
-                        orderBy: {
-                            createdOn: 'asc'
-                        }
-                    }
-                }
-            }
-        }
-    })
-    return { props: { biotope: b } }
-}
+export default function BiotopeHome() {
 
-export default function BiotopeHome({ biotope: b }) {
+    const { name } = useRouter().query
+    const {biotope: b} = useBiotope(name)
+
     return b ? (
         <div className="container">
-                    <div><h4>{b.name}</h4><span>{b.creator.name}</span> on {b.createdOn.toUTCString()}</div>
+                    <div><h4>{b.name}</h4><span>{b.creator.name}</span> on {b.createdOn}</div>
                     <div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>
                     { b.contact ?
                         <div>Contact possible: {b.contact}</div>
