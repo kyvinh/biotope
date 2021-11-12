@@ -32,18 +32,30 @@ async function main() {
 
         }
     })
+    const q1name = 'Comment jugez-vous la propreté de la rue?';
     const q1 = await prisma.question.upsert({
-        where: { questionnaireId_name: { name: 'Comment jugez-vous la propreté de la rue?' , questionnaireId: questionnaire.id}},
+        where: { questionnaireId_name: { name: q1name , questionnaireId: questionnaire.id}},
         update: {},
         create: {
-            name: 'Comment jugez-vous la propreté de la rue?',
+            name: q1name,
             type: "LIKERT",
             description: 'Welcome 1 2 ...',
             creatorId: admin.id,
             questionnaireId: questionnaire.id
         }
     })
-
+    const q2name = 'Comment amélioreriez-vous la propreté de la rue?';
+    const q2 = await prisma.question.upsert({
+        where: { questionnaireId_name: { name: q1name , questionnaireId: questionnaire.id}},
+        update: {},
+        create: {
+            name: q1name,
+            type: "LONGTEXT",
+            description: 'Welcome 3 4 ...',
+            creatorId: admin.id,
+            questionnaireId: questionnaire.id
+        }
+    })
 }
 
 main()

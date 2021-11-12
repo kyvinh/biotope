@@ -1,3 +1,4 @@
+import { Question } from '../../components/Question'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
@@ -25,8 +26,7 @@ export const getServerSideProps = async (req) => {
 }
 
 export default function BiotopeHome({ biotope: b }) {
-    console.dir(b)
-
+    // console.dir(b)
     return b ? (
         <div className="container">
                     <div><h4>{b.name}</h4><span>{b.creator.name}</span> on {b.createdOn.toUTCString()}</div>
@@ -39,7 +39,8 @@ export default function BiotopeHome({ biotope: b }) {
                         return <div key={questionnaire.id}>
                             <h5>{questionnaire.name}</h5>
                             { questionnaire.questions?.map((question) => {
-                                return <div key={question.id}>{question.name}</div>
+                                question.questionnaire = questionnaire  // Fill the relation (creates loop?)
+                                return <Question key={question.id} question={question} />
                             })}
                         </div>
                     }) : null}

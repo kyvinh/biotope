@@ -1,18 +1,8 @@
-import Layout from '../components/Layout'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
-// Export the `session` prop to use sessions with Server Side Rendering
-// export async function getServerSideProps(context) {
-//     return {
-//         props: {
-//             session: await getSession(context)
-//         }
-//     }
-// }
-
 export default function Profile() {
-    const { session: session, loading } = useSession()
+    const { data: session, status: loading } = useSession({ required: false })
 
     // When rendering client side don't display anything until loading is complete
     // From next-auth-example/protected.js
@@ -22,10 +12,10 @@ export default function Profile() {
     }
 
     return (
-        <Layout>
+        <>
             <h1>Your Profile</h1>
             <pre>{JSON.stringify(session, null, 2)}</pre>
-        </Layout>
+        </>
     )
 }
 
