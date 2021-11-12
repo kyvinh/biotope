@@ -16,6 +16,9 @@ export const getServerSideProps = async (req) => {
                     questions: {
                         include: {
                             creator: true
+                        },
+                        orderBy: {
+                            createdOn: 'asc'
                         }
                     }
                 }
