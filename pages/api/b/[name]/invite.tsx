@@ -1,15 +1,34 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
+import {PrismaAdapter} from '@next-auth/prisma-adapter'
+import {PrismaClient} from '@prisma/client'
+import {getProviders} from "next-auth/react"
+import {emailConfig} from '../../../api/auth/[...nextauth]'
+import nodemailer from "nodemailer"
 import _crypto from "crypto";
-import Email from 'next-auth/providers/email'
-import EmailProvider from "next-auth/providers/email";
 
 const prisma = new PrismaClient()
 const adapter = PrismaAdapter(prisma)
 
-// Assumes we have the email provider and that it is connected to a PrismaAdapter!
+// From https://next-auth.js.org/providers/email#configuration
+async function sendVerificationRequest({
+                                           identifier: email,
+                                           url,
+                                           provider: {server, from},
+                                       }) {
+    const site = process.env.NEXTAUTH_URL
+    const transport = nodemailer.createTransport(server)
+    await transport.sendMail({
+        to: email,
+        from,
+        subject: `Sign in to ${site}`,
+        text: text({url, site}),
+        html: html({url, site, email}),
+    })
+}
 
+// Assumes we have the email provider and that it is connected to a PrismaAdapter!
 export default async (req, res) => {
+
+    // Check request and params
 
     if (req.method !== 'POST') {
         res.status(400).send({ message: 'Only POST requests allowed' })
@@ -23,13 +42,44 @@ export default async (req, res) => {
         res.status(400).send({ message: 'Invalid POST request' })
     }
 
+    // Check config
+
+    const providers = await getProviders()
+    const emailProvider = providers.email
+
+    // console.log('EmailProvider', emailProvider)
+    /* Very few information from getProviders()
+        Providers {
+          email: {
+            id: 'email',
+            name: 'Email',
+            type: 'email',
+            signinUrl: 'http://localhost:3000/api/auth/signin/email',
+            callbackUrl: 'http://localhost:3000/api/auth/callback/email'
+          }
+        }
+     */
+
+    if (!emailProvider) {
+        res.status(500).send({ message: 'Invalid server configuration'})
+    }
+
+    console.log('EmailConfig', emailConfig)
+
+    const baseUrl = process.env.NEXTAUTH_URL;
+    const basePath = '/api/auth'
+
     // From node_modules/next-auth/server/lib/email/signin.js
-    // TODO Code below uses default configuration. Should use [...nextauth].js file
 
     const ONE_DAY_IN_SECONDS = 86400;
     const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
 
-    const token = _crypto.randomBytes(32).toString("hex")
+    const token = await emailConfig.generateVerificationToken()
+
+    const _provider$secret = process.env.NEXTAUTH_SECRET
+
+    const hashToken = _crypto.createHash("sha256")
+        .update(`${token}${process.env.NEXTAUTH_SECRET}`).digest("hex");
 
     let result;
 
@@ -37,29 +87,20 @@ export default async (req, res) => {
         result = await adapter.createVerificationToken({
             identifier: email,
             expires: expires,
-            token: token
+            token: hashToken
         })
 
-        const callbackUrl = process.env.NEXTAUTH_URL //+ '/b/welcome';
+        const callbackUrl = process.env.NEXTAUTH_URL;  // TODO: Should redirect to biotope's welcome page for invited users
         const params = new URLSearchParams({
             callbackUrl, token, email
         })
-        const baseUrl = process.env.NEXTAUTH_URL;
-        const basePath = '/api/auth'
-        const url = `${baseUrl}${basePath}/callback/email?${params}`;
+        const url = `${emailProvider.callbackUrl}?${params}`;
 
         try {
-
-            const provider = EmailProvider({})
-            provider.server = process.env.EMAIL_SERVER
-            provider.from = process.env.EMAIL_FROM
-
-            await provider.sendVerificationRequest({
+            await sendVerificationRequest({
                 identifier: email,
-                token,
-                expires,
                 url,
-                provider
+                provider: emailConfig
             });
         } catch (error) {
             console.error("SEND_VERIFICATION_EMAIL_ERROR", {
