@@ -1,6 +1,8 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 import _crypto from "crypto";
+import Email from 'next-auth/providers/email'
+import EmailProvider from "next-auth/providers/email";
 
 const prisma = new PrismaClient()
 const adapter = PrismaAdapter(prisma)
@@ -13,7 +15,7 @@ export default async (req, res) => {
         res.status(400).send({ message: 'Only POST requests allowed' })
         return
     }
-debugger;
+
     const biotopeName = req.query.name;
     const email = req.body?.email
 
@@ -37,36 +39,41 @@ debugger;
             expires: expires,
             token: token
         })
-        /*
-                const params = new URLSearchParams({
-                    process.env.NEXTAUTH_URL + '/b',
-                    token,
-                    email: identifier
-                });
-                const url = `${baseUrl}${basePath}/callback/${provider.id}?${params}`;
 
-                try {
-                    await provider.sendVerificationRequest({
-                        identifier,
-                        token,
-                        expires,
-                        url,
-                        provider
-                    });
-                } catch (error) {
-                    logger.error("SEND_VERIFICATION_EMAIL_ERROR", {
-                        identifier,
-                        url,
-                        error
-                    });
-                    throw new Error("SEND_VERIFICATION_EMAIL_ERROR");
-                }*/
+        const callbackUrl = process.env.NEXTAUTH_URL //+ '/b/welcome';
+        const params = new URLSearchParams({
+            callbackUrl, token, email
+        })
+        const baseUrl = process.env.NEXTAUTH_URL;
+        const basePath = '/api/auth'
+        const url = `${baseUrl}${basePath}/callback/email?${params}`;
+
+        try {
+
+            const provider = EmailProvider({})
+            provider.server = process.env.EMAIL_SERVER
+            provider.from = process.env.EMAIL_FROM
+
+            await provider.sendVerificationRequest({
+                identifier: email,
+                token,
+                expires,
+                url,
+                provider
+            });
+        } catch (error) {
+            console.error("SEND_VERIFICATION_EMAIL_ERROR", {
+                identifier: email,
+                url,
+                error
+            });
+            throw new Error("SEND_VERIFICATION_EMAIL_ERROR");
+        }
     } catch (error) {
-        debugger;
         if (error.code === "P2002" && error.meta.target === "VerificationToken_token_key") {
             console.log("Could not create a verification token the email already exists... maybe just ignore this?", error)
         } else {
-            console.log("Could not create a verification token.", error)
+            console.log("Could not create/send a verification token.", error)
         }
         result = { error: "Could not create VerificationToken"}
     }
