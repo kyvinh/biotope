@@ -9,11 +9,12 @@ const prisma = new PrismaClient()
 const adapter = PrismaAdapter(prisma)
 
 // From https://next-auth.js.org/providers/email#configuration
+// Maybe we could create a custom provider out of all this?
 async function sendVerificationRequest({
-                                           identifier: email,
-                                           url,
-                                           provider: {server, from},
-                                       }) {
+            email,
+            url,
+            provider: {server, from},
+}) {
     const site = process.env.NEXTAUTH_URL
     const transport = nodemailer.createTransport(server)
     await transport.sendMail({
@@ -25,8 +26,7 @@ async function sendVerificationRequest({
     })
 }
 
-// Assumes we have the email provider and that it is connected to a PrismaAdapter!
-export default async (req, res) => {
+export default async function handler(req, res) {
 
     // Check request and params
 
@@ -40,86 +40,80 @@ export default async (req, res) => {
 
     if (!email) {
         res.status(400).send({ message: 'Invalid POST request' })
+        return
     }
 
     // Check config
+    // Requires EmailProvider for the callbackUrl
+    // Requires EmailConfig for generating token, smtp config
 
     const providers = await getProviders()
     const emailProvider = providers.email
 
-    // console.log('EmailProvider', emailProvider)
-    /* Very few information from getProviders()
-        Providers {
-          email: {
-            id: 'email',
-            name: 'Email',
-            type: 'email',
-            signinUrl: 'http://localhost:3000/api/auth/signin/email',
-            callbackUrl: 'http://localhost:3000/api/auth/callback/email'
-          }
-        }
-     */
-
-    if (!emailProvider) {
+    if (!emailProvider || !emailConfig) {
+        console.log('EmailProvider', emailProvider)
+        console.log('EmailConfig', emailConfig)
         res.status(500).send({ message: 'Invalid server configuration'})
+        return
     }
 
-    console.log('EmailConfig', emailConfig)
-
-    const baseUrl = process.env.NEXTAUTH_URL;
-    const basePath = '/api/auth'
+    const callbackUrl = emailProvider.callbackUrl
 
     // From node_modules/next-auth/server/lib/email/signin.js
 
     const ONE_DAY_IN_SECONDS = 86400;
-    const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);
+    const expires = new Date(Date.now() + ONE_DAY_IN_SECONDS * 1000);   // TODO: Configurable param?
 
     const token = await emailConfig.generateVerificationToken()
-
-    const _provider$secret = process.env.NEXTAUTH_SECRET
-
     const hashToken = _crypto.createHash("sha256")
-        .update(`${token}${process.env.NEXTAUTH_SECRET}`).digest("hex");
+        .update(`${token}${process.env.NEXTAUTH_SECRET}`)
+        .digest("hex");
 
     let result;
 
     try {
+
         result = await adapter.createVerificationToken({
             identifier: email,
             expires: expires,
             token: hashToken
         })
 
-        const callbackUrl = process.env.NEXTAUTH_URL;  // TODO: Should redirect to biotope's welcome page for invited users
-        const params = new URLSearchParams({
-            callbackUrl, token, email
-        })
-        const url = `${emailProvider.callbackUrl}?${params}`;
-
-        try {
-            await sendVerificationRequest({
-                identifier: email,
-                url,
-                provider: emailConfig
-            });
-        } catch (error) {
-            console.error("SEND_VERIFICATION_EMAIL_ERROR", {
-                identifier: email,
-                url,
-                error
-            });
-            throw new Error("SEND_VERIFICATION_EMAIL_ERROR");
-        }
     } catch (error) {
         if (error.code === "P2002" && error.meta.target === "VerificationToken_token_key") {
             console.log("Could not create a verification token the email already exists... maybe just ignore this?", error)
         } else {
             console.log("Could not create/send a verification token.", error)
         }
-        result = { error: "Could not create VerificationToken"}
+        throw new Error("Could not create VerificationToken");
+    }
+
+    const params = new URLSearchParams({
+        callbackUrl: process.env.NEXTAUTH_URL,  // TODO: Should redirect to biotope's welcome page for invited users
+        token,
+        email,
+    })
+    const url = `${callbackUrl}?${params}`;
+
+    try {
+
+        await sendVerificationRequest({
+            email,
+            url,
+            provider: emailConfig
+        });
+
+    } catch (error) {
+        console.error("SEND_VERIFICATION_EMAIL_ERROR", {
+            identifier: email,
+            url,
+            error
+        });
+        throw new Error("SEND_VERIFICATION_EMAIL_ERROR");
     }
 
     res.status(200).json(result)
+
 }
 
 // Email HTML body

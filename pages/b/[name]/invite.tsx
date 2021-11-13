@@ -1,5 +1,5 @@
 import {useBiotope} from "../../../components/util/hooks"
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 import {useState} from 'react'
 
 export default function BiotopeHome() {
@@ -20,7 +20,7 @@ export default function BiotopeHome() {
         console.log('Result from Invite API', result)
     }
 
-    const { name } = useRouter().query
+    const {name} = useRouter().query
     const {biotope: b} = useBiotope(name)
 
     const [invitedEmail, setInvitedEmail] = useState("");
