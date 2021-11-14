@@ -6,8 +6,8 @@ export const Question = ({question}) => {
     const likertOptions = {
         question: `${question.name} (${question.type})`,
         responses: [
-            { value: 1, text: "Très sale" },
-            { value: 2, text: "Plus sale que normale" },
+            { value: 1, text: "Insalubre" },
+            { value: 2, text: "Sale" },
             { value: 3, text: "Normale", checked: true },
             { value: 4, text: "Propre" },
             { value: 5, text: "Sans reproche" }
