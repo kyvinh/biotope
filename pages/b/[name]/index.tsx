@@ -23,11 +23,22 @@ export default function BiotopeHome() {
         return null
     }
 
+    let authorized = false;
+
     const {name} = useRouter().query
-    const {biotope: b} = useBiotope(name)
+    const {biotope: b} = useBiotope(name, true)
+
+    if (session) {
+        if (b?.invitations) {
+            if (b.invitations.length > 0) {
+                // user has been invited here
+                authorized = true
+            }
+        }
+    }
 
     return b ?
-        b.private && !session ?
+        b.private && !authorized ?
             <>
                 This is a private biotope. <Link href="/api/auth/signin">Sign-in?</Link>
                 <p>Or for more information: {b.contact}.</p>

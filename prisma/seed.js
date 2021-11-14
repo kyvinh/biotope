@@ -39,7 +39,7 @@ async function main() {
         create: {
             name: q1name,
             type: "LIKERT",
-            description: 'Welcome 1 2 ...',
+            description: 'Comment estimez-vous la propreté de la rue Félix Terlinden?',
             creatorId: admin.id,
             questionnaireId: questionnaire.id
         }
