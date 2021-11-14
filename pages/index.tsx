@@ -1,25 +1,17 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { HumeurList } from '../components/HumeurList';
-import { PropositionList } from '../components/PropositionList';
-import { useSession, signIn } from "next-auth/react"
-import React, { useEffect } from 'react';
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import {HumeurList} from '../components/HumeurList';
+import {PropositionList} from '../components/PropositionList';
+import {useSession} from "next-auth/react"
+import React from 'react';
 
-export const getServerSideProps = async ({ /* req */ }) => {
+/*
+export const getServerSideProps = async ({ /!* req *!/ }) => {
   // TODO This only fetches the admin's circle
-  const userWithCirclesDTO = await prisma.user.findUnique({
-    where: {
-      email: "kyvinh@gmail.com",
-    },
-    include: {
-      cerclesCreated: true
-    }
-  })
   const test =  userWithCirclesDTO.cerclesCreated;
   return { props: { circles: test } }
 }
+*/
 
 export default function Home(circles) {
 
@@ -55,10 +47,11 @@ export default function Home(circles) {
 
         <div className="grid">
 
-          <div className="card">
-            <h3>Vous avez été invité(e) à ce biotope de la part de xyz &rarr;</h3>
-            <p>Vous êtes enregistré sous l'email {session?.user.email}. Veuillez renseigner votre nom ou pseudo: <input/></p>
-          </div>
+          <Link href="/b/bx">
+            <div className="card">
+              <h3>BX &rarr;</h3>
+            </div>
+          </Link>
 
           <Link href="/profile">
             <div className="card">
@@ -76,12 +69,6 @@ export default function Home(circles) {
             <div className="card">
               <h3>Humeurs &rarr;</h3>
               <HumeurList />
-            </div>
-          </Link>
-
-          <Link href="/b/bx">
-            <div className="card">
-              <h3>BX &rarr;</h3>
             </div>
           </Link>
 

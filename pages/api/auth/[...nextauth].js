@@ -57,7 +57,7 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
 
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, email}) {
 
       // console.log('User', user)
       // console.log('EmailField', email)
@@ -81,9 +81,17 @@ export default NextAuth({
       }
 
       return true
-    }
+    },
     // async redirect(url, baseUrl) { return baseUrl },
-    // async session(session, user) { return session },
+    async session({ session, user }) {
+      let { id, name, email} = user
+      session.user = {
+        id,
+        name,
+        email
+      }
+      return session
+    }
     // async jwt(token, user, account, profile, isNewUser) { return token }
   },
 
