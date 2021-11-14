@@ -5,34 +5,12 @@ import {PropositionList} from '../components/PropositionList';
 import {useSession} from "next-auth/react"
 import React from 'react';
 
-/*
-export const getServerSideProps = async ({ /!* req *!/ }) => {
-  // TODO This only fetches the admin's circle
-  const test =  userWithCirclesDTO.cerclesCreated;
-  return { props: { circles: test } }
-}
-*/
-
-export default function Home(circles) {
-
-  const { data: session, status } = useSession({ required: false});
-
-  // console.dir(session)
-  // console.dir(circles)
-
-  /*  Requires auth?
-
-  const isUser = !!session?.user
-  React.useEffect(() => {
-    if (status === "loading") return // Do nothing while loading
-    if (!isUser) signIn() // If not authenticated, force log in
-  }, [isUser, status])
-  */
+export default function Home() {
 
   return (
     <div className="container">
       <Head>
-        <title>Biotope Terlinden</title>
+        <title>Biotope</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -41,17 +19,20 @@ export default function Home(circles) {
           Mieux que des <Link href="/faq/champignons">champignons!</Link>
         </h1>
 
-        <p className="description">
-          Sondage des habitants de la résidence Terlinden
-        </p>
-
         <div className="grid">
 
           <Link href="/b/bx">
             <div className="card">
-              <h3>BX &rarr;</h3>
+              <h3>Biotope BX &rarr;</h3>
             </div>
+            <p>Le biotope BX est public et comprend plus de 500 membres.</p>
           </Link>
+
+          <div className="card">
+            <h3>Biotope Terlinden &rarr;</h3>
+            <p>Le biotope Terlinden est privé (seulement sur invitation) et comprend 25 membres.</p>
+          </div>
+
 
           <Link href="/profile">
             <div className="card">
@@ -59,11 +40,6 @@ export default function Home(circles) {
               <p>Votre compte, vos cercles, vos biotopes.</p>
             </div>
           </Link>
-
-          <div className="card">
-            <h3>Biotope Terlinden &rarr;</h3>
-            <p>Le biotope Terlinden est un Cercle Fermé (seulement sur invitation) et comprend 25 membres. Pour toute information, veuillez contacter xyz.</p>
-          </div>
 
           <Link href="/humeurs/">
             <div className="card">
