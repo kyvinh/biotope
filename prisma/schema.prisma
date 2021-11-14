@@ -80,7 +80,7 @@ enum InvitationType {
 model Invitation {
   id           String         @id @default(cuid())
   type         InvitationType @default(EMAIL)
-  invitedEmail String?
+  invitedEmail String?          // Should only exists while no User attached (email-leak?)
   invitedUser  User?          @relation("User_InvitedUser", fields: [invitedId], references: [id], onDelete: Cascade)
   invitedId    String?
   creator      User           @relation("User_InvitationCreator", fields: [creatorId], references: [id], onDelete: Cascade)
@@ -88,6 +88,9 @@ model Invitation {
   cercle       Cercle         @relation(fields: [cercleId], references: [id], onDelete: Cascade)
   cercleId     String
   createdOn    DateTime       @default(now())
+
+  @@unique([type, invitedEmail, creatorId, cercleId])
+  @@unique([type, invitedId, creatorId, cercleId])
 }
 
 model Questionnaire {

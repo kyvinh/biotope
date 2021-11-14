@@ -1,5 +1,5 @@
 import {PrismaAdapter} from '@next-auth/prisma-adapter'
-import {PrismaClient} from '@prisma/client'
+import {InvitationType, PrismaClient} from '@prisma/client'
 import {getProviders} from "next-auth/react"
 import {emailConfig} from '../../../api/auth/[...nextauth]'
 import nodemailer from "nodemailer"
@@ -86,6 +86,50 @@ export default async function handler(req, res) {
             console.log("Could not create/send a verification token.", error)
         }
         throw new Error("Could not create VerificationToken");
+    }
+
+    try {
+
+        const b = await prisma.cercle.findUnique({
+            where: {
+                name: biotopeName
+            }
+        })
+
+        // TODO add user.id to session and use it in invitation.upsert
+        const u = await prisma.user.findUnique({
+            where: {
+                email: "kyvinh@gmail.com"
+            }
+        })
+
+        await prisma.invitation.upsert({
+            where: {
+                type_invitedEmail_creatorId_cercleId: {
+                    type: InvitationType.EMAIL,
+                    cercleId: b.id,
+                    invitedEmail: email,
+                    creatorId: u.id
+                }
+            },
+            update: {
+                // Should modify createdOn?
+            },
+            create: {
+                type: InvitationType.EMAIL,
+                cercleId: b.id,
+                invitedEmail: email,
+                creatorId: u.id,
+            }
+        })
+
+    } catch (error) {
+        console.error("TOKE_TO_INVITATION_ERROR", {
+            cercle: biotopeName,
+            identifier: email,
+            error
+        });
+        throw error;
     }
 
     const params = new URLSearchParams({
