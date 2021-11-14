@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
+import {InvitationType, PrismaClient} from '@prisma/client'
 import _crypto from "crypto";
 
 const prisma = new PrismaClient()
@@ -56,7 +56,32 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // async signIn(user, account, profile) { return true },
+
+    async signIn({ user, account, profile, email, credentials }) {
+
+      // console.log('User', user)
+      // console.log('EmailField', email)
+
+      // We may have an invite pending for circle(s) -> Link the cercle invitation to the original user and the target email
+      // Note we cannot know from which circle invite this verification request is executed! So link all invitations pertaining to email user
+      // TODO This executes on every sign-in! Where to put this instead? CustomProvider?
+
+      if (user.id && user.email && !email.verificationRequest) {
+
+        await prisma.invitation.updateMany({
+          where: {
+            type: InvitationType.EMAIL,
+            invitedEmail: user.email,
+          },
+          data: {
+            invitedEmail: null,
+            invitedId: user.id
+          }
+        })
+      }
+
+      return true
+    }
     // async redirect(url, baseUrl) { return baseUrl },
     // async session(session, user) { return session },
     // async jwt(token, user, account, profile, isNewUser) { return token }
