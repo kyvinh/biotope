@@ -26,7 +26,7 @@ async function main() {
         update: {},
         create: {
             name: 'bx-questionnaire-1',
-            welcomeText: 'Welcome 1 2 ...',
+            welcomeText: 'Bonjour, ce questionnaire sonde les habitants de la rue par rapport à la propreté publique.',
             creatorId: admin.id,
             cercleId: cercleBx.id,
 
@@ -44,7 +44,7 @@ async function main() {
             questionnaireId: questionnaire.id
         }
     })
-    const q2name = 'Comment amélioreriez-vous la propreté de la rue?';
+    const q2name = 'Comment est-ce que la commune et ses habitants pourraient amélioreriez-vous la propreté de la rue?';
     const q2 = await prisma.question.upsert({
         where: { questionnaireId_name: { name: q2name , questionnaireId: questionnaire.id}},
         update: {},
