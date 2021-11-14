@@ -37,6 +37,11 @@ export default function BiotopeHome() {
         }
     }
 
+    const questionnaireSubmit = (evt) => {
+        evt.preventDefault();
+        alert(`Submitting Name: ${name}`)
+    }
+
     return b ?
         b.private && !authorized ?
             <>
@@ -60,11 +65,17 @@ export default function BiotopeHome() {
                 <div>
                     {b.questionnaires ? b.questionnaires.map((questionnaire) => {
                         return <div key={questionnaire.id}>
-                            <h5>{questionnaire.name}</h5>
-                            {questionnaire.questions?.map((question) => {
-                                question.questionnaire = questionnaire  // Fill the relation for rendering in Question comp
-                                return <Question key={question.id} question={question}/>
-                            })}
+                            <form onSubmit={questionnaireSubmit}>
+
+                                <h5>{questionnaire.name}</h5>
+                                {questionnaire.questions?.map((question) => {
+                                    question.questionnaire = questionnaire  // Fill the relation for rendering in Question comp
+                                    return <Question key={question.id} question={question}/>
+                                })}
+
+                                <input type="submit" value="Submit" />
+
+                            </form>
                         </div>
                     }) : null}
                 </div>
