@@ -8,7 +8,7 @@ export const Question = ({question}) => {
     const [likertanswer, setLikertanswer] = useState(3)
 
     const likertOptions = {
-        question: `${question.name} (${question.type})`,
+        //question: `${question.name} (${question.type})`,
         responses: [
             { value: 1, text: "Insalubre" },
             { value: 2, text: "Sale" },

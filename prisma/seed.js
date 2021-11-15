@@ -35,20 +35,20 @@ async function main() {
         update: {},
         create: {
             name: 'bx-questionnaire-1',
-            welcomeText: 'Bonjour, ce questionnaire sonde les habitants de la rue par rapport à la propreté publique.',
+            welcomeText: 'Bonjour, ce questionnaire sonde les habitants de Bruxelles par rapport à la propreté publique.',
             creatorId: admin.id,
             cercleId: cercleBx.id,
 
         }
     })
-    const q1name = 'Comment jugez-vous la propreté de la rue?';
+    const q1name = 'Comment jugez-vous la propreté des rues?';
     const q1 = await prisma.question.upsert({
         where: { questionnaireId_name: { name: q1name , questionnaireId: questionnaire.id}},
         update: {},
         create: {
             name: q1name,
             type: "LIKERT",
-            description: 'Comment estimez-vous la propreté de la rue Félix Terlinden?',
+            description: 'Comment estimez-vous la propreté des rues dans Bruxelles en général?',
             creatorId: admin.id,
             questionnaireId: questionnaire.id
         }
@@ -74,6 +74,29 @@ async function main() {
             creatorId: admin.id,
             private: true
         },
+    })
+    const terlindenQuestionnaire = await prisma.questionnaire.upsert({
+        where: { cercleId_name: { name: 'terlinden-questionnaire-1' , cercleId: cercleTerlinden.id} },
+        update: {},
+        create: {
+            name: 'terlinden-questionnaire-1',
+            welcomeText: 'Bonjour, ce questionnaire sonde les habitants de la rue Félix Terlinden par rapport à la propreté publique.',
+            creatorId: admin.id,
+            cercleId: cercleTerlinden.id,
+
+        }
+    })
+    const terlindenQ1name = 'Comment jugez-vous la propreté de la rue Félix Terlinden?';
+    const terlindenQ1 = await prisma.question.upsert({
+        where: { questionnaireId_name: { name: terlindenQ1name , questionnaireId: terlindenQuestionnaire.id}},
+        update: {},
+        create: {
+            name: terlindenQ1name,
+            type: "LIKERT",
+            description: 'Comment estimez-vous la propreté de la rue Félix Terlinden?',
+            creatorId: admin.id,
+            questionnaireId: terlindenQuestionnaire.id
+        }
     })
     const cercleUnkown = await prisma.cercle.upsert({
         where: { name: 'qqpart-1030' },

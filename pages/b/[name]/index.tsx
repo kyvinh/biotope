@@ -27,7 +27,7 @@ export default function BiotopeHome() {
 
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name)
-    const {error: authorizationError} = useBiotope(name, true)
+    const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
 
     if (session) {
         if (b?.public || !authorizationError) {
@@ -69,6 +69,7 @@ export default function BiotopeHome() {
                             <form onSubmit={questionnaireSubmit}>
 
                                 <h5>{questionnaire.name}</h5>
+                                <p>{questionnaire.welcomeText}</p>
                                 {questionnaire.questions?.map((question) => {
                                     question.questionnaire = questionnaire  // Fill the relation for rendering in Question comp
                                     return <Question key={question.id} question={question}/>
