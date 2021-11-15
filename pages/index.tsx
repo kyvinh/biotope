@@ -38,7 +38,7 @@ export default function Home() {
           <Link href="/b/qqpart-1030">
             <div className="card">
               <h3>Biotope 1030 &rarr;</h3>
-              <p>Le biotope Terlinden est privé (seulement sur invitation) et comprend 25 membres.</p>
+              <p>Le biotope 1030 est privé (seulement sur invitation) et comprend 25 membres.</p>
             </div>
           </Link>
 
