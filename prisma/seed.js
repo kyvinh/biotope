@@ -12,6 +12,14 @@ async function main() {
             email: 'kyvinh@gmail.com',
         }
     })
+    const unknown = await prisma.user.upsert({
+        where: { email: 'unknown@biotope.be' },
+        update: {},
+        create: {
+            name: 'Anonymous 1',
+            email: 'unknown@biotope.be',
+        }
+    })
     const cercleBx = await prisma.cercle.upsert({
         where: { name: 'bx' },
         update: {},
@@ -67,7 +75,16 @@ async function main() {
             private: true
         },
     })
-
+    const cercleUnkown = await prisma.cercle.upsert({
+        where: { name: 'qqpart-1030' },
+        update: {},
+        create: {
+            name: 'qqpart-1030',
+            contact: 'Contact me through the city hall',
+            creatorId: unknown.id,
+            private: true
+        },
+    })
 }
 
 main()

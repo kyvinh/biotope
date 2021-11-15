@@ -19,7 +19,7 @@ export default async function handler(req, res) {
             invitationInclude = false
         } else {
             // @ts-ignore
-            let userId = session.user.id;
+            userId = session.user.id;
             invitationInclude = {
                 where: {
                     invitedId: userId
@@ -56,14 +56,12 @@ export default async function handler(req, res) {
         if (b.private) {
             if (!userId) {
                 // Private biotope and not logged in
-                res.status(401).json(new Error("Who are you?"))
-                return
+                return res.status(401).json(new Error("Who are you?"))
 
             } else {
                 if (userId !== b.creatorId && b.invitations.length == 0) {
                     // user has not been invited here
-                    res.status(401).json(new Error("This is private"))
-                    return
+                    return res.status(401).json(new Error("This is private"))
                 }
             }
         }
@@ -94,5 +92,5 @@ export default async function handler(req, res) {
 
     }
 
-    res.status(200).json(b)
+    return res.status(200).json(b)
 }

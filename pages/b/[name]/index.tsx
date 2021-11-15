@@ -30,7 +30,7 @@ export default function BiotopeHome() {
     const {error: authorizationError} = useBiotope(name, true)
 
     if (session) {
-        if (b?.public && !authorizationError) {
+        if (b?.public || !authorizationError) {
             authorized = true
         }
     }

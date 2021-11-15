@@ -35,6 +35,13 @@ export default function Home() {
             </div>
           </Link>
 
+          <Link href="/b/qqpart-1030">
+            <div className="card">
+              <h3>Biotope 1030 &rarr;</h3>
+              <p>Le biotope Terlinden est privé (seulement sur invitation) et comprend 25 membres.</p>
+            </div>
+          </Link>
+
           <Link href="/profile">
             <div className="card">
               <h3>Vous &rarr;</h3>
