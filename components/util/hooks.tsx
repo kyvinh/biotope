@@ -13,10 +13,10 @@ export function usePropositions() {
 
 export function useBiotope(name, withUserSpecific = false) {
     if (withUserSpecific) {
-        const {data: biotope} = useSWR(`/api/b/${name}?user` , fetcher);
-        return {biotope};
+        const {data: biotope, error} = useSWR(`/api/b/${name}?user` , fetcher);
+        return {biotope, error};
     } else {
-        const {data: biotope} = useSWR('/api/b/' + name, fetcher);
-        return {biotope};
+        const {data: biotope, error} = useSWR('/api/b/' + name, fetcher);
+        return {biotope, error};
     }
 }

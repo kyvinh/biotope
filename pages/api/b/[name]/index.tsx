@@ -11,25 +11,28 @@ export default async function handler(req, res) {
     if (req.query.user === "") {
 
         const session = await getSession({ req })
+        let invitationInclude
+        let userId
 
         if (!session) {
-            res.status(401)
-            return
+            // If no user, fetch the basic information, then check whether user has access
+            invitationInclude = false
+        } else {
+            // @ts-ignore
+            let userId = session.user.id;
+            invitationInclude = {
+                where: {
+                    invitedId: userId
+                }
+            }
         }
-
-        // @ts-ignore
-        let userId = session.user.id;
 
         b = await prisma.cercle.findUnique({
             where: {
                 name: req.query.name
             },
             include: {
-                invitations: {
-                    where: {
-                        invitedId: userId
-                    }
-                },
+                invitations: invitationInclude,
                 creator: true,
                 questionnaires: {
                     include: {
@@ -46,7 +49,24 @@ export default async function handler(req, res) {
                 }
             }
         });
+
         // console.log(b)
+
+        // If private biotope, check that we have access
+        if (b.private) {
+            if (!userId) {
+                // Private biotope and not logged in
+                res.status(401).json(new Error("Who are you?"))
+                return
+
+            } else {
+                if (userId !== b.creatorId && b.invitations.length == 0) {
+                    // user has not been invited here
+                    res.status(401).json(new Error("This is private"))
+                    return
+                }
+            }
+        }
 
     } else {
 

@@ -18,7 +18,8 @@ async function main() {
         create: {
             name: 'bx',
             contact: 'Contact owner by mail...',
-            creatorId: admin.id
+            creatorId: admin.id,
+            private: false,
         },
     })
     const questionnaire = await prisma.questionnaire.upsert({
@@ -56,6 +57,17 @@ async function main() {
             questionnaireId: questionnaire.id
         }
     })
+    const cercleTerlinden = await prisma.cercle.upsert({
+        where: { name: 'terlinden-1040' },
+        update: {},
+        create: {
+            name: 'terlinden-1040',
+            contact: 'Hail me in the street',
+            creatorId: admin.id,
+            private: true
+        },
+    })
+
 }
 
 main()

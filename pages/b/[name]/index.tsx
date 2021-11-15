@@ -26,14 +26,12 @@ export default function BiotopeHome() {
     let authorized = false;
 
     const {name} = useRouter().query
-    const {biotope: b} = useBiotope(name, true)
+    const {biotope: b} = useBiotope(name)
+    const {error: authorizationError} = useBiotope(name, true)
 
     if (session) {
-        if (b?.invitations) {
-            if (b.invitations.length > 0) {
-                // user has been invited here
-                authorized = true
-            }
+        if (b?.public && !authorizationError) {
+            authorized = true
         }
     }
 
@@ -54,7 +52,10 @@ export default function BiotopeHome() {
                 <div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>
 
                 <div className="card">
-                    <p>Vous êtes enregistré sous l'email {session.user.email}.</p>
+                    {   session?
+                            <p>Vous êtes enregistré sous l'email {session.user.email}.</p>
+                            : null
+                    }
                 </div>
 
                 <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>

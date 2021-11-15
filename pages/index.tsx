@@ -24,15 +24,16 @@ export default function Home() {
           <Link href="/b/bx">
             <div className="card">
               <h3>Biotope BX &rarr;</h3>
+              <p>Le biotope BX est public et comprend plus de 500 membres.</p>
             </div>
-            <p>Le biotope BX est public et comprend plus de 500 membres.</p>
           </Link>
 
-          <div className="card">
-            <h3>Biotope Terlinden &rarr;</h3>
-            <p>Le biotope Terlinden est privé (seulement sur invitation) et comprend 25 membres.</p>
-          </div>
-
+          <Link href="/b/terlinden-1040">
+            <div className="card">
+              <h3>Biotope Terlinden &rarr;</h3>
+              <p>Le biotope Terlinden est privé (seulement sur invitation) et comprend 25 membres.</p>
+            </div>
+          </Link>
 
           <Link href="/profile">
             <div className="card">
