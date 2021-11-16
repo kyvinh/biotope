@@ -113,7 +113,7 @@ export default async function handler(req, res) {
                 }
             },
             update: {
-                // Should modify createdOn?
+                // TODO Should modify createdOn?
             },
             create: {
                 type: InvitationType.EMAIL,

@@ -125,6 +125,19 @@ model Question {
   createdOn    DateTime       @default(now())
   creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
+  answers      Answer[]
 
   @@unique([questionnaireId, name])
+}
+
+model Answer {
+  id           String         @id @default(cuid())
+  hashUid      String
+  question     Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId   String
+  answerNum    Int?
+  answerText   String?
+  createdOn    DateTime       @default(now())
+
+  @@unique([questionId, hashUid])
 }

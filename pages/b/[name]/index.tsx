@@ -18,7 +18,7 @@ export const getServerSideProps = async function ({req}) {
 export default function BiotopeHome() {
 
     const {data: session, status} = useSession({required: false})
-    const [answers, setAnswers] = useState({})
+    const [answers, setAnswers] = useState([])
 
     if (status === "loading") {
         return null
@@ -54,8 +54,11 @@ export default function BiotopeHome() {
     }
 
     const setAnswer = (questionId, answer) => {
-        let newAnswers = {...answers}
-        newAnswers[questionId] = answer
+        let newAnswers = answers.filter(element => element.questionId != questionId)
+        newAnswers.push({
+            questionId: questionId,
+            answer: answer
+        });
         setAnswers(newAnswers)
     }
 
