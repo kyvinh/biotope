@@ -3,7 +3,7 @@ import {useBiotope} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
-import React from "react";
+import {useState} from "react";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -18,6 +18,7 @@ export const getServerSideProps = async function ({req}) {
 export default function BiotopeHome() {
 
     const {data: session, status} = useSession({required: false})
+    const [answers, setAnswers] = useState({})
 
     if (status === "loading") {
         return null
@@ -37,7 +38,14 @@ export default function BiotopeHome() {
 
     const questionnaireSubmit = (evt) => {
         evt.preventDefault();
-        alert(`Submitting Name: ${name}`)
+        console.log(answers)
+        alert(`Submitting...`)
+    }
+
+    const setAnswer = (questionId, answer) => {
+        let newAnswers = {...answers}
+        newAnswers[questionId] = answer
+        setAnswers(newAnswers)
     }
 
     return b ?
@@ -67,16 +75,13 @@ export default function BiotopeHome() {
                     {b.questionnaires ? b.questionnaires.map((questionnaire) => {
                         return <div key={questionnaire.id}>
                             <form onSubmit={questionnaireSubmit}>
-
                                 <h5>{questionnaire.name}</h5>
                                 <p>{questionnaire.welcomeText}</p>
                                 {questionnaire.questions?.map((question) => {
                                     question.questionnaire = questionnaire  // Fill the relation for rendering in Question comp
-                                    return <Question key={question.id} question={question}/>
+                                    return <Question key={question.id} question={question} setState={setAnswer}/>
                                 })}
-
                                 <input type="submit" value="Submit" />
-
                             </form>
                         </div>
                     }) : null}
