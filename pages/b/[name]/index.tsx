@@ -4,6 +4,7 @@ import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
 import {useState} from "react";
+import {fetcher} from "../../../components/util/fetcher";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -39,15 +40,7 @@ export default function BiotopeHome() {
     const questionnaireSubmit = async (event, questionnaireId) => {
         event.preventDefault();
 
-        const res = await fetch(`/api/b/${name}/${questionnaireId}/answer`, {
-            body: JSON.stringify({
-                answers: answers
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST'
-        })
+        const res = await fetcher(`/api/b/${name}/${questionnaireId}/answer`, answers);
 
         const result = await res.json()
         console.log('Result from Answers API', result)
