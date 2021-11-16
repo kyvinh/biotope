@@ -5,6 +5,7 @@ import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
 import {useState} from "react";
 import {fetcher} from "../../../components/util/fetcher";
+import useSWR from "swr";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -20,6 +21,7 @@ export default function BiotopeHome() {
 
     const {data: session, status} = useSession({required: false})
     const [answers, setAnswers] = useState([])
+    const [answeredQids, setAnsweredQids] = useState([])
 
     if (status === "loading") {
         return null
@@ -30,6 +32,9 @@ export default function BiotopeHome() {
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name)
     const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
+    //const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
+
+    // console.log(questionnairesAnswered);
 
     if (session) {
         if (b?.public || !authorizationError) {
@@ -40,10 +45,11 @@ export default function BiotopeHome() {
     const questionnaireSubmit = async (event, questionnaireId) => {
         event.preventDefault();
 
-        const res = await fetcher(`/api/b/${name}/${questionnaireId}/answer`, answers);
+        const res = await fetcher(`/api/b/${name}/${questionnaireId}/answer`, { answers: answers});
 
-        const result = await res.json()
-        console.log('Result from Answers API', result)
+        if (res?.status == 'ok') {
+            // Answers submitted
+        }
     }
 
     const setAnswer = (questionId, answer) => {

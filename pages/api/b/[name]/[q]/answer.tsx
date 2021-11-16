@@ -1,7 +1,7 @@
 import {QuestionType, PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient()
 import {getSession} from "next-auth/react";
-import _crypto from "crypto";
+import {hashUid} from "../../../../../components/util/user";
 
 export default async function handler(req, res) {
 
@@ -26,10 +26,8 @@ export default async function handler(req, res) {
         // TODO Should also check whether the user is a constituent, eligible for voting? Or whether he/she has already voted?
     }
 
-    const hashUid = _crypto.createHash("sha256")
-        // @ts-ignore
-        .update(`${session.user.id}${process.env.NEXTAUTH_SECRET}`)
-        .digest("hex")
+    // @ts-ignore
+    const uid = hashUid(session.user.id)
 
     try {
 
@@ -66,13 +64,13 @@ export default async function handler(req, res) {
                 where: {
                     questionId_hashUid: {
                         questionId: questionId,
-                        hashUid: hashUid
+                        hashUid: uid
                     }
                 },
                 update: updateClause,
                 create: {
                     ...updateClause,
-                    hashUid: hashUid,
+                    hashUid: uid,
                     questionId: questionId,
                 }
             }))
