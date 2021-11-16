@@ -36,10 +36,21 @@ export default function BiotopeHome() {
         }
     }
 
-    const questionnaireSubmit = (evt) => {
-        evt.preventDefault();
-        console.log(answers)
-        alert(`Submitting...`)
+    const questionnaireSubmit = async (event, questionnaireId) => {
+        event.preventDefault();
+
+        const res = await fetch(`/api/b/${name}/${questionnaireId}/answer`, {
+            body: JSON.stringify({
+                answers: answers
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+
+        const result = await res.json()
+        console.log('Result from Answers API', result)
     }
 
     const setAnswer = (questionId, answer) => {
@@ -74,7 +85,7 @@ export default function BiotopeHome() {
                 <div>
                     {b.questionnaires ? b.questionnaires.map((questionnaire) => {
                         return <div key={questionnaire.id}>
-                            <form onSubmit={questionnaireSubmit}>
+                            <form onSubmit={e => questionnaireSubmit(e, questionnaire.id)}>
                                 <h5>{questionnaire.name}</h5>
                                 <p>{questionnaire.welcomeText}</p>
                                 {questionnaire.questions?.map((question) => {

@@ -3,7 +3,6 @@ import {getSession} from "next-auth/react";
 
 const prisma = new PrismaClient()
 
-// TODO AUTH!
 export default async function handler(req, res) {
 
     let b;
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
         let userId
 
         if (!session) {
-            // If no user, fetch the basic information, then check whether user has access
+            // If no user, fetch the basic information to show the public profile or private property, then check whether user has access
             invitationInclude = false
         } else {
             // @ts-ignore
@@ -57,7 +56,6 @@ export default async function handler(req, res) {
             if (!userId) {
                 // Private biotope and not logged in
                 return res.status(401).json(new Error("Who are you?"))
-
             } else {
                 if (userId !== b.creatorId && b.invitations.length == 0) {
                     // user has not been invited here

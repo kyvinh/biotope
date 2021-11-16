@@ -1,6 +1,6 @@
 import {PrismaAdapter} from '@next-auth/prisma-adapter'
 import {InvitationType, PrismaClient} from '@prisma/client'
-import {getProviders} from "next-auth/react"
+import {getProviders, getSession} from "next-auth/react"
 import {emailConfig} from '../../../api/auth/[...nextauth]'
 import nodemailer from "nodemailer"
 import _crypto from "crypto";
@@ -39,8 +39,7 @@ export default async function handler(req, res) {
     const email = req.body?.email
 
     if (!email) {
-        res.status(400).send({ message: 'Invalid POST request' })
-        return
+        return res.status(400).send({ message: 'Invalid POST request' })
     }
 
     // Check config
@@ -56,6 +55,14 @@ export default async function handler(req, res) {
         res.status(500).send({ message: 'Invalid server configuration'})
         return
     }
+
+    const session = await getSession({ req })
+    if (!session) {
+        return res.status(401).json(new Error("Who are you?"))
+
+    }
+    // @ts-ignore
+    const userId = session.user.id
 
     const callbackUrl = emailProvider.callbackUrl
 
@@ -96,20 +103,13 @@ export default async function handler(req, res) {
             }
         })
 
-        // TODO add user.id to session and use it in invitation.upsert
-        const u = await prisma.user.findUnique({
-            where: {
-                email: "kyvinh@gmail.com"
-            }
-        })
-
         await prisma.invitation.upsert({
             where: {
                 type_invitedEmail_creatorId_cercleId: {
                     type: InvitationType.EMAIL,
                     cercleId: b.id,
                     invitedEmail: email,
-                    creatorId: u.id
+                    creatorId: userId
                 }
             },
             update: {
@@ -119,7 +119,7 @@ export default async function handler(req, res) {
                 type: InvitationType.EMAIL,
                 cercleId: b.id,
                 invitedEmail: email,
-                creatorId: u.id,
+                creatorId: userId,
             }
         })
 

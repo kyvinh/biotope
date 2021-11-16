@@ -6,7 +6,7 @@ export default function BiotopeHome() {
 
     const inviteEmail = async (event) => {
         event.preventDefault()
-        const res = await fetch('/api/b/' + name + '/invite', {
+        const res = await fetch(`/api/b/${name}//invite`, {
             body: JSON.stringify({
                 email: event.target.email.value
             }),
