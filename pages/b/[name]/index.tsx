@@ -32,9 +32,9 @@ export default function BiotopeHome() {
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name)
     const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
-    //const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
+    const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
 
-    // console.log(questionnairesAnswered);
+    console.log(questionnairesAnswered);
 
     if (session) {
         if (b?.public || !authorizationError) {

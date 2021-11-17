@@ -21,16 +21,18 @@ export default async function handler(req, res) {
 
     try {
         // select from answers left join question left join questionnaire where answers.hashId = uid group by questionnaire.id
-        const answers = await prisma.answer.groupBy({
-            by: ['hashUid'],
-            where: {
-                hashUid: uid
-            },
-            _count: { }
-        })
-        console.log(answers);
+
+        const result =
+            await prisma.$queryRaw`select questionnaire.id as questionnaireId, count(question.id) as answerCount from answer
+                                    left join question on answer.questionId = question.id
+                                    left join questionnaire on questionnaire.id = question.questionnaireId
+                                    where answer.hashUid = ${uid}
+                                    group by questionnaire.id`
+        return res.status(200).json(result);
     }
     catch (error) {
+        console.log('Error while retrieving questionnaires answered:', error)
         return res.status(500).json({});
     }
+
 }
