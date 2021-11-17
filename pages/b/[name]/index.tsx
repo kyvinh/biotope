@@ -21,7 +21,6 @@ export default function BiotopeHome() {
 
     const {data: session, status} = useSession({required: false})
     const [answers, setAnswers] = useState([])
-    const [answeredQids, setAnsweredQids] = useState([])
 
     if (status === "loading") {
         return null
@@ -32,9 +31,9 @@ export default function BiotopeHome() {
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name)
     const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
-    const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
 
-    console.log(questionnairesAnswered);
+    // typeof questionnairesAnswered = [ { questionnaireId, answerCount} ]
+    const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
 
     if (session) {
         if (b?.public || !authorizationError) {
@@ -85,18 +84,28 @@ export default function BiotopeHome() {
                     : <div/>
                 }
                 <div>
-                    {b.questionnaires ? b.questionnaires.map((questionnaire) => {
-                        return <div key={questionnaire.id}>
-                            <form onSubmit={e => questionnaireSubmit(e, questionnaire.id)}>
-                                <h5>{questionnaire.name}</h5>
-                                <p>{questionnaire.welcomeText}</p>
-                                {questionnaire.questions?.map((question) => {
-                                    question.questionnaire = questionnaire  // Fill the relation for rendering in Question comp
-                                    return <Question key={question.id} question={question} setState={setAnswer}/>
-                                })}
-                                <input type="submit" value="Submit" />
-                            </form>
-                        </div>
+                    {b.questionnaires && questionnairesAnswered ? b.questionnaires.map((questionnaire) => {
+                        if (questionnairesAnswered.find(element => element.questionnaireId == questionnaire.id)) {
+                            // Questionnaire already answered
+                            return <div key={questionnaire.id}>
+                                        <h5>{questionnaire.name}</h5>
+                                        <p>{questionnaire.welcomeText}</p>
+                                        {questionnaire.questions?.map((question) => {
+                                            return <div key={question.id}>Question answered</div>
+                                        })}
+                                    </div>
+                        } else {
+                            return <div key={questionnaire.id}>
+                                <form onSubmit={e => questionnaireSubmit(e, questionnaire.id)}>
+                                    <h5>{questionnaire.name}</h5>
+                                    <p>{questionnaire.welcomeText}</p>
+                                    {questionnaire.questions?.map((question) => {
+                                        return <Question key={question.id} question={question} setState={setAnswer}/>
+                                    })}
+                                    <input type="submit" value="Submit" />
+                                </form>
+                            </div>
+                        }
                     }) : null}
                 </div>
             </div>
