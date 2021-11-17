@@ -57,7 +57,12 @@ export default function BiotopeHome() {
     return b ?
         b.private && !authorized ?
             <>
-                This is a private biotope. <Link href="/api/auth/signin">Sign-in?</Link>
+                {session ? <div>You are signed in but this is a private biotope.</div>
+                :
+                    <div>Please
+                        <Link href="/api/auth/signin">SIGN IN</Link>
+                        to access this private biotope.
+                    </div>}
                 <p>Or for more information: {b.contact}.</p>
             </>
             :
