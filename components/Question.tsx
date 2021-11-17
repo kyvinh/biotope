@@ -1,8 +1,8 @@
-import { QuestionType } from '@prisma/client'
+import {QuestionType} from '@prisma/client'
 import Likert from 'react-likert-scale';
 import {useState} from "react";
 
-export const Question = ({question, setState}) => {
+export const Question = ({question, setState, answered}) => {
 
     const updateAnswer = (value) => {
         setLonganswer(value)
@@ -15,11 +15,11 @@ export const Question = ({question, setState}) => {
     const likertOptions = {
         //question: `${question.name} (${question.type})`,
         responses: [
-            { value: 1, text: "Insalubre" },
-            { value: 2, text: "Sale" },
-            { value: 3, text: "Normale", /* checked: likertanswer == 3 */},
-            { value: 4, text: "Propre" },
-            { value: 5, text: "Sans reproche" }
+            {value: 1, text: "Insalubre"},
+            {value: 2, text: "Sale"},
+            {value: 3, text: "Normale", /* checked: likertanswer == 3 */},
+            {value: 4, text: "Propre"},
+            {value: 5, text: "Sans reproche"}
         ],
         id: question.id,
         onChange: val => {
@@ -31,19 +31,19 @@ export const Question = ({question, setState}) => {
     return <>
         <div>{question.name}</div>
         <div>{question.description}</div>
-        {
-            question.type === QuestionType.LIKERT ?
+        {!answered ?
+            (question.type === QuestionType.LIKERT ?
                 <>
                     <Likert {...likertOptions} layout='stacked'/>
                 </>
-            : null
-        }
-        {
+                :
             question.type === QuestionType.LONGTEXT ?
                 <>
-                    <textarea value={longanswer} onChange={e => updateAnswer(e.target.value)} />
+                    <textarea value={longanswer} onChange={e => updateAnswer(e.target.value)}/>
                 </>
                 : null
+            )
+            : <p>Question answered</p>
         }
     </>
 

@@ -6,6 +6,7 @@ import {getSession, useSession} from "next-auth/react"
 import {useState} from "react";
 import {fetcher} from "../../../components/util/fetcher";
 import useSWR from "swr";
+import {Questionnaire} from "../../../components/Questionnaire";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -19,12 +20,7 @@ export const getServerSideProps = async function ({req}) {
 
 export default function BiotopeHome() {
 
-    const {data: session, status} = useSession({required: false})
-    const [answers, setAnswers] = useState([])
-
-    if (status === "loading") {
-        return null
-    }
+    const {data: session} = useSession({required: false})
 
     let authorized = false;
 
@@ -32,7 +28,7 @@ export default function BiotopeHome() {
     const {biotope: b} = useBiotope(name)
     const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
 
-    // typeof questionnairesAnswered = [ { questionnaireId, answerCount} ]
+    // Type of questionnairesAnswered = [ { questionnaireId, answerCount} ]
     const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
 
     if (session) {
@@ -41,23 +37,21 @@ export default function BiotopeHome() {
         }
     }
 
-    const questionnaireSubmit = async (event, questionnaireId) => {
+    const questionnaireSubmit = async (event, questionnaireId, answers) => {
         event.preventDefault();
 
-        const res = await fetcher(`/api/b/${name}/${questionnaireId}/answer`, { answers: answers});
+        if (session) {
+            const res = await fetcher(`/api/b/${name}/${questionnaireId}/answer`, { answers: answers});
 
-        if (res?.status == 'ok') {
-            // Answers submitted
+            if (res?.status == 'ok') {
+                // Answers submitted
+            }
+        } else {
+            // how to handle anonymous answers? only available to certain types of questionnaires?
+            // by default, there shall not be anonymous votes
+            // - private biotopes cannot be accessed by anonymous users
+            throw new Error("Currently no anonymous vote allowed!")
         }
-    }
-
-    const setAnswer = (questionId, answer) => {
-        let newAnswers = answers.filter(element => element.questionId != questionId)
-        newAnswers.push({
-            questionId: questionId,
-            answer: answer
-        });
-        setAnswers(newAnswers)
     }
 
     return b ?
@@ -84,28 +78,11 @@ export default function BiotopeHome() {
                     : <div/>
                 }
                 <div>
-                    {b.questionnaires && questionnairesAnswered ? b.questionnaires.map((questionnaire) => {
-                        if (questionnairesAnswered.find(element => element.questionnaireId == questionnaire.id)) {
-                            // Questionnaire already answered
-                            return <div key={questionnaire.id}>
-                                        <h5>{questionnaire.name}</h5>
-                                        <p>{questionnaire.welcomeText}</p>
-                                        {questionnaire.questions?.map((question) => {
-                                            return <div key={question.id}>Question answered</div>
-                                        })}
-                                    </div>
-                        } else {
-                            return <div key={questionnaire.id}>
-                                <form onSubmit={e => questionnaireSubmit(e, questionnaire.id)}>
-                                    <h5>{questionnaire.name}</h5>
-                                    <p>{questionnaire.welcomeText}</p>
-                                    {questionnaire.questions?.map((question) => {
-                                        return <Question key={question.id} question={question} setState={setAnswer}/>
-                                    })}
-                                    <input type="submit" value="Submit" />
-                                </form>
-                            </div>
-                        }
+                    {b.questionnaires ? b.questionnaires.map((questionnaire) => {
+                        const questionnaireAnswered = questionnairesAnswered?.find(element => element.questionnaireId == questionnaire.id);
+                        const disabled = !b.private && !session;
+                        return <Questionnaire key={questionnaire.id} questionnaire={questionnaire} disabled={disabled}
+                                              questionnaireSubmit={questionnaireSubmit} answered={questionnaireAnswered} />
                     }) : null}
                 </div>
             </div>
