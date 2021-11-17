@@ -29,7 +29,7 @@ export default function BiotopeHome() {
     const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
 
     // Type of questionnairesAnswered = [ { questionnaireId, answerCount} ]
-    const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);    // If error occurs, means user is not signed in
+    const {data: questionnairesAnswered} = useSWR(session ? `/api/user/b-answers?biotopeName=${name}` : null, fetcher);
 
     if (session) {
         if (b?.public || !authorizationError) {
@@ -86,6 +86,7 @@ export default function BiotopeHome() {
                     {b.questionnaires ? b.questionnaires.map((questionnaire) => {
                         const questionnaireAnswered = questionnairesAnswered?.find(element => element.questionnaireId == questionnaire.id);
                         const disabled = !b.private && !session;
+                        questionnaire.biotope = { name: b.name, id: b.id }; // Useless to reference the whole b object
                         return <Questionnaire key={questionnaire.id} questionnaire={questionnaire} disabled={disabled}
                                               questionnaireSubmit={questionnaireSubmit} answered={questionnaireAnswered} />
                     }) : null}
