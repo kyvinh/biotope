@@ -1,10 +1,9 @@
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import {InvitationType, PrismaClient} from '@prisma/client'
+import {InvitationType} from '@prisma/client'
 import _crypto from "crypto";
-
-const prisma = new PrismaClient()
+import prisma from '../../../components/util/prismaClient'
 
 export const emailConfig = {
   server: process.env.EMAIL_SERVER,

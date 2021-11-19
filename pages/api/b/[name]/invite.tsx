@@ -1,11 +1,11 @@
 import {PrismaAdapter} from '@next-auth/prisma-adapter'
-import {InvitationType, PrismaClient} from '@prisma/client'
+import {InvitationType} from '@prisma/client'
 import {getProviders, getSession} from "next-auth/react"
 import {emailConfig} from '../../../api/auth/[...nextauth]'
 import nodemailer from "nodemailer"
 import _crypto from "crypto";
+import prisma from '../../../../components/util/prismaClient'
 
-const prisma = new PrismaClient()
 const adapter = PrismaAdapter(prisma)
 
 // From https://next-auth.js.org/providers/email#configuration

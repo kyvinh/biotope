@@ -43,25 +43,35 @@ export default async function handler(req, res) {
             }
         })
 
-        const resultsForQuestions = questionnaire.questions.reduce((results, question) => {
-                const result = {
-                    average: undefined,
-                    type: question.type
-                };
-                switch (result.type) {
-                    case QuestionType.LIKERT:
-                        result.average = 3
-                        break;
-                    case QuestionType.TEXT:
-                    case QuestionType.LONGTEXT:
-                        // If these are text comments, ... what?
-                        break;
-                }
-                return {...results, [question.id]: result}
-            }, {})
 
-        console.log("API Results", resultsForQuestions)
-        return res.status(200).json({ results: resultsForQuestions})
+        const answerResults = await prisma.answer.groupBy({
+            by: ['questionId', "answerText", "answerNum"],
+            where: {
+                questionId: {
+                    in: questionnaire.questions.reduce((ids, question) => [...ids, question.id], [])
+                }
+            },
+            _count: true
+        })
+        // console.log("API Results", answerResults)
+
+        /*
+        API Results [
+          {
+            questionId: 'ckw25pixk0036c0uznmtotupl',
+            answerText: 'Sale',
+            answerNum: null,
+            _count: 1
+          },
+          {
+            questionId: 'ckw25piy00044c0uzlzqspuqp',
+            answerText: "c'est sale",
+            answerNum: null,
+            _count: 1
+          }
+        ]
+         */
+        return res.status(200).json({ results: answerResults})
 
     } catch (error) {
         console.error("QUESTIONNAIRE_RESULTS_ERROR", {

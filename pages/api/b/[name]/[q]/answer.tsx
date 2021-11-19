@@ -59,7 +59,6 @@ export default async function handler(req, res) {
                     // answer is the possibleAnswer.id
                     // keep the value as text because it is more representative of the Likert answer than a number
                     updateClause.answerText = question.possibleAnswers.find(element => element.id == answer).possibleText
-                    console.log(updateClause);
                     break;
                 case QuestionType.LONGTEXT:
                 case QuestionType.TEXT:
