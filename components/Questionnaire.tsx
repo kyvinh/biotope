@@ -1,18 +1,18 @@
 import {Question} from "./Question";
 import {QuestionResults} from "./QuestionResults";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import useSWR from "swr";
 import {fetcher} from "./util/fetcher";
+import {Arguments} from "./Arguments";
 
-export const Questionnaire = ({questionnaire, answered= false, questionnaireSubmit, disabled = false}) => {
+export const Questionnaire = ({questionnaire, answered= false, disabled = false}) => {
 
     const [answers, setAnswers] = useState([])
-
     const {data: session} = useSession({required: false})
 
     // Type of questionnairesAnswered = { questionId: { average: Int }
-    const {data: resultsObject} = useSWR(session ? `/api/b/${questionnaire.biotope.name}/${questionnaire.id}/results` : null, fetcher);
+    const {data: resultsObject} = useSWR(session ? `/api/q/${questionnaire.id}/results` : null, fetcher);
     /* results:
         [{…}, {…}, {…}]
         0: {questionId: 'ckw25pixk0036c0uznmtotupl', answerText: 'Sale', answerNum: null, _count: 2}
@@ -40,18 +40,42 @@ export const Questionnaire = ({questionnaire, answered= false, questionnaireSubm
         setAnswers(newAnswers)
     }
 
+    const questionnaireSubmit = async (event, questionnaireId, answers) => {
+        event.preventDefault();
+        event.target.disabled = true;
+
+        if (session) {
+            const res = await fetcher(`/api/q/${questionnaireId}/answer`, { answers: answers});
+
+            if (res?.status == 'ok') {
+                // Answers have been submitted
+            }
+        } else {
+            // how to handle anonymous answers? only available to certain types of questionnaires?
+            // by default, there shall not be anonymous votes
+            // - private biotopes cannot be accessed by anonymous users
+            throw new Error("Currently no anonymous vote allowed!")
+        }
+    }
+
     return <div key={questionnaire.id}>
         <h5>{questionnaire.name}</h5>
         <p>{questionnaire.welcomeText}</p>
-        <form className={answered ? 'disabled' : ''} onSubmit={e => questionnaireSubmit(e, questionnaire.id, answers)}>
-            {questionnaire.questions?.map((question) => {
-                return <div key={'questionBlock-'+question.id}>
-                    <Question key={question.id} question={question} setState={setAnswer} answered={answered} />
-                    { answered && questionResults? <QuestionResults key={'results-'+question.id} question={question} results={questionResults[question.id]}/> : null }
-                </div>
-            })}
-            { answered || disabled ? <></>: <input type="submit" value="Submit" />}
-        </form>
+        { questionnaire.questions?.map(question =>
+            <div key={question.id}>
+                <Question question={question} setState={setAnswer} answered={answered} />
+                { answered && questionResults?
+                    <>
+                        <QuestionResults results={questionResults[question.id]}/>
+                        <Arguments question={question} questionArguments={[]} />
+                    </>
+                    : null
+                }
+            </div>
+        )}
+        { answered || disabled ? <></>:
+            <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
+        }
     </div>
 
 };

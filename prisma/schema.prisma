@@ -127,6 +127,7 @@ model Question {
   creatorId    String
   answers      Answer[]
   possibleAnswers   PossibleAnswer[]
+  arguments    Argument[]
 
   @@unique([questionnaireId, name])
 }
@@ -159,4 +160,14 @@ model Answer {
   createdOn    DateTime       @default(now())
 
   @@unique([questionId, hashUid])
+}
+
+model Argument {
+  id           String         @id @default(cuid())
+  question     Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId   String
+  text         String
+  answerNum    Int?
+  answerText   String?
+  createdOn    DateTime       @default(now())
 }

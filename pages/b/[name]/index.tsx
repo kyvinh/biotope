@@ -1,9 +1,7 @@
-import {Question} from '../../../components/Question'
 import {useBiotope} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
-import {useState} from "react";
 import {fetcher} from "../../../components/util/fetcher";
 import useSWR from "swr";
 import {Questionnaire} from "../../../components/Questionnaire";
@@ -34,23 +32,6 @@ export default function BiotopeHome() {
     if (session) {
         if (b?.public || !authorizationError) {
             authorized = true
-        }
-    }
-
-    const questionnaireSubmit = async (event, questionnaireId, answers) => {
-        event.preventDefault();
-
-        if (session) {
-            const res = await fetcher(`/api/b/${name}/${questionnaireId}/answer`, { answers: answers});
-
-            if (res?.status == 'ok') {
-                // Answers submitted
-            }
-        } else {
-            // how to handle anonymous answers? only available to certain types of questionnaires?
-            // by default, there shall not be anonymous votes
-            // - private biotopes cannot be accessed by anonymous users
-            throw new Error("Currently no anonymous vote allowed!")
         }
     }
 
@@ -88,7 +69,7 @@ export default function BiotopeHome() {
                         const disabled = !b.private && !session;
                         questionnaire.biotope = { name: b.name, id: b.id }; // Useless to reference the whole b object
                         return <Questionnaire key={questionnaire.id} questionnaire={questionnaire} disabled={disabled}
-                                              questionnaireSubmit={questionnaireSubmit} answered={questionnaireAnswered} />
+                                              answered={questionnaireAnswered} />
                     }) : null}
                 </div>
             </div>

@@ -1,7 +1,7 @@
-import {QuestionType, PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+import {QuestionType} from "@prisma/client";
+import prisma from '../../../../components/util/prismaClient'
 import {getSession} from "next-auth/react";
-import {hashUid} from "../../../../../components/util/user";
+import {hashUid} from "../../../../components/util/user";
 
 export default async function handler(req, res) {
 
@@ -12,7 +12,6 @@ export default async function handler(req, res) {
         return
     }
 
-    const biotopeName = req.query.name;
     const questionnaireId = req.query.q;
     const answers = req.body?.answers;
 
@@ -44,6 +43,10 @@ export default async function handler(req, res) {
                 }
             }
         })
+
+        if (!questionnaire) {
+            throw new Error('Invalid /q request!')
+        }
 
         const upsertAnswers = []
 
@@ -86,7 +89,6 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error("QUESTIONNAIRE_ANSWER_ERROR", {
-            cercle: biotopeName,
             identifier: questionnaireId,
             error
         });

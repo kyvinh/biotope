@@ -40,7 +40,7 @@ export const Question = ({question, setState, answered}) => {
                 </>
                 : null
             )
-            : <p>Question answered</p>
+            : <p>Question answered. Would you like to change your answer?</p>
         }
     </>
 
