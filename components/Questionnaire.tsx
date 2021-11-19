@@ -11,8 +11,8 @@ export const Questionnaire = ({questionnaire, answered= false, questionnaireSubm
     const {data: session} = useSession({required: false})
 
     // Type of questionnairesAnswered = { questionId: { average: Int }
-    const {data: {results}} = useSWR(session ? `/api/b/${questionnaire.biotope.name}/${questionnaire.id}/results` : null, fetcher);
-    console.log(results);
+    const {data: resultsObject} = useSWR(session ? `/api/b/${questionnaire.biotope.name}/${questionnaire.id}/results` : null, fetcher);
+    console.log(resultsObject?.results);
 
     const setAnswer = (questionId, answer) => {
         let newAnswers = answers.filter(element => element.questionId != questionId)

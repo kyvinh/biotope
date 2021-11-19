@@ -43,8 +43,7 @@ export default async function handler(req, res) {
             }
         })
 
-        const resultsForQuestions = questionnaire.questions
-            .reduce((results, question) => {
+        const resultsForQuestions = questionnaire.questions.reduce((results, question) => {
                 const result = {
                     average: undefined,
                     type: question.type
@@ -61,6 +60,7 @@ export default async function handler(req, res) {
                 return {...results, [question.id]: result}
             }, {})
 
+        console.log("API Results", resultsForQuestions)
         return res.status(200).json({ results: resultsForQuestions})
 
     } catch (error) {
