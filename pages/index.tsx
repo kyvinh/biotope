@@ -2,13 +2,17 @@ import Head from 'next/head'
 import Link from 'next/link'
 import {HumeurList} from '../components/HumeurList';
 import {PropositionList} from '../components/PropositionList';
-import {useSession} from "next-auth/react"
+import {useSession, signOut} from "next-auth/react"
 import React from 'react';
 
 export default function Home() {
 
+  const {data: session} = useSession({required: false}) // Should add serverSideProps so session is loaded on server?
+
   return (
     <div className="container">
+      { session ? <button onClick={() => signOut()}>Sign out</button> : <Link href="/api/auth/signin">Sign-in?</Link>}
+
       <Head>
         <title>Biotope</title>
         <link rel="icon" href="/favicon.ico" />
