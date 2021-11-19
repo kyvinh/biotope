@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prisma-migrate-dev": "npx prisma migrate dev",
+    "prisma-db-seed": "npx prisma db seed",
+    "prisma-generate": "npx prisma generate"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

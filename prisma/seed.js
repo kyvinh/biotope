@@ -1,9 +1,18 @@
-const {PrismaClient} = require('@prisma/client')
+const {PrismaClient, PossibleAnswerType} = require('@prisma/client')
 const prisma = new PrismaClient()
 
 // https://www.prisma.io/docs/guides/database/seed-database#integrated-seeding-with-prisma-migrate
 
 async function main() {
+
+    const likertOptions = [
+        {type: PossibleAnswerType.NUMBER, possibleNumber: 1, order: 1, possibleText: "Insalubre"},
+        {type: PossibleAnswerType.NUMBER, possibleNumber: 2, order: 2, possibleText: "Sale"},
+        {type: PossibleAnswerType.NUMBER, possibleNumber: 3, order: 3, possibleText: "Normale"},
+        {type: PossibleAnswerType.NUMBER, possibleNumber: 4, order: 4, possibleText: "Propre"},
+        {type: PossibleAnswerType.NUMBER, possibleNumber: 5, order: 5, possibleText: "Sans reproche"}
+    ];
+
     const admin = await prisma.user.upsert({
         where: { email: 'kyvinh@gmail.com' },
         update: {},
@@ -53,6 +62,11 @@ async function main() {
             questionnaireId: questionnaire.id
         }
     })
+    const q1optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: q1.id}]), []);
+    const q1options = await prisma.possibleAnswer.createMany({
+        data: q1optionsData,
+        skipDuplicates: true,   // Acts like an upsert
+    })
     const q2name = 'Comment est-ce que la commune et ses habitants pourraient amélioreriez-vous la propreté de la rue?';
     const q2 = await prisma.question.upsert({
         where: { questionnaireId_name: { name: q2name , questionnaireId: questionnaire.id}},
@@ -97,6 +111,11 @@ async function main() {
             creatorId: admin.id,
             questionnaireId: terlindenQuestionnaire.id
         }
+    })
+    const terlindenQ1optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ1.id}]), []);
+    const terlindenQ1options = await prisma.possibleAnswer.createMany({
+        data: terlindenQ1optionsData,
+        skipDuplicates: true,   // Acts like an upsert
     })
     const cercleUnkown = await prisma.cercle.upsert({
         where: { name: 'qqpart-1030' },

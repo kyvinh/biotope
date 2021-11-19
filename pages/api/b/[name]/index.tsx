@@ -77,10 +77,15 @@ export default async function handler(req, res) {
                         creator: true,
                         questions: {
                             include: {
-                                creator: true
+                                creator: true,
+                                possibleAnswers: {
+                                    orderBy: {
+                                        order: 'asc'    // TODO Does this work?
+                                    }
+                                }
                             },
                             orderBy: {
-                                createdOn: 'asc'
+                                createdOn: 'asc',
                             }
                         }
                     }

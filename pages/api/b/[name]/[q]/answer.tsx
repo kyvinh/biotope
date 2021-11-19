@@ -37,7 +37,11 @@ export default async function handler(req, res) {
                 id: questionnaireId
             },
             include: {
-                questions: true
+                questions: {
+                    include: {
+                        possibleAnswers: true
+                    }
+                }
             }
         })
 
@@ -45,14 +49,17 @@ export default async function handler(req, res) {
 
         answers.map(({questionId, answer}) => {
             const question = questionnaire.questions.find(element => element.id == questionId)
-            // Should modify createdOn?
+            // TODO Should modify createdOn?
             const updateClause = {
                 answerNum: null,
                 answerText: null
             };
             switch (question.type) {
                 case QuestionType.LIKERT:
-                    updateClause.answerNum = answer
+                    // answer is the possibleAnswer.id
+                    // keep the value as text because it is more representative of the Likert answer than a number
+                    updateClause.answerText = question.possibleAnswers.find(element => element.id == answer).possibleText
+                    console.log(updateClause);
                     break;
                 case QuestionType.LONGTEXT:
                 case QuestionType.TEXT:

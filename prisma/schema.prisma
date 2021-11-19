@@ -126,8 +126,27 @@ model Question {
   creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
   answers      Answer[]
+  possibleAnswers   PossibleAnswer[]
 
   @@unique([questionnaireId, name])
+}
+
+enum PossibleAnswerType {
+  TEXT
+  NUMBER
+}
+
+model PossibleAnswer {
+  id           String         @id @default(cuid())
+  type         PossibleAnswerType   @default(NUMBER)
+  question     Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId   String
+  possibleText String?
+  possibleNumber Int?
+  order        Int            @default(0)
+
+  @@unique([questionId, possibleText, possibleNumber])
+  @@unique([questionId, order])
 }
 
 model Answer {
