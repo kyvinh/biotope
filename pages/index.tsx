@@ -3,7 +3,6 @@ import Link from 'next/link'
 import {HumeurList} from '../components/HumeurList';
 import {PropositionList} from '../components/PropositionList';
 import {useSession, signOut} from "next-auth/react"
-import React from 'react';
 
 export default function Home() {
 
