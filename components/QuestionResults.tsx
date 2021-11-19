@@ -4,7 +4,7 @@ export const QuestionResults = ({question, results}) => {
         {
             results.map((answerResult, i) => {
                 return <div key={i}>
-                    <p>{answerResult.answerText}: {answerResult._count}</p>
+                    <p>{answerResult.answerText? answerResult.answerText: answerResult.answerNum}: {answerResult._count} vote(s)</p>
                 </div>
             })
         }
