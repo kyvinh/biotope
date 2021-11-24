@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="container">
-      { session ? <button onClick={() => signOut()}>Sign out</button> : <Link href="/api/auth/signin">Sign-in?</Link>}
+      { session ? <button onClick={() => signOut()}>Sign out</button> : <Link href="/api/auth/signin" locale={false}>Sign-in?</Link>}
 
       <Head>
         <title>Biotope</title>
