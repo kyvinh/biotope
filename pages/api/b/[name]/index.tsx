@@ -80,7 +80,8 @@ export default async function handler(req, res) {
                                     orderBy: {
                                         order: 'asc'    // TODO Does this work?
                                     }
-                                }
+                                },
+                                arguments: true,
                             },
                             orderBy: {
                                 createdOn: 'asc',

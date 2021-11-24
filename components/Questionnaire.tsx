@@ -77,7 +77,7 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
                 { answered && questionResults?
                     <>
                         <QuestionResults results={questionResults[question.id]}/>
-                        <Arguments question={question} questionArguments={[]} />
+                        <Arguments question={question} questionArguments={question.arguments} />
                     </>
                     : null
                 }
