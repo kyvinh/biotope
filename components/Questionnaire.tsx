@@ -6,12 +6,20 @@ import useSWR from "swr";
 import {fetcher} from "./util/fetcher";
 import {Arguments} from "./Arguments";
 
-export const Questionnaire = ({questionnaire, answered= false, disabled = false}) => {
+export const Questionnaire = ({questionnaire, disabled = false}) => {
 
     const [answers, setAnswers] = useState([])
     const {data: session} = useSession({required: false})
 
-    // Type of questionnairesAnswered = { questionId: { average: Int }
+    // Whether the user has answered questions in this questionnaire or not
+    // Type of questionnairesAnswered = [ { questionId, answerCount} ]
+    const {data: questionsAnswered} = useSWR(session ? `/api/user/questionnaire/${questionnaire.id}` : null, fetcher);
+
+    const questionsAnsweredCount = questionsAnswered?.reduce((acc, question) => acc + question.hasAnswer, 0)
+    const questionnaireAnswered = questionnaire.questions.length === questionsAnsweredCount;
+
+    // Results of the votes (include comments?) on this questionnaire
+    // Type of resultsObject = { questionId: { average: Int }
     const {data: resultsObject} = useSWR(session ? `/api/q/${questionnaire.id}/results` : null, fetcher);
     /* results:
         [{…}, {…}, {…}]
@@ -61,8 +69,10 @@ export const Questionnaire = ({questionnaire, answered= false, disabled = false}
     return <div key={questionnaire.id}>
         <h5>{questionnaire.name}</h5>
         <p>{questionnaire.welcomeText}</p>
-        { questionnaire.questions?.map(question =>
-            <div key={question.id}>
+        { questionnaire.questions?.map(question => {
+            const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
+            const answered = questionAnswered?.hasAnswer > 0;
+            return <div key={question.id}>
                 <Question question={question} setState={setAnswer} answered={answered} />
                 { answered && questionResults?
                     <>
@@ -72,8 +82,10 @@ export const Questionnaire = ({questionnaire, answered= false, disabled = false}
                     : null
                 }
             </div>
+
+            }
         )}
-        { answered || disabled ? <></>:
+        { questionnaireAnswered || disabled ? <></>:
             <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
         }
     </div>

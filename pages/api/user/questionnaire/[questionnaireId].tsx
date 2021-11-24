@@ -1,16 +1,16 @@
 import {getSession} from "next-auth/react";
-import {hashUid} from "../../../components/util/user";
-import prisma from '../../../components/util/prismaClient'
+import {hashUid} from "../../../../components/util/user";
+import prisma from '../../../../components/util/prismaClient'
 
 export default async function handler(req, res) {
 
     const session = await getSession({req})
-    const biotopeName = req.query.biotopeName;
+    const questionnaireId = req.query.questionnaireId;
 
     if (!session) {
         return res.status(401).json(new Error("Who are you?"))
     }
-    if (!biotopeName) {
+    if (!questionnaireId) {
         return res.status(500).json(new Error("Invalid request"))
     }
 
@@ -21,11 +21,13 @@ export default async function handler(req, res) {
         // select from answers left join question left join questionnaire where answers.hashId = uid group by questionnaire.id
 
         const result =
-            await prisma.$queryRaw`select questionnaire.id as questionnaireId, count(question.id) as answerCount from answer
+            await prisma.$queryRaw`select question.id as questionId, questionnaire.id as questionnaireId, 
+                                    count(answer.id) as hasAnswer from answer
                                     left join question on answer.questionId = question.id
                                     left join questionnaire on questionnaire.id = question.questionnaireId
                                     where answer.hashUid = ${uid}
-                                    group by questionnaire.id`
+                                    and questionnaire.id = ${questionnaireId}
+                                    group by question.id`
         return res.status(200).json(result);
     }
     catch (error) {
