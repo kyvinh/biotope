@@ -58,9 +58,6 @@ export default NextAuth({
 
     async signIn({ user, email}) {
 
-      // console.log('User', user)
-      // console.log('EmailField', email)
-
       // We may have an invite pending for circle(s) -> Link the cercle invitation to the original user and the target email
       // Note we cannot know from which circle invite this verification request is executed! So link all invitations pertaining to email user
       // TODO This executes on every sign-in! Where to put this instead? CustomProvider?

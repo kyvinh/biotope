@@ -1,0 +1,29 @@
+// https://getbootstrap.com/docs/5.1/customize/sass/
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../node_modules/bootstrap/scss/functions";
+// 2. Include any default variable overrides here
+
+// scss-docs-start theme-color-variables
+$primary:       #0D6EFDFF;
+$secondary:     #6C757DFF;  // tint-color($primary, 10%);
+$success:       #198754FF;
+$info:          #0DCAF0FF;
+$warning:       #FFC107FF;
+$danger:        #DC3545FF;
+$light:         #F8F9FAFF;
+$dark:          #212529FF;
+// scss-docs-end theme-color-variables
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+
+// 4. Include any optional Bootstrap CSS as needed
+@import "../node_modules/bootstrap/scss/utilities";
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/type";
+@import "../node_modules/bootstrap/scss/images";
+@import "../node_modules/bootstrap/scss/containers";
+@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/helpers";
