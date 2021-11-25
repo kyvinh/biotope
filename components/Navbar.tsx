@@ -12,21 +12,31 @@ export default function Navbar() {
                     <img src="/waterflow-69.png" className="img-fluid" alt="Biotope" />
                 </a>
 
-                <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" className="nav-link px-2 link-secondary">Home</a></li>
-                    <li><a href="#" className="nav-link px-2 link-dark">Features</a></li>
-                    <li><a href="#" className="nav-link px-2 link-dark">Pricing</a></li>
-                    <li><a href="#" className="nav-link px-2 link-dark">FAQs</a></li>
-                    <li><a href="#" className="nav-link px-2 link-dark">About</a></li>
-                </ul>
+                {
+                 /*   <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="#" className="nav-link px-2 link-secondary">Home</a></li>
+                        <li><a href="#" className="nav-link px-2 link-dark">Features</a></li>
+                        <li><a href="#" className="nav-link px-2 link-dark">Pricing</a></li>
+                        <li><a href="#" className="nav-link px-2 link-dark">FAQs</a></li>
+                        <li><a href="#" className="nav-link px-2 link-dark">About</a></li>
+                    </ul>*/
+                }
 
-                <div className="col-md-2 text-end">
-                    {session ?
-                        <button type="button" onClick={() => signOut()} className="btn btn-outline-primary">Sign out</button> :
+                { session ?
+                    <div className="d-flex justify-content-between align-items-center col-md-4 text-end">
+                                <div>{session.user.email}</div>
+                                <button type="button" onClick={() => signOut()} className="btn btn-outline-primary">Sign out</button>
+                    </div>
+                : null }
+
+                { !session ?
+                    <div className="col-md-4 text-end">
                         <Link href="/api/auth/signin" locale={false}>
                             <a className="btn btn-outline-primary">Sign in</a>
-                        </Link>}
-                </div>
+                        </Link>
+                    </div>
+                : null }
+
             </header>
         </div>
     )

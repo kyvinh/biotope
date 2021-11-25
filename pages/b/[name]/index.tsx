@@ -2,8 +2,6 @@ import {useBiotope} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
-import {fetcher} from "../../../components/util/fetcher";
-import useSWR from "swr";
 import {Questionnaire} from "../../../components/Questionnaire";
 
 export const getServerSideProps = async function ({req}) {
@@ -47,13 +45,6 @@ export default function BiotopeHome() {
             <div className="container">
                 <div><h4>{b.name}</h4><span>{b.creator.name}</span> on {b.createdOn}</div>
                 <div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>
-
-                <div className="card">
-                    {   session?
-                            <p>Vous êtes enregistré sous l'email {session.user.email}.</p>
-                            : null
-                    }
-                </div>
 
                 <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>
                 {b.contact ?
