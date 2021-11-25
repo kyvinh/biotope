@@ -66,28 +66,30 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
         }
     }
 
-    return <div key={questionnaire.id}>
-        <h5>{questionnaire.name}</h5>
-        <p>{questionnaire.welcomeText}</p>
-        { questionnaire.questions?.map(question => {
-            const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
-            const answered = questionAnswered?.hasAnswer > 0;
-            return <div key={question.id}>
-                <Question question={question} setState={setAnswer} answered={answered} />
-                { answered && questionResults?
-                    <>
-                        <QuestionResults results={questionResults[question.id]}/>
-                        <Arguments question={question} questionArguments={question.arguments} />
-                    </>
-                    : null
-                }
-            </div>
+    return <div key={questionnaire.id} className="card my-3">
+        <h5 className="card-header">{questionnaire.name}</h5>
+        <div className="card-body">
+            <p>{questionnaire.welcomeText}</p>
+            { questionnaire.questions?.map(question => {
+                    const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
+                    const answered = questionAnswered?.hasAnswer > 0;
+                    return <div key={question.id}>
+                        <Question question={question} setState={setAnswer} answered={answered} />
+                        { answered && questionResults?
+                            <>
+                                <QuestionResults results={questionResults[question.id]}/>
+                                <Arguments question={question} questionArguments={question.arguments} />
+                            </>
+                            : null
+                        }
+                    </div>
 
+                }
+            )}
+            { questionnaireAnswered || disabled ? <></>:
+                <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
             }
-        )}
-        { questionnaireAnswered || disabled ? <></>:
-            <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
-        }
+        </div>
     </div>
 
 };
