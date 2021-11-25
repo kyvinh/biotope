@@ -8,7 +8,7 @@ export default async function(req, res) {
 
     try {
         // TODO should go into DB!
-        const filePath = path.join(process.cwd(), `/storage/${id}.jpg`);
+        const filePath = path.join(process.cwd(), `/prisma/seed-assets/${id}.jpg`);
         const imageBuffer = fs.createReadStream(filePath);
 
         await new Promise(function(resolve) {
