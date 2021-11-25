@@ -43,14 +43,30 @@ export default function BiotopeHome() {
             </>
             :
             <div className="container">
-                <div><h4>{b.name}</h4><span>{b.creator.name}</span> on {b.createdOn}</div>
-                <div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>
+
+                <div className="card bg-dark text-white">
+                    {b.headerPic ?
+                        <img className="card-img" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
+                        : null
+                    }
+                    <div className={`${b.headerPic? "card-img-overlay":""}`}>
+                        <h5 className="card-title">{b.name}</h5>
+                        <p className="card-text">This is a wider card with supporting text below as a natural
+                            lead-in to additional content. This content is a little bit longer.</p>
+                        <p className="card-text">
+                            Biotope created by <span>{b.creator.name}</span> on {b.createdOn}.&nbsp;
+                            {b.contact ?
+                                <span>Contact: {b.contact}</span>
+                                : null
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                {/*<div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>*/}
 
                 <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>
-                {b.contact ?
-                    <div>Contact possible: {b.contact}</div>
-                    : <div/>
-                }
+
                 <div>
                     {b.questionnaires ? b.questionnaires.map((questionnaire) => {
                         const disabled = !b.private && !session;

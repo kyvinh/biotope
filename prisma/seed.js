@@ -92,7 +92,8 @@ async function main() {
             name: 'terlinden-1040',
             contact: 'Hail me in the street',
             creatorId: admin.id,
-            private: true
+            private: true,
+            headerPic: 'felixterlinden-plaque'
         },
     })
     const terlindenQuestionnaire = await prisma.questionnaire.upsert({
