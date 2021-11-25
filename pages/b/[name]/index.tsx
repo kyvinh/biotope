@@ -31,49 +31,56 @@ export default function BiotopeHome() {
     }
 
     return b ?
-        b.private && !authorized ?
-            <>
-                {session ? <div>You are signed in but this is a private biotope.</div>
-                :
-                    <div>Please
-                        <Link href="/api/auth/signin" locale={false}>SIGN IN</Link>
-                        to access this private biotope.
-                    </div>}
-                <p>Or for more information: {b.contact}.</p>
-            </>
-            :
             <div className="container">
 
-                <div className="card bg-dark text-white">
+                <div className="card biotope-hero-height bg-dark text-white">
                     {b.headerPic ?
-                        <img className="card-img" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
+                        <img className="card-img biotope-hero-height" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
                         : null
                     }
                     <div className={`${b.headerPic? "card-img-overlay":""}`}>
                         <h5 className="card-title">{b.name}</h5>
-                        <p className="card-text">This is a wider card with supporting text below as a natural
-                            lead-in to additional content. This content is a little bit longer.</p>
+                        { b.description ? <p className="card-text">{b.description}</p> : null}
                         <p className="card-text">
                             Biotope created by <span>{b.creator.name}</span> on {b.createdOn}.&nbsp;
-                            {b.contact ?
-                                <span>Contact: {b.contact}</span>
-                                : null
-                            }
+                            {b.contact ? <span>Contact: {b.contact}</span> : null}
                         </p>
                     </div>
                 </div>
 
-                {/*<div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>*/}
+                {
+                    b.private && !authorized ?
+                        <>
+                            {session ? <div>You are signed in but this is a private biotope.</div>
+                                :
+                                <div>Please
+                                    <Link href="/api/auth/signin" locale={false}>SIGN IN</Link>
+                                    to access this private biotope.
+                                </div>}
+                            <p>Or for more information: {b.contact}.</p>
+                        </>
+                        :
+                        <>
+                            {/*<div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>*/}
 
-                <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>
+                            <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>
 
-                <div>
-                    {b.questionnaires ? b.questionnaires.map((questionnaire) => {
-                        const disabled = !b.private && !session;
-                        questionnaire.biotope = { name: b.name, id: b.id }; // Useless to reference the whole b object
-                        return <Questionnaire key={questionnaire.id} questionnaire={questionnaire} disabled={disabled} />
-                    }) : null}
-                </div>
+                            <div>
+                                {b.questionnaires ? b.questionnaires.map((questionnaire) => {
+                                    const disabled = !b.private && !session;
+                                    questionnaire.biotope = { name: b.name, id: b.id }; // Useless to reference the whole b object
+                                    return <Questionnaire key={questionnaire.id} questionnaire={questionnaire} disabled={disabled} />
+                                }) : null}
+                            </div>
+                        </>
+                }
+
+                <style jsx>{`
+                  .biotope-hero-height {
+                    max-height: 15rem;
+                  }
+                `}</style>
+
             </div>
         : null
 }

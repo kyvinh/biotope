@@ -93,7 +93,8 @@ async function main() {
             contact: 'Hail me in the street',
             creatorId: admin.id,
             private: true,
-            headerPic: 'felixterlinden-plaque'
+            headerPic: 'felixterlinden-plaque',
+            description: 'Ce biotope rassemble tous les voisins résidant dans la rue Félix Terlinden et des rues avoisinantes.'
         },
     })
     const terlindenQuestionnaire = await prisma.questionnaire.upsert({
