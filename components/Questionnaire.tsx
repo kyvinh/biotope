@@ -72,27 +72,29 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
         <div className="card-body">
             <h6 className="card-title">{questionnaire.welcomeText}</h6>
 
-            <Accordion defaultActiveKey="0" id={`accordion-${questionnaire.id}`}>
-                { questionnaire.questions?.map(question => {
-                        const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
-                        const answered = questionAnswered?.hasAnswer > 0;
-                        return <Accordion.Item eventKey={`accordion-item-${question.id}`}>
-                            <Accordion.Header>{question.name}</Accordion.Header>
-                            <Accordion.Body>
-                                <Question question={question} setState={setAnswer} answered={answered} />
+            { questionnaire.questions?.length > 0 ?
+                <Accordion defaultActiveKey={`accordion-key-${questionnaire.questions[0].id}`} id={`accordion-${questionnaire.id}`}>
+                    { questionnaire.questions.map(question => {
+                            const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
+                            const answered = questionAnswered?.hasAnswer > 0;
+                            return <Accordion.Item key={`accordion-item-${question.id}`} eventKey={`accordion-key-${question.id}`}>
+                                <Accordion.Header>{question.name}</Accordion.Header>
+                                <Accordion.Body>
+                                    <Question question={question} setState={setAnswer} answered={answered} />
 
-                                { answered && questionResults?
-                                    <>
-                                        <QuestionResults results={questionResults[question.id]}/>
-                                        <Arguments question={question} questionArguments={question.arguments} />
-                                    </>
-                                    : null
-                                }
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    }
-                )}
-            </Accordion>
+                                    { answered && questionResults?
+                                        <>
+                                            <QuestionResults results={questionResults[question.id]}/>
+                                            <Arguments question={question} questionArguments={question.arguments} />
+                                        </>
+                                        : null
+                                    }
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        }
+                    )}
+                </Accordion>
+            : null }
 
             { questionnaireAnswered || disabled ? <></>:
                 <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
