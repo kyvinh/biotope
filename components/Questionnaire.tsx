@@ -5,7 +5,7 @@ import {fetcher} from "./util/fetcher";
 import useSWR from "swr";
 import React, {useState} from "react";
 import {useSession} from "next-auth/react";
-import {Accordion} from "react-bootstrap";
+import {Accordion, useAccordionButton} from "react-bootstrap";
 
 export const Questionnaire = ({questionnaire, disabled = false}) => {
 
@@ -67,20 +67,26 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
         }
     }
 
-    return <div key={questionnaire.id} className="card my-3">
-        <h5 className="card-header">{questionnaire.name}</h5>
+    return <div key={questionnaire.id} className="questionnaire-container">
+        <h5>{questionnaire.name}</h5>
         <div className="card-body">
-            <h6 className="card-title">{questionnaire.welcomeText}</h6>
+            <h6>{questionnaire.welcomeText}</h6>
 
             { questionnaire.questions?.length > 0 ?
-                <Accordion defaultActiveKey={`accordion-key-${questionnaire.questions[0].id}`} id={`accordion-${questionnaire.id}`}>
-                    { questionnaire.questions.map(question => {
+                <Accordion defaultActiveKey={`accordion-key-${questionnaire.questions[0].id}`} id={`accordion-${questionnaire.id}`} flush>
+                    { questionnaire.questions.map((question, i) => {
                             const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
                             const answered = questionAnswered?.hasAnswer > 0;
                             return <Accordion.Item key={`accordion-item-${question.id}`} eventKey={`accordion-key-${question.id}`}>
-                                <Accordion.Header>{question.name}</Accordion.Header>
+                                <Accordion.Header>({i+1}/{questionnaire.questions.length})&nbsp;<b>{question.name}</b></Accordion.Header>
                                 <Accordion.Body>
-                                    <Question question={question} setState={setAnswer} answered={answered} />
+                                    <Question question={question} setState={setAnswer} answered={answered} showTitle={false} />
+
+                                    { i+1 == questionnaire.questions.length ?
+                                        <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
+                                    :
+                                        <NextQuestionButton eventKey={`accordion-key-${questionnaire.questions[i+1].id}`}>Next</NextQuestionButton>
+                                    }
 
                                     { answered && questionResults?
                                         <>
@@ -95,11 +101,16 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
                     )}
                 </Accordion>
             : null }
-
-            { questionnaireAnswered || disabled ? <></>:
-                <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
-            }
         </div>
     </div>
-
 };
+
+function NextQuestionButton({ children, eventKey }) {
+    const decoratedOnClick = useAccordionButton(eventKey);
+
+    return (
+        <button type="button" onClick={decoratedOnClick}>
+            {children}
+        </button>
+    );
+}

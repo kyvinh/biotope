@@ -22,3 +22,28 @@ $dark:          #212529FF;
 // When optimizing import, postCss is not configured to create me-x bootstrap classes? But maybe use purgeCss instead?
 // https://getbootstrap.com/docs/5.0/customize/optimize/
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+.questionnaire-container {
+  @extend .card;
+  @extend .my-3;
+
+  h5 {
+    @extend .card-header
+  }
+
+  .card-body {
+    h6 {
+      @extend .card-title;
+      @extend .text-center;
+      margin-bottom: 16px;
+    }
+  }
+
+  .accordion-button {
+    padding-left: 8px;
+  }
+
+  .accordion-body {
+    padding-left: 8px;
+  }
+}
