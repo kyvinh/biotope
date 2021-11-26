@@ -1,10 +1,11 @@
 import {Question} from "./Question";
 import {QuestionResults} from "./QuestionResults";
+import {Arguments} from "./Arguments";
+import {fetcher} from "./util/fetcher";
+import useSWR from "swr";
 import React, {useState} from "react";
 import {useSession} from "next-auth/react";
-import useSWR from "swr";
-import {fetcher} from "./util/fetcher";
-import {Arguments} from "./Arguments";
+import {Accordion} from "react-bootstrap";
 
 export const Questionnaire = ({questionnaire, disabled = false}) => {
 
@@ -69,23 +70,30 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
     return <div key={questionnaire.id} className="card my-3">
         <h5 className="card-header">{questionnaire.name}</h5>
         <div className="card-body">
-            <p>{questionnaire.welcomeText}</p>
-            { questionnaire.questions?.map(question => {
-                    const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
-                    const answered = questionAnswered?.hasAnswer > 0;
-                    return <div key={question.id}>
-                        <Question question={question} setState={setAnswer} answered={answered} />
-                        { answered && questionResults?
-                            <>
-                                <QuestionResults results={questionResults[question.id]}/>
-                                <Arguments question={question} questionArguments={question.arguments} />
-                            </>
-                            : null
-                        }
-                    </div>
+            <h6 className="card-title">{questionnaire.welcomeText}</h6>
 
-                }
-            )}
+            <Accordion defaultActiveKey="0" id={`accordion-${questionnaire.id}`}>
+                { questionnaire.questions?.map(question => {
+                        const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
+                        const answered = questionAnswered?.hasAnswer > 0;
+                        return <Accordion.Item eventKey={`accordion-item-${question.id}`}>
+                            <Accordion.Header>{question.name}</Accordion.Header>
+                            <Accordion.Body>
+                                <Question question={question} setState={setAnswer} answered={answered} />
+
+                                { answered && questionResults?
+                                    <>
+                                        <QuestionResults results={questionResults[question.id]}/>
+                                        <Arguments question={question} questionArguments={question.arguments} />
+                                    </>
+                                    : null
+                                }
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    }
+                )}
+            </Accordion>
+
             { questionnaireAnswered || disabled ? <></>:
                 <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
             }

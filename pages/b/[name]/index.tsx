@@ -21,8 +21,10 @@ export default function BiotopeHome() {
     let authorized = false;
 
     const {name} = useRouter().query
+    // TODO Just fetch the 1st questionnaire?
     const {biotope: b} = useBiotope(name)
-    const {error: authorizationError} = useBiotope(name, true)  // TODO This should be a query for privileges and user history on this biotope
+    // TODO This should be a query for privileges and user history on this biotope
+    const {error: authorizationError} = useBiotope(name, true)
 
     if (session) {
         if (b?.public || !authorizationError) {
@@ -31,7 +33,7 @@ export default function BiotopeHome() {
     }
 
     return b ?
-            <div className="container">
+            <div className="container-fluid">
 
                 <div className="card biotope-hero-height bg-dark text-white">
                     {b.headerPic ?

@@ -5,7 +5,7 @@ export default function Navbar() {
     const {data: session} = useSession({required: false}) // Should add serverSideProps so session is loaded on server?
 
     return (
-        <div className="container">
+        <div className="container-fluid">
             <header
                 className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 
