@@ -48,11 +48,11 @@ export const QuestionResults = ({question, results}) => {
             type: "NUMBER"
      */
     return <div className="py-2">
-        <div>Résultats: {totalVotesCount} vote(s)</div>
+        <div >Résultats: {totalVotesCount} vote(s)</div>
         <div>
             { options.map((answerResult, i) =>
                 <div key={i}>
-                    <Row>
+                    <Row className="align-items-center">
                         <Col sm={2}>
                             <div>{answerResult.possibleText? answerResult.possibleText: answerResult.possibleNumber}:</div>
                         </Col>
