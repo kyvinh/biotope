@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev-start": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "prod-build": "next build",
+    "prod-start": "next start",
     "prisma-migrate-dev": "npx prisma migrate dev",
     "prisma-db-push": "npx prisma db push",
     "prisma-db-seed": "npx prisma db seed",

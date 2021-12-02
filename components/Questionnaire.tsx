@@ -32,7 +32,7 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
         (acc, answer) => {
             const questionId = answer.questionId;
             if (acc[questionId]) {
-                acc[questionId].push(answer)
+                acc[questionId].push(answer);
             } else {
                 acc[questionId] = [answer]
             }
@@ -82,15 +82,18 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
                                 <Accordion.Body>
                                     <Question question={question} setState={setAnswer} answered={answered} showTitle={false} />
 
-                                    { i+1 == questionnaire.questions.length ?
-                                        <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
-                                    :
-                                        <NextQuestionButton eventKey={`accordion-key-${questionnaire.questions[i+1].id}`}>Next</NextQuestionButton>
+                                    {!answered ?
+                                        // Next/Submit button
+                                        (i+1 == questionnaire.questions.length) ?
+                                                <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
+                                                :
+                                                <NextQuestionButton eventKey={`accordion-key-${questionnaire.questions[i+1].id}`}>Next</NextQuestionButton>
+                                        : null
                                     }
 
                                     { answered && questionResults?
                                         <>
-                                            <QuestionResults results={questionResults[question.id]}/>
+                                            <QuestionResults question={question} results={questionResults[question.id]}/>
                                             <Arguments question={question} questionArguments={question.arguments} />
                                         </>
                                         : null
