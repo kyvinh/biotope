@@ -22,20 +22,23 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
     const {data: resultsObject} = useSWR(session ? `/api/q/${questionnaire.id}/results` : null, fetcher);
-    /* results:
-        [{…}, {…}, {…}]
-        0: {questionId: 'ckw25pixk0036c0uznmtotupl', answerText: 'Sale', answerNum: null, _count: 2}
-        1: {questionId: 'ckw25piy00044c0uzlzqspuqp', answerText: "c'est sale", answerNum: null, _count: 1}
-        2: {questionId: 'ckw25piy00044c0uzlzqspuqp', answerText: 'pas mal propre', answerNum: null, _count: 1}
+    /* results: [
+        QuestionObject {
+            PossibleAnswers [
+                id: "ckweupyty0084p0uz1ugb3zcy"
+                order: 1
+                possibleNumber: 1
+                possibleText: "Insalubre"
+                questionId: "ckweupytg0076p0uz3j7ygwm2"
+                type: "NUMBER"
+                _count: {answers: 0}
+            ]
+        }
+    ]
     */
     const questionResults = resultsObject?.results.reduce(
-        (acc, answer) => {
-            const questionId = answer.questionId;
-            if (acc[questionId]) {
-                acc[questionId].push(answer);
-            } else {
-                acc[questionId] = [answer]
-            }
+        (acc, question) => {
+            acc[question.id] = question.possibleAnswers
             return acc
         }
     , {})

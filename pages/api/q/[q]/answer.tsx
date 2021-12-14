@@ -1,4 +1,3 @@
-import {QuestionType} from "@prisma/client";
 import prisma from '../../../../components/util/prismaClient'
 import {getSession} from "next-auth/react";
 import {hashUid} from "../../../../components/util/user";
@@ -51,23 +50,13 @@ export default async function handler(req, res) {
         const upsertAnswers = []
 
         answers.map(({questionId, answer}) => {
-            const question = questionnaire.questions.find(element => element.id == questionId)
+
             // TODO Should modify createdOn?
+
             const updateClause = {
-                answerNum: null,
-                answerText: null
+                // answer is the possibleAnswer.id
+                possibleAnswerId: answer
             };
-            switch (question.type) {
-                case QuestionType.LIKERT:
-                    // answer is the possibleAnswer.id
-                    // keep the value as text because it is more representative of the Likert answer than a number
-                    updateClause.answerText = question.possibleAnswers.find(element => element.id == answer).possibleText
-                    break;
-                case QuestionType.LONGTEXT:
-                case QuestionType.TEXT:
-                    updateClause.answerText = answer
-                    break;
-            }
 
             upsertAnswers.push(prisma.answer.upsert({
                 where: {

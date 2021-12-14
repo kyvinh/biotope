@@ -28,17 +28,17 @@ export const Arguments = ({questionArguments, question}) => {
     return <>
         { questionArguments ? questionArguments.map((argument) =>
             <div key={argument.id}>
-                <p>{argument.text}</p>
+                <p>{argument.answerText}: {argument.text}</p>
             </div>
         ) : null}
         { showAddArgument ?
             <div>
+                <p>ARGUMENTS SHOULD BE ADDED AT ANSWER LEVEL (not question level like here)</p>
                 <textarea value={argumentText} onChange={e => setArgumentText(e.target.value)}/>
                 <input type="submit" value="Submit argument" onClick={e => submitArgument(e, question.id, argumentText)} />
             </div>
         :
             <p>Would you like to <button onClick={() => setShowAddArgument(true)}>anonymously argument/comment</button> on this question?</p>
         }
-
     </>
 }

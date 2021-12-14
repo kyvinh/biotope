@@ -25,51 +25,64 @@ export default async function handler(req, res) {
 
     try {
         const questionnaire = await prisma.questionnaire.findUnique({
-            where: {
-                id: questionnaireId
-            },
             include: {
                 questions: {
                     include: {
-                        answers: {
-                            select: {
-                                answerNum: true,
-                                answerText: true
+                        possibleAnswers: {
+                            include: {
+                                _count: {
+                                    select: { answers: true }
+                                }
                             }
                         }
                     }
                 }
-            }
-        })
-
-
-        const answerResults = await prisma.answer.groupBy({
-            by: ['questionId', "answerText", "answerNum"],
-            where: {
-                questionId: {
-                    in: questionnaire.questions.reduce((ids, question) => [...ids, question.id], [])
-                }
             },
-            _count: true
+            where: {
+                id: questionnaireId
+            },
         })
-        // console.log("API Results", answerResults)
+
+        const answerResults = questionnaire.questions
 
         /*
-        API Results [
-          {
-            questionId: 'ckw25pixk0036c0uznmtotupl',
-            answerText: 'Sale',
-            answerNum: null,
-            _count: 1
-          },
-          {
-            questionId: 'ckw25piy00044c0uzlzqspuqp',
-            answerText: "c'est sale",
-            answerNum: null,
-            _count: 1
-          }
-        ]
+            API Results [
+            {
+                id: 'ckweupytg0076p0uz3j7ygwm2',
+                type: 'LIKERT',
+                name: 'Comment jugez-vous la propreté de la rue Félix Terlinden?',
+                description: "Notre rue mérite une attention particulière car elle est à proximité de plusieurs centres d'activité: La Chasse, Jourdan, Flagey.",
+                questionnaireId: 'ckweupysx0068p0uzfqcph5ks',
+                createdOn: 2021-11-25T11:07:23.140Z,
+                creatorId: 'ckweup6ov0000swuzkxd5wyqt',
+                possibleAnswers: [ [Object], [Object], [Object], [Object], [Object] ]
+              },
+              {
+                id: 'ckweupyu90091p0uzsjjobdl3',
+                type: 'LIKERT',
+                name: 'Comment jugez-vous le comportement des passants par rapport à la propreté dans la rue Félix Terlinden?',
+                description: 'Les piétons, résidents, et passants ont tous une responsabilité par rapport à la salubrité publique. Est-ce que leurs comportements sont suffisamment civils selon vous?
+            ',
+                questionnaireId: 'ckweupysx0068p0uzfqcph5ks',
+                createdOn: 2021-11-25T11:07:23.169Z,
+                creatorId: 'ckweup6ov0000swuzkxd5wyqt',
+                possibleAnswers: [ [Object], [Object], [Object], [Object], [Object] ]
+              },
+              {
+                id: 'ckweupyut0106p0uzz9op2jau',
+                type: 'LIKERT',
+                name: 'Quelles activités seraient bénéfiques pour la propreté dans la rue Félix Terlinden?',
+                description: "Quelles activités à soutenir? Rajouter une proposition d'activité si possible.",
+                questionnaireId: 'ckweupysx0068p0uzfqcph5ks',
+                createdOn: 2021-11-25T11:07:23.189Z,
+                creatorId: 'ckweup6ov0000swuzkxd5wyqt',
+                possibleAnswers: [ [Object], [Object], [Object] ]
+              }
+            ]
          */
+
+        // console.log("API Results", answerResults)
+
         return res.status(200).json({ results: answerResults})
 
     } catch (error) {

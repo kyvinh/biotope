@@ -147,6 +147,7 @@ model PossibleAnswer {
   possibleText String?
   possibleNumber Int?
   order        Int            @default(0)
+  answers      Answer[]
 
   @@unique([questionId, possibleText, possibleNumber])
   @@unique([questionId, order])
@@ -157,8 +158,8 @@ model Answer {
   hashUid      String
   question     Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId   String
-  answerNum    Int?
-  answerText   String?
+  possibleAnswer PossibleAnswer @relation(fields: [possibleAnswerId], references: [id], onDelete: Cascade)
+  possibleAnswerId String
   createdOn    DateTime       @default(now())
 
   @@unique([questionId, hashUid])
