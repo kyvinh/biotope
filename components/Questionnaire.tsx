@@ -49,6 +49,10 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
         setAnswers(newAnswers)
     }
 
+    const hasNewAnswer = (questionId) => {
+        return answers.find(element => element.questionId === questionId)
+    }
+
     const questionnaireSubmit = async (event, questionnaireId, answers) => {
         event.preventDefault();
         event.target.disabled = true;
@@ -87,7 +91,7 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
                                         (i+1 == questionnaire.questions.length) ?
                                                 <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
                                                 :
-                                                <NextQuestionButton eventKey={`accordion-key-${questionnaire.questions[i+1].id}`}>Next</NextQuestionButton>
+                                                <NextQuestionButton enabled={hasNewAnswer(question.id)} eventKey={`accordion-key-${questionnaire.questions[i+1].id}`}>Next</NextQuestionButton>
                                         : null
                                     }
 
@@ -108,11 +112,11 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
     </div>
 };
 
-function NextQuestionButton({ children, eventKey }) {
+function NextQuestionButton({ children, eventKey, enabled }) {
     const decoratedOnClick = useAccordionButton(eventKey);
 
     return (
-        <button type="button" onClick={decoratedOnClick}>
+        <button type="button" onClick={decoratedOnClick} disabled={!enabled}>
             {children}
         </button>
     );
