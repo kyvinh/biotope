@@ -11,12 +11,12 @@ export function usePropositions() {
     return {propositions};
 }
 
-export function useBiotope(name, withUserSpecific = false) {
-    if (withUserSpecific) {
-        const {data: biotope, error} = useSWR(`/api/b/${name}?user` , fetcher);
-        return {biotope, error};
-    } else {
-        const {data: biotope, error} = useSWR('/api/b/' + name, fetcher);
-        return {biotope, error};
-    }
+export function useBiotope(name) {
+    const {data: biotope, error} = useSWR(`/api/b/${name}`, fetcher);
+    return {biotope, error};
+}
+
+export function useBiotopeUserHistory(name) {
+    const {data: userHistory, error} = useSWR(`/api/b/${name}/userHistory` , fetcher);
+    return {userHistory, error};
 }

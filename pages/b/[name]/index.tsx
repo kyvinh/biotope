@@ -1,4 +1,4 @@
-import {useBiotope} from "../../../components/util/hooks";
+import {useBiotope, useBiotopeUserHistory} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
@@ -16,21 +16,23 @@ export const getServerSideProps = async function ({req}) {
 
 export default function BiotopeHome() {
 
+    // Required = false -> session might be null
     const {data: session} = useSession({required: false})
 
     let authorized = false;
 
     const {name} = useRouter().query
-    // TODO Just fetch the 1st questionnaire?
+
     const {biotope: b} = useBiotope(name)
-    // TODO This should be a query for privileges and user history on this biotope
-    const {error: authorizationError} = useBiotope(name, true)
+    const {error: authorizationError} = useBiotopeUserHistory(name)
 
     if (session) {
         if (b?.public || !authorizationError) {
             authorized = true
         }
     }
+
+    // TODO: How to make sure we only display public information until we have the certainty that the user is authorized?
 
     return b ?
             <div className="container-fluid">
