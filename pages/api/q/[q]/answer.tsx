@@ -2,6 +2,13 @@ import prisma from '../../../../components/util/prismaClient'
 import {getSession} from "next-auth/react";
 import {hashUid} from "../../../../components/util/user";
 
+export interface AnswerDto {
+    possibleAnswerId?: string,
+    newAnswer?: {
+        text?: string
+    }
+}
+
 export default async function handler(req, res) {
 
     // Check request and params
@@ -11,10 +18,10 @@ export default async function handler(req, res) {
         return
     }
 
-    const questionnaireId = req.query.q;
-    const answers = req.body?.answers;
+    const questionId = req.query.q;
+    const answer:AnswerDto = req.body?.answer;
 
-    if (!answers) {
+    if (!answer) {
         return res.status(400).send({message: 'Invalid POST request'})
     }
 
@@ -30,35 +37,29 @@ export default async function handler(req, res) {
     try {
 
         // We need the questions' type to know how to store the answer value
-        const questionnaire = await prisma.questionnaire.findUnique({
+        const question = await prisma.question.findUnique({
             where: {
-                id: questionnaireId
+                id: questionId
             },
             include: {
-                questions: {
-                    include: {
-                        possibleAnswers: true
-                    }
-                }
+                possibleAnswers: true
             }
         })
 
-        if (!questionnaire) {
+        if (!question) {
             throw new Error('Invalid /q request!')
         }
 
-        const upsertAnswers = []
+        const transaction = []
 
-        answers.map(({questionId, answer}) => {
-
+        const updateClause = {
+            // answer is the possibleAnswer.id
             // TODO Should modify createdOn?
+            possibleAnswerId: answer.possibleAnswerId
+        };
 
-            const updateClause = {
-                // answer is the possibleAnswer.id
-                possibleAnswerId: answer
-            };
-
-            upsertAnswers.push(prisma.answer.upsert({
+        transaction.push(
+            prisma.answer.upsert({
                 where: {
                     questionId_hashUid: {
                         questionId: questionId,
@@ -71,14 +72,14 @@ export default async function handler(req, res) {
                     hashUid: uid,
                     questionId: questionId,
                 }
-            }))
-        })
+            })
+        )
 
-        await prisma.$transaction(upsertAnswers)
+        await prisma.$transaction(transaction)
 
     } catch (error) {
-        console.error("QUESTIONNAIRE_ANSWER_ERROR", {
-            identifier: questionnaireId,
+        console.error("QUESTION_ANSWER_ERROR", {
+            identifier: questionId,
             error
         });
         throw error;

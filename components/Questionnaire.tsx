@@ -5,67 +5,35 @@ import {fetcher} from "./util/fetcher";
 import useSWR from "swr";
 import React, {useState} from "react";
 import {useSession} from "next-auth/react";
-import {Accordion, useAccordionButton} from "react-bootstrap";
+import Link from "next/link";
 
-export const Questionnaire = ({questionnaire, disabled = false}) => {
+export const Questionnaire = ({question, disabled = false}) => {
 
-    const [answers, setAnswers] = useState([])
+    const [answer, setAnswer] = useState(null)
     const {data: session} = useSession({required: false})
 
-    // Whether the user has answered questions in this questionnaire or not
-    // Type of questionnairesAnswered = [ { questionId, answerCount} ]
-    const {data: questionsAnswered} = useSWR(session ? `/api/user/questionnaire/${questionnaire.id}` : null, fetcher);
-
-    const questionsAnsweredCount = questionsAnswered?.reduce((acc, question) => acc + question.hasAnswer, 0)
-    const questionnaireAnswered = questionnaire.questions.length === questionsAnsweredCount;
+    // Whether the user has answered this question or not
+    const {data: questionHistory} = useSWR(session ? `/api/user/question/${question.id}` : null, fetcher);
+    console.log('questionHistory', questionHistory)
+    const questionAnswered = questionHistory?._count?.answers > 0
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
-    const {data: resultsObject} = useSWR(session ? `/api/q/${questionnaire.id}/results` : null, fetcher);
-    /* results: [
-        QuestionObject {
-            PossibleAnswers [
-                id: "ckweupyty0084p0uz1ugb3zcy"
-                order: 1
-                possibleNumber: 1
-                possibleText: "Insalubre"
-                questionId: "ckweupytg0076p0uz3j7ygwm2"
-                type: "NUMBER"
-                _count: {answers: 0}
-            ]
-        }
-    ]
-    */
-    const questionResults = resultsObject?.results.reduce(
-        (acc, question) => {
-            acc[question.id] = question.possibleAnswers
-            return acc
-        }
-    , {})
+    const {data: answerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
+    console.log('resultsObject', answerResults)
 
-    const setAnswer = (questionId, answer) => {
-        let newAnswers = answers.filter(element => element.questionId != questionId)
-        newAnswers.push({
-            questionId: questionId,
-            answer: answer
-        });
-        setAnswers(newAnswers)
-    }
-
-    const hasNewAnswer = (questionId) => {
-        return answers.find(element => element.questionId === questionId)
-    }
-
-    const questionnaireSubmit = async (event, questionnaireId, answers) => {
+    const questionSubmit = async (event) => {
         event.preventDefault();
         event.target.disabled = true;
 
         if (session) {
-            const res = await fetcher(`/api/q/${questionnaireId}/answer`, { answers: answers});
+            const res = await fetcher(`/api/q/${question.id}/answer`, { possibleAnswerId: answer});
 
             if (res?.status == 'ok') {
-                // Answers have been submitted
+                // Answer has been recorded
             }
+
+            console.log('Post-Answer:', res)
         } else {
             // how to handle anonymous answers? only available to certain types of questionnaires?
             // by default, there shall not be anonymous votes
@@ -74,53 +42,30 @@ export const Questionnaire = ({questionnaire, disabled = false}) => {
         }
     }
 
-    return <div key={questionnaire.id} className="questionnaire-container">
-        <h5>{questionnaire.name}</h5>
+    return <div className="questionnaire-container">
+        <h5>{question.name}</h5>
         <div className="card-body">
-            <h6>{questionnaire.welcomeText}</h6>
+            <h6>{question.description}</h6>
 
-            { questionnaire.questions?.length > 0 ?
-                <Accordion defaultActiveKey={`accordion-key-${questionnaire.questions[0].id}`} id={`accordion-${questionnaire.id}`} flush>
-                    { questionnaire.questions.map((question, i) => {
-                            const questionAnswered = questionsAnswered?.find(element => element.questionId === question.id);
-                            const answered = questionAnswered?.hasAnswer > 0;
-                            return <Accordion.Item key={`accordion-item-${question.id}`} eventKey={`accordion-key-${question.id}`}>
-                                <Accordion.Header>({i+1}/{questionnaire.questions.length})&nbsp;<b>{question.name}</b></Accordion.Header>
-                                <Accordion.Body>
-                                    <Question question={question} setState={setAnswer} answered={answered} showTitle={false} />
-
-                                    {!answered ?
-                                        // Next/Submit button
-                                        (i+1 == questionnaire.questions.length) ?
-                                                <input type="submit" value="Submit" onClick={e => questionnaireSubmit(e, questionnaire.id, answers)}/>
-                                                :
-                                                <NextQuestionButton enabled={hasNewAnswer(question.id)} eventKey={`accordion-key-${questionnaire.questions[i+1].id}`}>Next</NextQuestionButton>
-                                        : null
-                                    }
-
-                                    { answered && questionResults?
-                                        <>
-                                            <QuestionResults question={question} results={questionResults[question.id]}/>
-                                            <Arguments question={question} questionArguments={question.arguments} />
-                                        </>
-                                        : null
-                                    }
-                                </Accordion.Body>
-                            </Accordion.Item>
-                        }
-                    )}
-                </Accordion>
-            : null }
+            {!session ?
+                <div>
+                    <Link href="/api/auth/signin" locale={false}>
+                        <a className="btn btn-outline-primary">Sign in</a>
+                    </Link> to vote
+                </div>
+                : <>
+                    <Question question={question} setState={setAnswer} answered={answer || questionAnswered}
+                              showTitle={false} disabled={disabled}/>
+                    <input type="submit" value="Submit" onClick={questionSubmit} disabled={disabled}/>
+                </>
+            }
+            { answer && answerResults?
+                <>
+                    <QuestionResults question={question} results={answerResults}/>
+                    <Arguments question={question} questionArguments={question.arguments} />
+                </>
+                : null
+            }
         </div>
     </div>
 };
-
-function NextQuestionButton({ children, eventKey, enabled }) {
-    const decoratedOnClick = useAccordionButton(eventKey);
-
-    return (
-        <button type="button" onClick={decoratedOnClick} disabled={!enabled}>
-            {children}
-        </button>
-    );
-}

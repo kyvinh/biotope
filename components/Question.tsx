@@ -2,7 +2,7 @@ import {QuestionType} from '@prisma/client'
 import Likert from 'react-likert-scale';
 import {useState} from "react";
 
-export const Question = ({question, setState, answered, showTitle = true}) => {
+export const Question = ({question, setState, answered, showTitle = true, disabled = false}) => {
 
     const updateAnswer = (value) => {
         setLonganswer(value)

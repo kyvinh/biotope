@@ -2,6 +2,7 @@ import {useBiotope, useBiotopeUserHistory} from "../../../components/util/hooks"
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
+import React from "react";
 import {Questionnaire} from "../../../components/Questionnaire";
 
 export const getServerSideProps = async function ({req}) {
@@ -23,8 +24,8 @@ export default function BiotopeHome() {
 
     const {name} = useRouter().query
 
-    const {biotope: b} = useBiotope(name)
-    const {error: authorizationError} = useBiotopeUserHistory(name)
+    const {biotope: b} = useBiotope(name as string)
+    const {error: authorizationError} = useBiotopeUserHistory(name as string)
 
     if (session) {
         if (b?.public || !authorizationError) {
@@ -70,10 +71,9 @@ export default function BiotopeHome() {
                             <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>
 
                             <div>
-                                {b.questionnaires ? b.questionnaires.map((questionnaire) => {
-                                    const disabled = !b.private && !session;
-                                    questionnaire.biotope = { name: b.name, id: b.id }; // Useless to reference the whole b object
-                                    return <Questionnaire key={questionnaire.id} questionnaire={questionnaire} disabled={disabled} />
+                                {b.questions ? b.questions.map((question) => {
+                                    const disabled = !authorized || !session;
+                                    return <Questionnaire key={question.id} question={question} disabled={disabled} />
                                 }) : null}
                             </div>
                         </>

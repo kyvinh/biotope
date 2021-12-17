@@ -10,23 +10,18 @@ export default async function handler(req, res) {
         },
         include: {
             creator: true,
-            questionnaires: {
+            questions: {
                 include: {
                     creator: true,
-                    questions: {
-                        include: {
-                            creator: true,
-                            possibleAnswers: {
-                                orderBy: {
-                                    order: 'asc'    // TODO Does this work?
-                                }
-                            },
-                            arguments: true,
-                        },
+                    possibleAnswers: {
                         orderBy: {
-                            createdOn: 'asc',
+                            order: 'asc'    // TODO Does this work?
                         }
-                    }
+                    },
+                    arguments: true,
+                },
+                orderBy: {
+                    createdOn: 'asc',
                 }
             }
         }
