@@ -18,23 +18,13 @@ export default async function handler(req, res) {
     const hashedUid = hashUid(session.user.id);
 
     try {
-        // Get all questions that the user has answered
+        // Check whether the user has answered this question already
 
         const result =
-            await prisma.question.findUnique({
+            await prisma.answer.count({
                 where: {
-                    questionId: questionId
-                },
-                include: {
-                    _count: {
-                        select: {
-                            answers: {
-                                where: {
-                                    hashedUid: hashedUid
-                                }
-                            }
-                        }
-                    }
+                    questionId: questionId,
+                    hashUid: hashedUid
                 }
             })
 
@@ -47,10 +37,15 @@ export default async function handler(req, res) {
                                     and cercle.id = ${questionId}
                                     group by question.id`
 */
-        return res.status(200).json(result);
+        const answerResult = {answered: false};
+
+        if (result.number > 0) {
+            answerResult.answered = true;
+        }
+        res.status(200).json(answerResult)
     }
     catch (error) {
-        console.log('Error while retrieving questions answered:', error)
+        console.log('Error while retrieving answered question:', error)
         return res.status(500).json({});
     }
 

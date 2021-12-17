@@ -13,9 +13,9 @@ export const Questionnaire = ({question, disabled = false}) => {
     const {data: session} = useSession({required: false})
 
     // Whether the user has answered this question or not
-    const {data: questionHistory} = useSWR(session ? `/api/user/question/${question.id}` : null, fetcher);
-    console.log('questionHistory', questionHistory)
-    const questionAnswered = questionHistory?._count?.answers > 0
+    const {data: questionAnsweredObject} = useSWR(session ? `/api/user/question/${question.id}` : null, fetcher);
+    console.log('questionAnswered', questionAnsweredObject)
+    const questionAnswered = questionAnsweredObject?.answered
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
