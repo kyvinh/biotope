@@ -45,27 +45,16 @@ async function main() {
             private: false,
         },
     })
-    const questionnaire = await prisma.questionnaire.upsert({
-        where: { cercleId_name: { name: 'bx-questionnaire-1' , cercleId: cercleBx.id} },
-        update: {},
-        create: {
-            name: 'bx-questionnaire-1',
-            welcomeText: 'Bonjour, ce questionnaire sonde les habitants de Bruxelles par rapport à la propreté publique.',
-            creatorId: admin.id,
-            cercleId: cercleBx.id,
-
-        }
-    })
     const q1name = 'Comment jugez-vous la propreté des rues?';
     const q1 = await prisma.question.upsert({
-        where: { questionnaireId_name: { name: q1name , questionnaireId: questionnaire.id}},
+        where: { cercleId_name: { name: q1name , cercleId: cercleBx.id}},
         update: {},
         create: {
             name: q1name,
             type: "LIKERT",
-            description: 'Comment estimez-vous la propreté des rues dans Bruxelles en général?',
+            description: 'Bonjour, ce questionnaire sonde les habitants de Bruxelles par rapport à la propreté publique. Comment estimez-vous la propreté des rues dans Bruxelles en général?',
             creatorId: admin.id,
-            questionnaireId: questionnaire.id
+            cercleId: cercleBx.id
         }
     })
     const q1optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: q1.id}]), []);
@@ -73,16 +62,16 @@ async function main() {
         data: q1optionsData,
         skipDuplicates: true,   // Acts like an upsert
     })
-    const q2name = 'Comment est-ce que la commune et ses habitants pourraient amélioreriez-vous la propreté de la rue?';
+    const q2name = 'Comment jugez-vous la mobilité dans Bruxelles et ses 19 communes?';
     const q2 = await prisma.question.upsert({
-        where: { questionnaireId_name: { name: q2name , questionnaireId: questionnaire.id}},
+        where: { cercleId_name: { name: q2name , cercleId: cercleBx.id}},
         update: {},
         create: {
             name: q2name,
             type: "LONGTEXT",
             description: 'Welcome 3 4 ...',
             creatorId: admin.id,
-            questionnaireId: questionnaire.id
+            cercleId: cercleBx.id
         }
     })
     const cercleTerlinden = await prisma.cercle.upsert({
@@ -97,27 +86,16 @@ async function main() {
             description: 'Ce biotope rassemble tous les voisins résidant dans la rue Félix Terlinden et des rues avoisinantes.'
         },
     })
-    const terlindenQuestionnaire = await prisma.questionnaire.upsert({
-        where: { cercleId_name: { name: 'terlinden-questionnaire-1' , cercleId: cercleTerlinden.id} },
-        update: {},
-        create: {
-            name: 'terlinden-questionnaire-1',
-            welcomeText: 'Bonjour, ce questionnaire sonde les habitants de la rue Félix Terlinden par rapport à la propreté publique.',
-            creatorId: admin.id,
-            cercleId: cercleTerlinden.id,
-        }
-    })
-
     const terlindenQ1name = 'Comment jugez-vous la propreté de la rue Félix Terlinden?';
     const terlindenQ1 = await prisma.question.upsert({
-        where: { questionnaireId_name: { name: terlindenQ1name , questionnaireId: terlindenQuestionnaire.id}},
+        where: { cercleId_name: { name: terlindenQ1name , cercleId: cercleTerlinden.id}},
         update: {},
         create: {
             name: terlindenQ1name,
             type: "LIKERT",
-            description: "Notre rue mérite une attention particulière car elle est à proximité de plusieurs centres d'activité: La Chasse, Jourdan, Flagey.",
+            description: "Bonjour, ce questionnaire sonde les habitants de la rue Félix Terlinden par rapport à la propreté publique. (MARKDOWN?) Notre rue mérite une attention particulière car elle est à proximité de plusieurs centres d'activité: La Chasse, Jourdan, Flagey.",
             creatorId: admin.id,
-            questionnaireId: terlindenQuestionnaire.id
+            cercleId: cercleTerlinden.id
         }
     })
     const terlindenQ1optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ1.id}]), []);
@@ -126,16 +104,16 @@ async function main() {
         skipDuplicates: true,   // Acts like an upsert
     })
 
-    const terlindenQ2name = 'Comment jugez-vous le comportement des passants par rapport à la propreté dans la rue Félix Terlinden?';
+    const terlindenQ2name = 'Comment améliorer notre rue et les rues avoisinantes en terme de mobilité et d\'attractivité?';
     const terlindenQ2 = await prisma.question.upsert({
-        where: { questionnaireId_name: { name: terlindenQ2name , questionnaireId: terlindenQuestionnaire.id}},
+        where: { cercleId_name: { name: terlindenQ2name , cercleId: cercleTerlinden.id}},
         update: {},
         create: {
             name: terlindenQ2name,
             type: "LIKERT",
-            description: 'Les piétons, résidents, et passants ont tous une responsabilité par rapport à la salubrité publique. Est-ce que leurs comportements sont suffisamment civils selon vous?',
+            description: 'La rue n\'est pas safe pour les cyclistes (autorisés en sens contraire mais avec peu d\'espace. La rue n\'est pas verduré du tout.',
             creatorId: admin.id,
-            questionnaireId: terlindenQuestionnaire.id
+            cercleId: cercleTerlinden.id
         }
     })
     const terlindenQ2optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ2.id}]), []);
@@ -144,16 +122,16 @@ async function main() {
         skipDuplicates: true,   // Acts like an upsert
     })
 
-    const terlindenQ3name = 'Quelles activités seraient bénéfiques pour la propreté dans la rue Félix Terlinden?';
+    const terlindenQ3name = 'Quelles activités voudriez-vous voir dans la rue Félix Terlinden?';
     const terlindenQ3 = await prisma.question.upsert({
-        where: { questionnaireId_name: { name: terlindenQ3name , questionnaireId: terlindenQuestionnaire.id}},
+        where: { cercleId_name: { name: terlindenQ3name , cercleId: cercleTerlinden.id}},
         update: {},
         create: {
             name: terlindenQ3name,
             type: "LIKERT",
             description: "Quelles activités à soutenir? Rajouter une proposition d'activité si possible.",
             creatorId: admin.id,
-            questionnaireId: terlindenQuestionnaire.id
+            cercleId: cercleTerlinden.id
         }
     })
     const terlindenQ3optionsData = shortLikertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ3.id}]), []);

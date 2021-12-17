@@ -50,7 +50,6 @@ model User {
   cerclesCreated      Cercle[]
   invitationsSent     Invitation[] @relation("User_InvitationCreator")
   invitationsReceived Invitation[] @relation("User_InvitedUser")
-  questionnaire       Questionnaire[]
   questions           Question[]
 }
 
@@ -73,7 +72,7 @@ model Cercle {
   creatorId   String?
   createdOn   DateTime     @default(now())
   invitations Invitation[]
-  questionnaires Questionnaire[]
+  questions Question[]
 }
 
 enum InvitationType {
@@ -96,20 +95,6 @@ model Invitation {
   @@unique([type, invitedId, creatorId, cercleId])
 }
 
-model Questionnaire {
-  id           String         @id @default(cuid())
-  name         String
-  creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId    String
-  createdOn    DateTime       @default(now())
-  welcomeText  String?
-  questions    Question[]
-  cercle       Cercle         @relation(fields: [cercleId], references: [id], onDelete: Cascade)
-  cercleId     String
-
-  @@unique([cercleId, name])
-}
-
 enum QuestionType {
   TEXT
   LONGTEXT
@@ -122,8 +107,8 @@ model Question {
   type         QuestionType   @default(TEXT)
   name         String
   description  String?
-  questionnaire    Questionnaire   @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
-  questionnaireId  String
+  cercle       Cercle         @relation(fields: [cercleId], references: [id], onDelete: Cascade)
+  cercleId     String
   createdOn    DateTime       @default(now())
   creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
@@ -131,7 +116,7 @@ model Question {
   possibleAnswers   PossibleAnswer[]
   arguments    Argument[]
 
-  @@unique([questionnaireId, name])
+  @@unique([cercleId, name])
 }
 
 enum PossibleAnswerType {
