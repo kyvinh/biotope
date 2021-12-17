@@ -6,7 +6,7 @@ export const QuestionResults = ({question, results}) => {
         return null
     }
     /* results:
-        PossibleAnswers [
+        PossibleAnswers[
             id: "ckweupyty0084p0uz1ugb3zcy"
             order: 1
             possibleNumber: 1

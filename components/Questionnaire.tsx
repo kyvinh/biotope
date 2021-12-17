@@ -10,6 +10,7 @@ import Link from "next/link";
 export const Questionnaire = ({question, disabled = false}) => {
 
     const [answer, setAnswer] = useState(null)
+    const [isSubmitted, setIsSubmitted] = useState(false)
     const {data: session} = useSession({required: false})
 
     // Whether the user has answered this question or not
@@ -27,6 +28,7 @@ export const Questionnaire = ({question, disabled = false}) => {
         event.target.disabled = true;
 
         if (session) {
+            setIsSubmitted(true)
             const res = await fetcher(`/api/q/${question.id}/answer`, { possibleAnswerId: answer});
 
             if (res?.status == 'ok') {
@@ -54,14 +56,14 @@ export const Questionnaire = ({question, disabled = false}) => {
                     </Link> to vote
                 </div>
                 : <>
-                    <Question question={question} setState={setAnswer} answered={answer || questionAnswered}
+                    <Question question={question} setState={setAnswer} answered={isSubmitted || questionAnswered}
                               showTitle={false} disabled={disabled}/>
                     <input type="submit" value="Submit" onClick={questionSubmit} disabled={disabled}/>
                 </>
             }
-            { answer && answerResults?
+            { (isSubmitted && answerResults) ?
                 <>
-                    <QuestionResults question={question} results={answerResults}/>
+                    <QuestionResults question={question} results={answerResults.results}/>
                     <Arguments question={question} questionArguments={question.arguments} />
                 </>
                 : null
