@@ -40,7 +40,8 @@ export default async function handler(req, res) {
             },
         })
 
-        console.log("API Results", question.possibleAnswers)
+        // console.log("API Results", question.possibleAnswers)
+
         return res.status(200).json({ results: question.possibleAnswers})
 
     } catch (error) {

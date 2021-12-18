@@ -1,23 +1,9 @@
-const {PrismaClient, PossibleAnswerType} = require('@prisma/client')
+const {PrismaClient, PossibleAnswerType, QuestionType} = require('@prisma/client')
 const prisma = new PrismaClient()
 
 // https://www.prisma.io/docs/guides/database/seed-database#integrated-seeding-with-prisma-migrate
 
 async function main() {
-
-    const likertOptions = [
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 1, order: 1, possibleText: "Insalubre"},
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 2, order: 2, possibleText: "Sale"},
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 3, order: 3, possibleText: "Normale"},
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 4, order: 4, possibleText: "Propre"},
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 5, order: 5, possibleText: "Sans reproche"}
-    ];
-
-    const shortLikertOptions = [
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 1, order: 1, possibleText: "Non-désirable"},
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 2, order: 2, possibleText: "Sans opinion"},
-        {type: PossibleAnswerType.NUMBER, possibleNumber: 3, order: 3, possibleText: "Désirable"},
-    ];
 
     const admin = await prisma.user.upsert({
         where: { email: 'kyvinh@gmail.com' },
@@ -51,16 +37,11 @@ async function main() {
         update: {},
         create: {
             name: q1name,
-            type: "LIKERT",
+            type: QuestionType.DYNAMIC,
             description: 'Bonjour, ce questionnaire sonde les habitants de Bruxelles par rapport à la propreté publique. Comment estimez-vous la propreté des rues dans Bruxelles en général?',
             creatorId: admin.id,
             cercleId: cercleBx.id
         }
-    })
-    const q1optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: q1.id}]), []);
-    const q1options = await prisma.possibleAnswer.createMany({
-        data: q1optionsData,
-        skipDuplicates: true,   // Acts like an upsert
     })
     const q2name = 'Comment jugez-vous la mobilité dans Bruxelles et ses 19 communes?';
     const q2 = await prisma.question.upsert({
@@ -68,8 +49,8 @@ async function main() {
         update: {},
         create: {
             name: q2name,
-            type: "LONGTEXT",
-            description: 'Welcome 3 4 ...',
+            type: QuestionType.DYNAMIC,
+            description: 'Comment trouvez-vous les différentes options de mobilité dans notre capitale? Que ce soit pour vos déplacements privés ou professionnels?',
             creatorId: admin.id,
             cercleId: cercleBx.id
         }
@@ -92,16 +73,11 @@ async function main() {
         update: {},
         create: {
             name: terlindenQ1name,
-            type: "LIKERT",
+            type: QuestionType.DYNAMIC,
             description: "Bonjour, ce questionnaire sonde les habitants de la rue Félix Terlinden par rapport à la propreté publique. (MARKDOWN?) Notre rue mérite une attention particulière car elle est à proximité de plusieurs centres d'activité: La Chasse, Jourdan, Flagey.",
             creatorId: admin.id,
             cercleId: cercleTerlinden.id
         }
-    })
-    const terlindenQ1optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ1.id}]), []);
-    const terlindenQ1options = await prisma.possibleAnswer.createMany({
-        data: terlindenQ1optionsData,
-        skipDuplicates: true,   // Acts like an upsert
     })
 
     const terlindenQ2name = 'Comment améliorer notre rue et les rues avoisinantes en terme de mobilité et d\'attractivité?';
@@ -110,16 +86,11 @@ async function main() {
         update: {},
         create: {
             name: terlindenQ2name,
-            type: "LIKERT",
+            type: QuestionType.DYNAMIC,
             description: 'La rue n\'est pas safe pour les cyclistes (autorisés en sens contraire mais avec peu d\'espace. La rue n\'est pas verduré du tout.',
             creatorId: admin.id,
             cercleId: cercleTerlinden.id
         }
-    })
-    const terlindenQ2optionsData = likertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ2.id}]), []);
-    const terlindenQ2options = await prisma.possibleAnswer.createMany({
-        data: terlindenQ2optionsData,
-        skipDuplicates: true,   // Acts like an upsert
     })
 
     const terlindenQ3name = 'Quelles activités voudriez-vous voir dans la rue Félix Terlinden?';
@@ -128,16 +99,11 @@ async function main() {
         update: {},
         create: {
             name: terlindenQ3name,
-            type: "LIKERT",
+            type: QuestionType.DYNAMIC,
             description: "Quelles activités à soutenir? Rajouter une proposition d'activité si possible.",
             creatorId: admin.id,
             cercleId: cercleTerlinden.id
         }
-    })
-    const terlindenQ3optionsData = shortLikertOptions.reduce((prev, value) => ([...prev, {...value, questionId: terlindenQ3.id}]), []);
-    const terlindenQ3options = await prisma.possibleAnswer.createMany({
-        data: terlindenQ3optionsData,
-        skipDuplicates: true,   // Acts like an upsert
     })
 
     const cercleUnknown = await prisma.cercle.upsert({

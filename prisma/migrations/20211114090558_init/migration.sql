@@ -96,7 +96,7 @@ CREATE TABLE `Questionnaire` (
 -- CreateTable
 CREATE TABLE `Question` (
     `id` VARCHAR(191) NOT NULL,
-    `type` ENUM('TEXT', 'LONGTEXT', 'LIKERT') NOT NULL DEFAULT 'TEXT',
+    `type` ENUM('TEXT', 'LONGTEXT', 'LIKERT', 'DYNAMIC') NOT NULL DEFAULT 'TEXT',
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `questionnaireId` VARCHAR(191) NOT NULL,
