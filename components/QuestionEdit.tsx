@@ -1,13 +1,19 @@
-import {QuestionType} from '@prisma/client'
-import Likert from 'react-likert-scale';
-import React, {useState} from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
+import {useForm} from "react-hook-form";
+import {fetcher} from "./util/fetcher";
+import {QuestionEditDto} from "../pages/api/q/[q]/edit";
 
 export const QuestionEdit = ({question}) => {
 
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
+    const onSubmit = async (questionDto:QuestionEditDto) => {
+        const res = await fetcher(`/api/q/${question.id}/edit`, questionDto);
+        if (res?.status == 'ok') {
+            // Answer has been recorded
+        }
+        console.log('Post-Answer:', res)
+    };
 
     return <>
             <form onSubmit={handleSubmit(onSubmit)}>

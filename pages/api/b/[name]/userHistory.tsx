@@ -4,7 +4,6 @@ import prisma from '../../../../components/util/prismaClient'
 export default async function handler(req, res) {
 
     const session = await getSession({ req })
-    // @ts-ignore
     const userId = session?.user?.id;
 
     if (!userId) {

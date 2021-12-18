@@ -31,7 +31,6 @@ export default async function handler(req, res) {
         // TODO Should also check whether the user is a constituent, eligible for voting? Or whether he/she has already voted?
     }
 
-    // @ts-ignore
     const uid = hashUid(session.user.id)
 
     try {

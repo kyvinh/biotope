@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     if (!session) {
         return res.status(401).json(new Error("Who are you?"))
     }
-    // @ts-ignore
+
     const userId = session.user.id
 
     const callbackUrl = emailProvider.callbackUrl

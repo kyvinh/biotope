@@ -39,11 +39,12 @@ $dark:          #212529FF;
     }
   }
 
-  .accordion-button {
-    padding-left: 8px;
+  .form-group {
+    margin-bottom: 1rem;
   }
 
-  .accordion-body {
-    padding-left: 8px;
+  label {
+    display: inline-block;
+    margin-bottom: .5rem;
   }
 }

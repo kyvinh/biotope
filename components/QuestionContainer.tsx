@@ -7,6 +7,7 @@ import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
 import {QuestionEdit} from "./QuestionEdit";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const QuestionContainer = ({question, disabled = false}) => {
 
@@ -47,7 +48,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
     return <div className="questionnaire-container">
         <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
         <div className="card-body">
-            { !isEditMode && <h6>{question.description}</h6> }
+            { !isEditMode && <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6> }
 
             {!session ?
                 <div>

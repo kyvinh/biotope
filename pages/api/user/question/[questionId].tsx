@@ -14,11 +14,11 @@ export default async function handler(req, res) {
         return res.status(500).json(new Error("Invalid request"))
     }
 
-    // @ts-ignore
     const hashedUid = hashUid(session.user.id);
 
     try {
         // Check whether the user has answered this question already
+        // We voluntarily don't fetch the data (privacy) but just the count
 
         const result =
             await prisma.answer.count({
@@ -28,15 +28,6 @@ export default async function handler(req, res) {
                 }
             })
 
-/*
-            await prisma.$queryRaw`select question.id as questionId,
-                                    count(answer.id) as hasAnswer from answer
-                                    left join question on answer.questionId = question.id
-                                    left join cercle on cercle.id = question.cercleId
-                                    where answer.hashUid = ${hashedUid}
-                                    and cercle.id = ${questionId}
-                                    group by question.id`
-*/
         const answerResult = {answered: false};
 
         if (result > 0) {
