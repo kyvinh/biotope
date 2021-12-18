@@ -11,6 +11,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
 
     const [answer, setAnswer] = useState(null)
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isEditMode, setIsEditMode] = useState(false)
     const {data: session} = useSession({required: false})
 
     // Whether the user has answered this question or not
@@ -43,7 +44,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
     }
 
     return <div className="questionnaire-container">
-        <h5>{question.name}</h5>
+        <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
         <div className="card-body">
             <h6>{question.description}</h6>
 
@@ -53,9 +54,10 @@ export const QuestionContainer = ({question, disabled = false}) => {
                         <a className="btn btn-outline-primary">Sign in</a>
                     </Link> to vote
                 </div>
-                : <>
+                :
+                <>
                     <Question question={question} setState={setAnswer} answered={isSubmitted || questionAnswered}
-                              showTitle={false} disabled={disabled} answerSubmit={answerSubmit}/>
+                              disabled={disabled} answerSubmit={answerSubmit} editMode={isEditMode}/>
                 </>
             }
             { ((isSubmitted || questionAnswered) && answerResults) ?
