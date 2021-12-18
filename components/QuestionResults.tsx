@@ -17,6 +17,7 @@ export const QuestionResults = ({question, results}) => {
         ]
     */
 
+    console.log('questionResults', results)
     const totalVotesCount = results.reduce((acc, result) => acc + result._count.answers, 0)
 
     const options = results.reduce(

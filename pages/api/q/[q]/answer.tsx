@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     }
 
     const questionId = req.query.q;
-    const answer:AnswerDto = req.body?.answer;
+    const answer:AnswerDto = req.body;
 
     if (!answer) {
         return res.status(400).send({message: 'Invalid POST request'})

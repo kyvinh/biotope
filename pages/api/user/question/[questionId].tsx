@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 */
         const answerResult = {answered: false};
 
-        if (result.number > 0) {
+        if (result > 0) {
             answerResult.answered = true;
         }
         res.status(200).json(answerResult)

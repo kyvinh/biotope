@@ -15,15 +15,14 @@ export const Questionnaire = ({question, disabled = false}) => {
 
     // Whether the user has answered this question or not
     const {data: questionAnsweredObject} = useSWR(session ? `/api/user/question/${question.id}` : null, fetcher);
-    console.log('questionAnswered', questionAnsweredObject)
     const questionAnswered = questionAnsweredObject?.answered
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
     const {data: answerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
-    console.log('resultsObject', answerResults)
+    console.log('answerResults', answerResults)
 
-    const questionSubmit = async (event) => {
+    const answerSubmit = async (event) => {
         event.preventDefault();
         event.target.disabled = true;
 
@@ -57,11 +56,10 @@ export const Questionnaire = ({question, disabled = false}) => {
                 </div>
                 : <>
                     <Question question={question} setState={setAnswer} answered={isSubmitted || questionAnswered}
-                              showTitle={false} disabled={disabled}/>
-                    <input type="submit" value="Submit" onClick={questionSubmit} disabled={disabled}/>
+                              showTitle={false} disabled={disabled} answerSubmit={answerSubmit}/>
                 </>
             }
-            { (isSubmitted && answerResults) ?
+            { ((isSubmitted || questionAnswered) && answerResults) ?
                 <>
                     <QuestionResults question={question} results={answerResults.results}/>
                     <Arguments question={question} questionArguments={question.arguments} />

@@ -1,12 +1,12 @@
 import {QuestionType} from '@prisma/client'
 import Likert from 'react-likert-scale';
-import {useState} from "react";
+import React, {useState} from "react";
 
-export const Question = ({question, setState, answered, showTitle = true, disabled = false}) => {
+export const Question = ({question, setState, answered, showTitle = true, disabled = false, answerSubmit}) => {
 
     const updateAnswer = (value) => {
         setLonganswer(value)
-        setState(question.id, value)
+        setState(value)
     }
 
     const [longanswer, setLonganswer] = useState("test")
@@ -21,7 +21,7 @@ export const Question = ({question, setState, answered, showTitle = true, disabl
         id: question.id,
         onChange: val => {
             setLikertanswer(val.value)
-            setState(question.id, val.value)    // Likert option values are possibleAnswer.id (text might be dangerous here!)
+            setState(val.value)    // Likert option values are possibleAnswer.id (text might be dangerous here!)
         }
     };
 
@@ -29,19 +29,19 @@ export const Question = ({question, setState, answered, showTitle = true, disabl
         { showTitle ? <div>{question.name}</div> : null}
         <div>{question.description}</div>
         {!answered ?
-            (question.type === QuestionType.LIKERT ?
-                <>
-                    <Likert {...likertOptions} layout='stacked'/>
-                </>
-                :
-            question.type === QuestionType.LONGTEXT ?
-                <>
-                    <textarea value={longanswer} onChange={e => updateAnswer(e.target.value)}/>
-                </>
-                : null
-            )
-            : null
-        }
+            <>
+                {question.type === QuestionType.LIKERT ?
+                    <>
+                        <Likert {...likertOptions} layout='stacked'/>
+                    </>
+                : null}
+                {question.type === QuestionType.LONGTEXT ?
+                    <>
+                        <textarea value={longanswer} onChange={e => updateAnswer(e.target.value)}/>
+                    </>
+                : null}
+                <input type="submit" value="Submit" onClick={answerSubmit} disabled={disabled}/>
+            </> : null}
     </>
 
 };
