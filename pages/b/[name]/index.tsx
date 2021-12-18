@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
 import React from "react";
-import {Questionnaire} from "../../../components/Questionnaire";
+import {QuestionContainer} from "../../../components/QuestionContainer";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -73,7 +73,7 @@ export default function BiotopeHome() {
                             <div>
                                 {b.questions ? b.questions.map((question) => {
                                     const disabled = !authorized || !session;
-                                    return <Questionnaire key={question.id} question={question} disabled={disabled} />
+                                    return <QuestionContainer key={question.id} question={question} disabled={disabled} />
                                 }) : null}
                             </div>
                         </>

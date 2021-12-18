@@ -7,7 +7,7 @@ import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
 
-export const Questionnaire = ({question, disabled = false}) => {
+export const QuestionContainer = ({question, disabled = false}) => {
 
     const [answer, setAnswer] = useState(null)
     const [isSubmitted, setIsSubmitted] = useState(false)
@@ -20,7 +20,6 @@ export const Questionnaire = ({question, disabled = false}) => {
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
     const {data: answerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
-    console.log('answerResults', answerResults)
 
     const answerSubmit = async (event) => {
         event.preventDefault();
