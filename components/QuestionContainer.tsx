@@ -6,6 +6,7 @@ import useSWR from "swr";
 import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
+import {QuestionEdit} from "./QuestionEdit";
 
 export const QuestionContainer = ({question, disabled = false}) => {
 
@@ -46,7 +47,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
     return <div className="questionnaire-container">
         <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
         <div className="card-body">
-            <h6>{question.description}</h6>
+            { !isEditMode && <h6>{question.description}</h6> }
 
             {!session ?
                 <div>
@@ -56,8 +57,12 @@ export const QuestionContainer = ({question, disabled = false}) => {
                 </div>
                 :
                 <>
-                    <Question question={question} setState={setAnswer} answered={isSubmitted || questionAnswered}
-                              disabled={disabled} answerSubmit={answerSubmit} editMode={isEditMode}/>
+                    {isEditMode ?
+                        <QuestionEdit question={question} />
+                        :
+                        <Question question={question} setState={setAnswer} answered={isSubmitted || questionAnswered}
+                                  disabled={disabled} answerSubmit={answerSubmit} />
+                    }
                 </>
             }
             { ((isSubmitted || questionAnswered) && answerResults) ?
