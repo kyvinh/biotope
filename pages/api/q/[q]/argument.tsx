@@ -10,10 +10,10 @@ export default async function handler(req, res) {
         return
     }
 
-    const questionId = req.query.q;
+    const possibleAnswerId = req.query.q;
     const argumentText = req.body?.argumentText;
 
-    if (!questionId && !argumentText) {
+    if (!possibleAnswerId && !argumentText) {
         return res.status(400).send({message: 'Invalid request'})
     }
 
@@ -28,17 +28,16 @@ export default async function handler(req, res) {
 
         const argument = await prisma.argument.create({
             data: {
-                questionId: questionId,
+                possibleAnswerId: possibleAnswerId,
                 text: argumentText,
-                // TODO We should provide the answerNum or Text so we can visually organise this argument
-                // But this means we have to retrieve the user's answers, which is not ideal... or we can re-ask the author?
+                creatorId: session.user.id,
             }
         })
-        return res.status(200).json({ argument: argument})
+        return res.status(200).json({ argument})
 
     } catch (error) {
-        console.error("QUESTION_C_ARG_ERROR", {
-            identifier: questionId,
+        console.error("QUESTION_ANSWER_ARG_ERROR", {
+            identifier: possibleAnswerId,
             error
         });
         throw error;

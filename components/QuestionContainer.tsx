@@ -1,6 +1,5 @@
 import {Question} from "./Question";
 import {QuestionResults} from "./QuestionResults";
-import {Arguments} from "./Arguments";
 import {fetcher} from "./util/fetcher";
 import useSWR from "swr";
 import React, {useState} from "react";
@@ -21,7 +20,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
-    const {data: answerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
+    const {data: answerResults, mutate} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
 
     const answerSubmit = async (values) => {
         /*
@@ -45,6 +44,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
 
             if (res?.status == 'ok') {
                 // Answer has been recorded
+                await mutate()
             }
 
             console.log('Post-Answer:', res)

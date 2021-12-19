@@ -2,18 +2,18 @@ import React, {useState} from "react";
 import {fetcher} from "./util/fetcher";
 import {useSession} from "next-auth/react";
 
-export const Arguments = ({questionArguments, question}) => {
+export const Arguments = ({answerArguments, possibleAnswerId}) => {
 
     const [showAddArgument, setShowAddArgument] = useState(false)
     const [argumentText, setArgumentText] = useState("")
     const {data: session} = useSession({required: false})
 
-    const submitArgument = async (event, questionId, argumentText) => {
+    const submitArgument = async (event) => {
         event.preventDefault();
         event.target.disabled = true;
 
         if (session) {
-            const res = await fetcher(`/api/q/${questionId}/argument`, { argumentText: argumentText});
+            const res = await fetcher(`/api/q/${possibleAnswerId}/argument`, { argumentText});
             if (res?.status == 'ok') {
                 // Argument has been recorded
             }
@@ -26,15 +26,15 @@ export const Arguments = ({questionArguments, question}) => {
     // console.log(questionArguments)
 
     return <>
-        { questionArguments ? questionArguments.map((argument) =>
+        { answerArguments ? answerArguments.map((argument) =>
             <div key={argument.id}>
-                <p>{argument.answerText}: {argument.text}</p>
+                <p>{argument.creator.name}: {argument.text}</p>
             </div>
         ) : null}
         { showAddArgument ?
             <div>
                 <textarea value={argumentText} onChange={e => setArgumentText(e.target.value)}/>
-                <input type="submit" value="Submit argument" onClick={e => submitArgument(e, question.id, argumentText)} />
+                <input type="submit" value="Submit argument" onClick={submitArgument} />
                 <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>
             </div>
         :

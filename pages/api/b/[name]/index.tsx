@@ -5,7 +5,12 @@ export const questionIncludeBiotopeQuery = {
         creator: true,
         possibleAnswers: {
             include: {
-                arguments: true
+                arguments: {
+                    include: {
+                        creator: true
+                    }
+                },
+                creator: true
             },
             orderBy: {
                 order: 'asc'    // TODO Does this work?

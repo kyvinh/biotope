@@ -47,7 +47,7 @@ export const QuestionResults = ({question, results: rawResults}) => {
                         <Col sm={2}>
                         </Col>
                         <Col>
-                            <Arguments question={question} questionArguments={answerResult.arguments} />
+                            <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments} />
                         </Col>
                     </Row>
                 </div>
