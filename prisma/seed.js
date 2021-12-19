@@ -79,7 +79,16 @@ async function main() {
             cercleId: cercleTerlinden.id
         }
     })
-
+    const terlindenQ1a1 = await prisma.possibleAnswer.upsert({
+        where: { questionId_order: { order: 1, questionId: terlindenQ1.id}},
+        update: {},
+        create: {
+            type: PossibleAnswerType.TEXT,
+            order: 1,
+            possibleText: "Sale",
+            questionId: terlindenQ1.id
+        }
+    })
     const terlindenQ2name = 'Comment améliorer notre rue et les rues avoisinantes en terme de mobilité et d\'attractivité?';
     const terlindenQ2 = await prisma.question.upsert({
         where: { cercleId_name: { name: terlindenQ2name , cercleId: cercleTerlinden.id}},

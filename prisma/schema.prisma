@@ -51,6 +51,7 @@ model User {
   invitationsSent     Invitation[] @relation("User_InvitationCreator")
   invitationsReceived Invitation[] @relation("User_InvitedUser")
   questions           Question[]
+  possibleAnswers     PossibleAnswer[]
 }
 
 model VerificationToken {
@@ -134,6 +135,9 @@ model PossibleAnswer {
   possibleNumber Int?
   order        Int            @default(0)
   answers      Answer[]
+  createdOn    DateTime       @default(now())
+  creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId    String
 
   @@unique([questionId, possibleText, possibleNumber])
   @@unique([questionId, order])
