@@ -3,7 +3,7 @@ import Likert from 'react-likert-scale';
 import React, {useState} from "react";
 import { useForm } from "react-hook-form";
 
-export const Question = ({question, setState, answered, disabled = false, answerSubmit}) => {
+export const Question = ({question, answered, disabled = false, answerSubmit}) => {
 
     const sortedPossibleAnswers:PossibleAnswer[] = question.possibleAnswers
         .sort((a,b) => a.order - b.order);
@@ -14,7 +14,7 @@ export const Question = ({question, setState, answered, disabled = false, answer
 
     const updateLongAnswer = (value) => {
         setLonganswer(value)
-        setState(value)
+        //setState(value)
     }
 
     // -- QuestionType.LIKERT --
@@ -29,7 +29,7 @@ export const Question = ({question, setState, answered, disabled = false, answer
         id: question.id,
         onChange: val => {
             setLikertanswer(val.value)
-            setState(val.value)    // Likert option values are possibleAnswer.id (text might be dangerous here!)
+            //setState(val.value)    // Likert option values are possibleAnswer.id (text might be dangerous here!)
         }
     };
 

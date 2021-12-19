@@ -6,7 +6,8 @@ export interface AnswerDto {
     possibleAnswerId?: string,
     newAnswer?: {
         text?: string
-    }
+    },
+    possibleAnswerIds?: string[]
 }
 
 export default async function handler(req, res) {
@@ -51,30 +52,48 @@ export default async function handler(req, res) {
 
         const transaction = []
 
-        const updateClause = {
-            // answer is the possibleAnswer.id
-            // TODO Should modify createdOn?
-            possibleAnswerId: answer.possibleAnswerId
-        };
-
-        transaction.push(
-            prisma.answer.upsert({
-                where: {
-                    questionId_hashUid: {
+        if (answer.possibleAnswerId) {
+            transaction.push(
+                prisma.answer.upsert({
+                    where: {
+                        questionId_hashUid: {
+                            questionId: questionId,
+                            hashUid: uid
+                        }
+                    },
+                    // TODO Should modify createdOn?
+                    update: {
+                        possibleAnswerId: answer.possibleAnswerId
+                    },
+                    create: {
+                        possibleAnswerId: answer.possibleAnswerId,
+                        hashUid: uid,
+                        questionId: questionId,
+                    }
+                })
+            )
+        }
+        if (answer.possibleAnswerIds) {
+            transaction.push(
+                prisma.answer.deleteMany({
+                    where: {
                         questionId: questionId,
                         hashUid: uid
                     }
-                },
-                update: updateClause,
-                create: {
-                    ...updateClause,
-                    hashUid: uid,
-                    questionId: questionId,
-                }
-            })
-        )
+                })
+            )
+            transaction.push(
+                ...answer.possibleAnswerIds.map(possibleAnswerId => prisma.answer.create({
+                    data: {
+                        questionId: questionId,
+                        hashUid: uid,
+                        possibleAnswerId: possibleAnswerId,
+                    }
+                }))
+            )
+        }
 
-        await prisma.$transaction(transaction)
+        await prisma.$transaction(transaction);
 
     } catch (error) {
         console.error("QUESTION_ANSWER_ERROR", {

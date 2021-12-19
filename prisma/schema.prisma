@@ -152,7 +152,7 @@ model Answer {
   possibleAnswerId String
   createdOn    DateTime       @default(now())
 
-  @@unique([questionId, hashUid])
+  @@unique([questionId, hashUid, possibleAnswerId])
 }
 
 model Argument {

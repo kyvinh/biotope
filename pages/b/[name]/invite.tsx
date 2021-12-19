@@ -21,7 +21,7 @@ export default function BiotopeHome() {
     }
 
     const {name} = useRouter().query
-    const {biotope: b} = useBiotope(name)
+    const {biotope: b} = useBiotope(name as string)
 
     const [invitedEmail, setInvitedEmail] = useState("");
 

@@ -11,7 +11,6 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const QuestionContainer = ({question, disabled = false}) => {
 
-    const [answer, setAnswer] = useState(null)
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
     const {data: session} = useSession({required: false})
@@ -24,10 +23,25 @@ export const QuestionContainer = ({question, disabled = false}) => {
     // Type of resultsObject = { questionId: { average: Int }
     const {data: answerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
 
-    const answerSubmit = async () => {
+    const answerSubmit = async (values) => {
+        /*
+        console.log(values)
+        For dynamic questions: {
+            "question-ckxd4l25p0053i4uzwit3vy0p": {
+                "ckxd4wtfc0063ekuzl19g8dax": false,
+                "ckxd4wtfc0063ekuzl19g8qwe": true
+            }
+        }
+        */
         if (session) {
+            const possibleAnswerIds:string[] = Object.entries(values[`question-${question.id}`]).reduce((acc, [key, value])=> {
+                if (value) {
+                    acc.push(key)
+                }
+                return acc
+            }, [])
             setIsSubmitted(true)
-            const res = await fetcher(`/api/q/${question.id}/answer`, { possibleAnswerId: answer});
+            const res = await fetcher(`/api/q/${question.id}/answer`, { possibleAnswerIds });
 
             if (res?.status == 'ok') {
                 // Answer has been recorded
@@ -58,7 +72,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
                     {isEditMode ?
                         <QuestionEdit question={question} />
                         :
-                        <Question question={question} setState={setAnswer} answered={isSubmitted || questionAnswered}
+                        <Question question={question} answered={isSubmitted || questionAnswered}
                                   disabled={disabled} answerSubmit={answerSubmit} />
                     }
                 </>
