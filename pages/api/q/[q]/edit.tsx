@@ -1,6 +1,7 @@
 import prisma from '../../../../components/util/prismaClient'
 import {getSession} from "next-auth/react";
 import {Question} from ".prisma/client";
+import {questionIncludeBiotopeQuery} from "../../b/[name]";
 
 export interface QuestionEditDto {
     name: string,
@@ -43,12 +44,21 @@ export default async function handler(req, res) {
             throw new Error('Invalid /q request!')
         }
 
-        const question:Question = await prisma.question.update({
+        await prisma.question.update({
             data: questionData,
             where: {
                 id: questionId
             }
         })
+
+        const updatedQuestion = await prisma.question.findUnique({
+            where: {
+                id: questionId
+            },
+            include: questionIncludeBiotopeQuery.include
+        })
+
+        return res.status(200).json({status: 'ok', updatedQuestion})
 
     } catch (error) {
         console.error("QUESTION_EDIT_ERROR", {
@@ -57,7 +67,4 @@ export default async function handler(req, res) {
         });
         throw error;
     }
-
-    return res.status(200).json({status: 'ok'})
-
 }

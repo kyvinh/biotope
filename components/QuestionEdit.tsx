@@ -5,14 +5,13 @@ import {QuestionEditDto} from "../pages/api/q/[q]/edit";
 
 export const QuestionEdit = ({question}) => {
 
-
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = async (questionDto:QuestionEditDto) => {
         const res = await fetcher(`/api/q/${question.id}/edit`, questionDto);
         if (res?.status == 'ok') {
-            // Answer has been recorded
+            // TODO: question should be re-sent to parent to be included in original data source
+            question = res.updatedQuestion
         }
-        console.log('Post-Answer:', res)
     };
 
     return <>

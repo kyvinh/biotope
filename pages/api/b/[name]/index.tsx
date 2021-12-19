@@ -1,5 +1,17 @@
 import prisma from '../../../../components/util/prismaClient'
 
+export const questionIncludeBiotopeQuery = {
+    include: {
+        creator: true,
+        possibleAnswers: {
+            orderBy: {
+                order: 'asc'    // TODO Does this work?
+            }
+        },
+        arguments: true,
+    }
+}
+
 export default async function handler(req, res) {
 
     // TODO: No authorization check here?!
@@ -11,15 +23,7 @@ export default async function handler(req, res) {
         include: {
             creator: true,
             questions: {
-                include: {
-                    creator: true,
-                    possibleAnswers: {
-                        orderBy: {
-                            order: 'asc'    // TODO Does this work?
-                        }
-                    },
-                    arguments: true,
-                },
+                include: questionIncludeBiotopeQuery.include,
                 orderBy: {
                     createdOn: 'asc',
                 }
