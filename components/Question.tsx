@@ -35,11 +35,44 @@ export const Question = ({question, setState, answered, disabled = false, answer
 
     // -- QuestionType.DYNAMIC --
 
+    const DynamicAnswer = ({answer}) => {
+        return <div className="form-check">
+            <input className="form-check-input" type="checkbox"
+                {...register(`question-${question.id}.${answer.id}`)} id={`question-${question.id}.${answer.id}`} />
+            <label className="form-check-label" htmlFor={`question-${question.id}.${answer.id}`}>
+                {answer.possibleText}
+            </label>
+        </div>
+    }
+
+    const NewDynamicAnswer = () => {
+        return <div className="form-check" key={`possible-answer-new`}>
+            <input className="form-check-input" type="checkbox" value="false" disabled={true} />
+            <label className="form-check-label" htmlFor={`possible-answer-new`}>
+                <input />
+            </label>
+        </div>
+    }
+
+    // -- COMPONENT --
+
+    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues} = useForm();
+
+    const handleAnswerSubmit = (e) => {
+        // Check we chose at least one answer!
+        clearErrors()
+        const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => !!getValues(`question-${question.id}`)[answer.id], false)
+        if (!oneChecked) {
+            setError(`question-${question.id}`, {type: 'manual', message: 'Please choose at least one answer, or create your own.'})
+        }
+        handleSubmit(answerSubmit)(e)
+    }
+
     // -- RENDER --
 
     return <>
         { !answered &&
-            <>
+            <form onSubmit={handleAnswerSubmit}>
                 {question.type === QuestionType.LIKERT &&
                     <>
                         <Likert {...likertOptions} layout='stacked'/>
@@ -53,17 +86,15 @@ export const Question = ({question, setState, answered, disabled = false, answer
                 {question.type === QuestionType.DYNAMIC &&
                 <>
                     { sortedPossibleAnswers.map(answer =>
-                        <div className="form-check" key={`possible-answer-${answer.id}`}>
-                            <input className="form-check-input" type="checkbox" value="" id={`possible-answer-${answer.id}`} />
-                            <label className="form-check-label" htmlFor={`possible-answer-${answer.id}`}>
-                                {answer.possibleText}
-                            </label>
-                        </div>)
-                    }
+                        <DynamicAnswer answer={answer} key={`possible-answer-${answer.id}`} />
+                    )}
+                    <NewDynamicAnswer />
                 </>
                 }
-                <input type="submit" value="Submit" onClick={answerSubmit} disabled={disabled}/>
-            </>
+                <input type="hidden" name={`question-${question.id}`} className={`${errors[`question-${question.id}`] ? 'is-invalid' : ''}`} />
+                <input type="submit" value="Submit" disabled={disabled}/>
+                { errors[`question-${question.id}`] && <div className="invalid-feedback">{errors[`question-${question.id}`].message}</div>}
+            </form>
         }
     </>
 };

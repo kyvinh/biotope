@@ -24,10 +24,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
     // Type of resultsObject = { questionId: { average: Int }
     const {data: answerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
 
-    const answerSubmit = async (event) => {
-        event.preventDefault();
-        event.target.disabled = true;
-
+    const answerSubmit = async () => {
         if (session) {
             setIsSubmitted(true)
             const res = await fetcher(`/api/q/${question.id}/answer`, { possibleAnswerId: answer});
