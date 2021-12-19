@@ -97,7 +97,7 @@ async function main() {
         create: {
             name: terlindenQ2name,
             type: QuestionType.DYNAMIC,
-            description: 'La rue n\'est pas safe pour les cyclistes (autorisés en sens contraire mais avec peu d\'espace. La rue n\'est pas verduré du tout.',
+            description: 'La rue n\'est pas safe pour les cyclistes (autorisés en sens contraire mais avec peu d\'espace). La rue n\'est pas verdurée du tout.',
             creatorId: admin.id,
             cercleId: cercleTerlinden.id
         }

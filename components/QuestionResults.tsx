@@ -28,7 +28,7 @@ export const QuestionResults = ({question, results}) => {
         }
         , []).sort((n1,n2) => n1.order - n2.order)
 
-    console.log(options)
+    // console.log(options)
 
     return <div className="py-2">
         <div >Résultats: {totalVotesCount} vote(s)</div>
