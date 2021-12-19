@@ -86,7 +86,8 @@ async function main() {
             type: PossibleAnswerType.TEXT,
             order: 1,
             possibleText: "Sale",
-            questionId: terlindenQ1.id
+            questionId: terlindenQ1.id,
+            creatorId: admin.id
         }
     })
     const terlindenQ2name = 'Comment améliorer notre rue et les rues avoisinantes en terme de mobilité et d\'attractivité?';

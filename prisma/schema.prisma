@@ -108,7 +108,7 @@ model Question {
   id           String         @id @default(cuid())
   type         QuestionType   @default(TEXT)
   name         String
-  description  String?
+  description  String?        @db.VarChar(4096)
   cercle       Cercle         @relation(fields: [cercleId], references: [id], onDelete: Cascade)
   cercleId     String
   createdOn    DateTime       @default(now())
