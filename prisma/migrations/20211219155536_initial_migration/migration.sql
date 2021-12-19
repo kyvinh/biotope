@@ -120,18 +120,17 @@ CREATE TABLE `Answer` (
     `possibleAnswerId` VARCHAR(191) NOT NULL,
     `createdOn` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `Answer_questionId_hashUid_key`(`questionId`, `hashUid`),
+    UNIQUE INDEX `Answer_questionId_hashUid_possibleAnswerId_key`(`questionId`, `hashUid`, `possibleAnswerId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Argument` (
     `id` VARCHAR(191) NOT NULL,
-    `questionId` VARCHAR(191) NOT NULL,
+    `possibleAnswerId` VARCHAR(191) NOT NULL,
     `text` VARCHAR(191) NOT NULL,
-    `answerNum` INTEGER NULL,
-    `answerText` VARCHAR(191) NULL,
     `createdOn` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `creatorId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -173,4 +172,7 @@ ALTER TABLE `Answer` ADD CONSTRAINT `Answer_questionId_fkey` FOREIGN KEY (`quest
 ALTER TABLE `Answer` ADD CONSTRAINT `Answer_possibleAnswerId_fkey` FOREIGN KEY (`possibleAnswerId`) REFERENCES `PossibleAnswer`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Argument` ADD CONSTRAINT `Argument_questionId_fkey` FOREIGN KEY (`questionId`) REFERENCES `Question`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Argument` ADD CONSTRAINT `Argument_possibleAnswerId_fkey` FOREIGN KEY (`possibleAnswerId`) REFERENCES `PossibleAnswer`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Argument` ADD CONSTRAINT `Argument_creatorId_fkey` FOREIGN KEY (`creatorId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

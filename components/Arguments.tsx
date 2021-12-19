@@ -15,7 +15,7 @@ export const Arguments = ({questionArguments, question}) => {
         if (session) {
             const res = await fetcher(`/api/q/${questionId}/argument`, { argumentText: argumentText});
             if (res?.status == 'ok') {
-                // Answers have been submitted
+                // Argument has been recorded
             }
         } else {
             // Arguments are anonymous but you should be logged in? (SO lets you add as anonymous but has a review queue in process)
@@ -33,12 +33,12 @@ export const Arguments = ({questionArguments, question}) => {
         ) : null}
         { showAddArgument ?
             <div>
-                <p>ARGUMENTS SHOULD BE ADDED AT ANSWER LEVEL (not question level like here)</p>
                 <textarea value={argumentText} onChange={e => setArgumentText(e.target.value)}/>
                 <input type="submit" value="Submit argument" onClick={e => submitArgument(e, question.id, argumentText)} />
+                <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>
             </div>
         :
-            <p>Would you like to <button onClick={() => setShowAddArgument(true)}>anonymously argument/comment</button> on this question?</p>
+            <button className="btn btn-link" onClick={() => setShowAddArgument(true)}>Add an argument/observation</button>
         }
     </>
 }

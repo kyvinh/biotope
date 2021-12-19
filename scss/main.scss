@@ -27,10 +27,6 @@ $dark:          #212529FF;
   @extend .card;
   @extend .my-3;
 
-  h5 {
-    @extend .card-header
-  }
-
   .card-body {
     h6 {
       @extend .card-title;

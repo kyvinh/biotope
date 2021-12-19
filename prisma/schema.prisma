@@ -52,6 +52,7 @@ model User {
   invitationsReceived Invitation[] @relation("User_InvitedUser")
   questions           Question[]
   possibleAnswers     PossibleAnswer[]
+  arguments           Argument[]
 }
 
 model VerificationToken {
@@ -116,7 +117,6 @@ model Question {
   creatorId    String
   answers      Answer[]
   possibleAnswers   PossibleAnswer[]
-  arguments    Argument[]
 
   @@unique([cercleId, name])
 }
@@ -138,6 +138,7 @@ model PossibleAnswer {
   createdOn    DateTime       @default(now())
   creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
+  arguments    Argument[]
 
   @@unique([questionId, possibleText, possibleNumber])
   @@unique([questionId, order])
@@ -157,10 +158,10 @@ model Answer {
 
 model Argument {
   id           String         @id @default(cuid())
-  question     Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId   String
+  possibleAnswer PossibleAnswer @relation(fields: [possibleAnswerId], references: [id], onDelete: Cascade)
+  possibleAnswerId String
   text         String
-  answerNum    Int?
-  answerText   String?
   createdOn    DateTime       @default(now())
+  creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId    String
 }

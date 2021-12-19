@@ -4,11 +4,13 @@ export const questionIncludeBiotopeQuery = {
     include: {
         creator: true,
         possibleAnswers: {
+            include: {
+                arguments: true
+            },
             orderBy: {
                 order: 'asc'    // TODO Does this work?
             }
         },
-        arguments: true,
     }
 }
 

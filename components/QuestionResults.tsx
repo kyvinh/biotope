@@ -1,11 +1,12 @@
 import React from "react";
 import {Col, ProgressBar, Row} from "react-bootstrap";
+import {Arguments} from "./Arguments";
 
-export const QuestionResults = ({question, results}) => {
-    if (!results) {
+export const QuestionResults = ({question, results: rawResults}) => {
+    if (!rawResults) {
         return null
     }
-    /* results:
+    /* rawResults:
         PossibleAnswers[
             id: "ckweupyty0084p0uz1ugb3zcy"
             order: 1
@@ -17,23 +18,22 @@ export const QuestionResults = ({question, results}) => {
         ]
     */
 
-    const totalVotesCount = results.reduce((acc, result) => acc + result._count.answers, 0)
+    const totalVotesCount = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
 
-    const options = results.reduce(
-        (acc, possibleAnswer) => {
+    const answerResults = rawResults.reduce(
+        (acc, rawResult) => {
+            const possibleAnswer = question.possibleAnswers.find(element => element.id = rawResult.id)
             const answerResult = { ...possibleAnswer }
-            answerResult.count = possibleAnswer._count.answers
+            answerResult.count = rawResult._count.answers
             answerResult.percent = answerResult.count / totalVotesCount * 100
             return [...acc, answerResult]
         }
         , []).sort((n1,n2) => n1.order - n2.order)
 
-    // console.log(options)
-
     return <div className="py-2">
         <div >Résultats: {totalVotesCount} vote(s)</div>
         <div>
-            { options.map((answerResult, i) =>
+            { answerResults.map((answerResult, i) =>
                 <div key={i}>
                     <Row className="align-items-center">
                         <Col sm={2}>
@@ -41,6 +41,13 @@ export const QuestionResults = ({question, results}) => {
                         </Col>
                         <Col>
                             <ProgressBar now={answerResult.percent} label={answerResult.count} />
+                        </Col>
+                    </Row>
+                    <Row className="align-items-center">
+                        <Col sm={2}>
+                        </Col>
+                        <Col>
+                            <Arguments question={question} questionArguments={answerResult.arguments} />
                         </Col>
                     </Row>
                 </div>

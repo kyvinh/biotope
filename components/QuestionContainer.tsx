@@ -57,7 +57,10 @@ export const QuestionContainer = ({question, disabled = false}) => {
     }
 
     return <div className="questionnaire-container">
-        <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
+        <div className="card-header">
+            <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
+            <h6>par {question.creator.name}</h6>
+        </div>
         <div className="card-body">
             { !isEditMode && <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6> }
 
@@ -80,7 +83,6 @@ export const QuestionContainer = ({question, disabled = false}) => {
             { ((isSubmitted || questionAnswered) && answerResults) ?
                 <>
                     <QuestionResults question={question} results={answerResults.results}/>
-                    <Arguments question={question} questionArguments={question.arguments} />
                 </>
                 : null
             }
