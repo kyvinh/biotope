@@ -7,6 +7,7 @@ import {useSession} from "next-auth/react";
 import Link from "next/link";
 import {QuestionEdit} from "./QuestionEdit";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import {UserFlair} from "./UserFlair";
 
 export const QuestionContainer = ({question, disabled = false}) => {
 
@@ -59,7 +60,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
     return <div className="questionnaire-container">
         <div className="card-header">
             <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
-            <h6>par {question.creator.name}</h6>
+            <h6>par <UserFlair user={question.creator} /></h6>
         </div>
         <div className="card-body">
             { !isEditMode && <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6> }

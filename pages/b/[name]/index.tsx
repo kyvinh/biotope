@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
 import React from "react";
 import {QuestionContainer} from "../../../components/QuestionContainer";
+import {UserFlair} from "../../../components/UserFlair";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -47,7 +48,7 @@ export default function BiotopeHome() {
                         <h5 className="card-title">{b.name}</h5>
                         { b.description ? <p className="card-text">{b.description}</p> : null}
                         <p className="card-text">
-                            Biotope created by <span>{b.creator.name}</span> on {b.createdOn}.&nbsp;
+                            Biotope created by <UserFlair user={b.creator} theme="outline-light" /> on {b.createdOn}.&nbsp;
                             {b.contact ? <span>Contact: {b.contact}</span> : null}
                         </p>
                     </div>
