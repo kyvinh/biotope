@@ -94,6 +94,14 @@ export default NextAuth({
                 userId: user.id,
                 actionType: ActionType.REGISTER_EMAIL,
               }
+            }),
+            prisma.user.update({
+              where: {
+                id: user.id
+              },
+              data: {
+                reputationPoints: { increment: 5}
+              }
             })
         )
 

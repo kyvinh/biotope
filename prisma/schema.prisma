@@ -54,6 +54,7 @@ model User {
   possibleAnswers     PossibleAnswer[]
   arguments           Argument[]
   reputationActions   ReputationAction[]
+  reputationPoints    Int          @default(0)
 }
 
 model VerificationToken {
