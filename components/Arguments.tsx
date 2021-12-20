@@ -28,7 +28,7 @@ export const Arguments = ({answerArguments, possibleAnswerId}) => {
     return <>
         { answerArguments ? answerArguments.map((argument) =>
             <div key={argument.id}>
-                <p>{argument.creator.name}: {argument.text}</p>
+                <p>{argument.creator.name ? argument.creator.name : "Un voisin"}: {argument.text}</p>
             </div>
         ) : null}
         { showAddArgument ?
