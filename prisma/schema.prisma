@@ -53,6 +53,7 @@ model User {
   questions           Question[]
   possibleAnswers     PossibleAnswer[]
   arguments           Argument[]
+  reputationActions   ReputationAction[]
 }
 
 model VerificationToken {
@@ -164,4 +165,30 @@ model Argument {
   createdOn    DateTime       @default(now())
   creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
+}
+
+enum ActionType {
+  // Membership actions
+  REGISTER_EMAIL
+  REGISTER_IRL
+  REGISTER_POSTAL
+  HAS_REGISTERED_IRL
+  SEND_INVITE
+  // Answer actions
+  ANSWER_QUESTION
+  ARGUMENT_ANSWER
+  CREATE_ANSWER
+  UPVOTE_ARGUMENT
+  FLAG_ARGUMENT
+  EDIT_ARGUMENT
+  // Question actions
+
+}
+
+model ReputationAction {
+  id           String         @id @default(cuid())
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  actionType   ActionType
+  createdOn    DateTime       @default(now())
 }

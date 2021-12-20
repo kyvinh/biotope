@@ -1,9 +1,10 @@
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import {InvitationType} from '@prisma/client'
+import {ActionType, InvitationType} from '@prisma/client'
 import _crypto from "crypto";
 import prisma from '../../../components/util/prismaClient'
+import addDays from 'date-fns/addDays'
 
 export const emailConfig = {
   server: process.env.EMAIL_SERVER,
@@ -60,20 +61,49 @@ export default NextAuth({
 
       // We may have an invite pending for circle(s) -> Link the cercle invitation to the original user and the target email
       // Note we cannot know from which circle invite this verification request is executed! So link all invitations pertaining to email user
-      // TODO This executes on every sign-in! Where to put this instead? CustomProvider?
+      // TODO This executes on first real sign-in! i.e. Not after clicking the Register link the first time.
+      // Where to put this instead? CustomProvider?
 
       if (user.id && user.email && !email.verificationRequest) {
+        const transaction = []
 
-        await prisma.invitation.updateMany({
-          where: {
-            type: InvitationType.EMAIL,
-            invitedEmail: user.email,
-          },
-          data: {
-            invitedEmail: null,
-            invitedId: user.id
-          }
-        })
+        transaction.push(
+            prisma.invitation.deleteMany({
+              where: {
+                type: InvitationType.EMAIL,
+                invitedEmail: user.email,
+                createdOn: {
+                  lte: addDays(new Date(), -2)
+                }
+              }
+            }),
+            prisma.invitation.updateMany({
+              where: {
+                type: InvitationType.EMAIL,
+                invitedEmail: user.email,
+              },
+              data: {
+                // Privacy by design: Remove the email
+                invitedEmail: null,
+                invitedId: user.id
+              }
+            })
+            ,
+            prisma.reputationAction.create({
+              data: {
+                userId: user.id,
+                actionType: ActionType.REGISTER_EMAIL,
+              }
+            })
+        )
+
+        try {
+          await prisma.$transaction(transaction);
+        } catch (error) {
+          console.log('login error', error)
+          console.log('login error for user', user)
+          return false
+        }
       }
 
       return true
