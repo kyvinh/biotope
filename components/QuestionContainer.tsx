@@ -59,7 +59,11 @@ export const QuestionContainer = ({question, disabled = false}) => {
 
     return <div className="questionnaire-container">
         <div className="card-header">
-            <h5>{question.name} <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)}}>edit</button></h5>
+            <h5>{question.name}
+                { !isEditMode && question.creator.id === session.user.id &&
+                <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)} }>edit</button>
+                }
+            </h5>
             <h6>par <UserFlair user={question.creator} /></h6>
         </div>
         <div className="card-body">
@@ -74,7 +78,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
                 :
                 <>
                     {isEditMode ?
-                        <QuestionEdit question={question} />
+                        <QuestionEdit question={question} cancel={() => {setIsEditMode(false)}} />
                         :
                         <Question question={question} answered={isSubmitted || questionAnswered}
                                   disabled={disabled} answerSubmit={answerSubmit} />

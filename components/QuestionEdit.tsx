@@ -3,7 +3,7 @@ import {useForm} from "react-hook-form";
 import {fetcher} from "./util/fetcher";
 import {QuestionEditDto} from "../pages/api/q/[q]/edit";
 
-export const QuestionEdit = ({question}) => {
+export const QuestionEdit = ({question, cancel}) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = async (questionDto:QuestionEditDto) => {
@@ -29,6 +29,7 @@ export const QuestionEdit = ({question}) => {
                     {errors.description && <div className="invalid-feedback">A description is required.</div>}
                 </div>
                 <input type="submit" />
+                <button className="btn btn-link" onClick={cancel}>Cancel</button>
             </form>
         </>
 };
