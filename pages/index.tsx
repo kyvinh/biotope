@@ -57,11 +57,6 @@ export default function Home() {
 
         </div>
 
-
-      <style jsx>{`
-
-      `}</style>
-
     </div>
   )
 }
