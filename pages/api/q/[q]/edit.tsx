@@ -33,7 +33,8 @@ export default async function handler(req, res) {
 
     try {
 
-        // We need the questions' type to know how to store the answer value
+        // Must be the question creator to edit
+
         const originalQuestion:Question = await prisma.question.findUnique({
             where: {
                 id: questionId

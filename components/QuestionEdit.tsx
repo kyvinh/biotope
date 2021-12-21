@@ -64,7 +64,7 @@ export const QuestionEdit = ({question, cancel}) => {
                 <div className="col-6">
                     Add new answer:
                     <input value={newAnswer} onChange={(e) => { setNewAnswer(e.target.value) } } />
-                    <button className="btn btn-link" onClick={submitAddNewAnswer}>Add</button>
+                    <button className="btn btn-outline-primary" onClick={submitAddNewAnswer}>Add</button>
                 </div>
             </div>
         </div>

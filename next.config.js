@@ -1,4 +1,9 @@
-module.exports = {
+// @ts-check
+
+/**
+ * @type {import('next').NextConfig}
+ **/
+const nextConfig = {
     poweredByHeader: false,
     productionBrowserSourceMaps: true,
     reactStrictMode: true,
@@ -7,3 +12,4 @@ module.exports = {
         defaultLocale: 'fr',
     }
 }
+module.exports = nextConfig
