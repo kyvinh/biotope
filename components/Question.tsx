@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 export const Question = ({question, answered, disabled = false, answerSubmit}) => {
 
     const sortedPossibleAnswers:PossibleAnswer[] = question.possibleAnswers
-        .sort((a,b) => a.order - b.order);
 
     // -- QuestionType.LONG --
 
