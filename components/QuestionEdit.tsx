@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {useForm} from "react-hook-form";
 import {fetcher} from "./util/fetcher";
 import {QuestionEditDto} from "../pages/api/q/[q]/edit";
@@ -26,6 +26,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
             const res = await fetcher(`/api/q/${question.id}/newAnswer`, newAnswerDto);
             if (res?.status == 'ok') {
                 question = res.updatedQuestion
+                onQuestionEdit();
                 onAnswerEdit();
             }
         }
