@@ -91,7 +91,7 @@ export const Question = ({question, answered, disabled = false, answerSubmit}) =
                 </>
                 }
                 <input type="hidden" name={`question-${question.id}`} className={`${errors[`question-${question.id}`] ? 'is-invalid' : ''}`} />
-                <input type="submit" value="Submit" disabled={disabled}/>
+                <input type="submit" className="btn btn-primary" value="Submit" disabled={disabled}/>
                 { errors[`question-${question.id}`] && <div className="invalid-feedback">{errors[`question-${question.id}`].message}</div>}
             </form>
         }

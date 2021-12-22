@@ -43,7 +43,7 @@ const QuestionCreatorAuthGuard = createMiddlewareDecorator(
     }
 );
 
-class NewAnswerInput {
+export class NewAnswerInput {
     newAnswer: string;
 }
 
@@ -53,13 +53,22 @@ class AddNewAnswerHandler {
     @Post()
     async create(@Body() newAnswerInput: NewAnswerInput, @Query('q') questionId: string, @Query('userId') userId: string) {
 
+        // Get number of previous PossibleAnswers
+        // TODO: Create this inside a nested write or a transaction?
+        const possibleAnswersCount =
+            await prisma.possibleAnswer.count({
+                where: {
+                    questionId: questionId
+                }
+            })
+
         await prisma.possibleAnswer.create({
             data: {
                 type: PossibleAnswerType.TEXT,
                 questionId: questionId,
                 possibleText: newAnswerInput.newAnswer,
                 creatorId: userId,
-                // TODO: order = ?
+                order: possibleAnswersCount + 1,
             }
         })
 

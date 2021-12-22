@@ -25,7 +25,7 @@ export default function BiotopeHome() {
 
     const {name} = useRouter().query
 
-    const {biotope: b} = useBiotope(name as string)
+    const {biotope: b, reloadBiotope} = useBiotope(name as string)
     const {error: authorizationError} = useBiotopeUserHistory(name as string)
 
     if (session) {
@@ -74,7 +74,7 @@ export default function BiotopeHome() {
                             <div>
                                 {b.questions ? b.questions.map((question) => {
                                     const disabled = !authorized || !session;
-                                    return <QuestionContainer key={question.id} question={question} disabled={disabled} />
+                                    return <QuestionContainer key={question.id} question={question} disabled={disabled} onQuestionUpdated={reloadBiotope}/>
                                 }) : null}
                             </div>
                         </>

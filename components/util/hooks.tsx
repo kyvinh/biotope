@@ -13,8 +13,8 @@ export function usePropositions() {
 
 // TODO How to type return biotope: Cercle(public/private, include questions, ...)?
 export function useBiotope(name: string) {
-    const {data: biotope, error} = useSWR(`/api/b/${name}`, fetcher);
-    return {biotope, error};
+    const {data: biotope, mutate: reloadBiotope, error} = useSWR(`/api/b/${name}`, fetcher);
+    return {biotope, reloadBiotope, error};
 }
 
 export function useBiotopeUserHistory(name: string) {

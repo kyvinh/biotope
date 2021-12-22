@@ -11,7 +11,7 @@ import {UserFlair} from "./UserFlair";
 import { formatDistance } from 'date-fns'
 
 
-export const QuestionContainer = ({question, disabled = false}) => {
+export const QuestionContainer = ({question, disabled = false, onQuestionUpdated}) => {
 
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
@@ -23,7 +23,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
-    const {data: answerResults, mutate} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
+    const {data: answerResults, mutate: reloadAnswerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
 
     const answerSubmit = async (values) => {
         /*
@@ -47,7 +47,7 @@ export const QuestionContainer = ({question, disabled = false}) => {
 
             if (res?.status == 'ok') {
                 // Answer has been recorded
-                await mutate()
+                await reloadAnswerResults()
             }
 
             console.log('Post-Answer:', res)
@@ -80,14 +80,18 @@ export const QuestionContainer = ({question, disabled = false}) => {
                 :
                 <>
                     {isEditMode ?
-                        <QuestionEdit question={question} cancel={() => {setIsEditMode(false)}} />
+                        <QuestionEdit question={question}
+                                      onCancel={async () => { setIsEditMode(false) } }
+                                      onQuestionEdit={async () => { setIsEditMode(false); await onQuestionUpdated(); } }
+                                      onAnswerEdit={async () => { setIsEditMode(false); await reloadAnswerResults(); } }
+                        />
                         :
                         <Question question={question} answered={isSubmitted || questionAnswered}
-                                  disabled={disabled} answerSubmit={answerSubmit} />
+                                  disabled={disabled} answerSubmit={answerSubmit}/>
                     }
                 </>
             }
-            { ((isSubmitted || questionAnswered) && answerResults) ?
+            { ((isSubmitted || questionAnswered) && answerResults && !isEditMode) ?
                 <>
                     <QuestionResults question={question} results={answerResults.results}/>
                 </>
