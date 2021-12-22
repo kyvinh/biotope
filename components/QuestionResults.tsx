@@ -22,7 +22,7 @@ export const QuestionResults = ({question, results: rawResults}) => {
 
     const answerResults = rawResults.reduce(
         (acc, rawResult) => {
-            const possibleAnswer = question.possibleAnswers.find(element => element.id = rawResult.id)
+            const possibleAnswer = question.possibleAnswers.find(element => element.id === rawResult.id)
             const answerResult = { ...possibleAnswer }
             answerResult.count = rawResult._count.answers
             answerResult.percent = answerResult.count / totalVotesCount * 100
