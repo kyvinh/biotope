@@ -9,7 +9,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
     // Question edit form
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const onSubmit = async (questionDto:QuestionEditDto) => {
+    const onQuestionSubmit = async (questionDto:QuestionEditDto) => {
         const res = await fetcher(`/api/q/${question.id}/edit`, questionDto);
         if (res?.status == 'ok') {
             question = res.updatedQuestion
@@ -33,7 +33,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
     }
 
     return <>
-        <form onSubmit={handleSubmit(onSubmit)} className="question-edit">
+        <form onSubmit={handleSubmit(onQuestionSubmit)} className="question-edit">
             <h6>Edit question description</h6>
             <div className="form-group">
                 <label htmlFor={`question-${question.id}.name`}>Your question:</label>
@@ -72,7 +72,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
             <h6>Add new answer</h6>
             <div className="form-group">
                 <div className="form-text">Your new answer will be suggested to new voters. Previous voters will be informed through their biotope feed.</div>
-                <input className={`form-control ${answerErrors.name ? 'is-invalid' : ''}`}
+                <input className={`form-control ${answerErrors.newAnswer ? 'is-invalid' : ''}`}
                        {...registerAnswer("newAnswer", {required: true})} />
                 <div className="invalid-feedback">Please specify a new answer to be suggested to the voters.</div>
             </div>

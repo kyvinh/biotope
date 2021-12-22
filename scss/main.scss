@@ -66,3 +66,13 @@ div.answers-edit {
 .add-new-answer {
   @extend .mt-4;
 }
+
+// *** New argument ***
+
+.argument-add {
+  @extend .mb-3;
+
+  .form-text {
+    @extend .my-1;
+  }
+}

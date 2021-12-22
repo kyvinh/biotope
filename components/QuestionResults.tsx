@@ -2,7 +2,7 @@ import React from "react";
 import {Col, ProgressBar, Row} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 
-export const QuestionResults = ({question, results: rawResults}) => {
+export const QuestionResults = ({question, results: rawResults, onQuestionUpdated}) => {
     if (!rawResults) {
         return null
     }
@@ -30,6 +30,12 @@ export const QuestionResults = ({question, results: rawResults}) => {
         }
         , []).sort((n1,n2) => n1.order - n2.order)
 
+    const onArgumentAdded = (possibleAnswerId, argument) => {
+        const possibleAnswer = question.possibleAnswers.find(element => element.id === possibleAnswerId)
+        possibleAnswer.arguments.push(argument)
+        onQuestionUpdated()
+    }
+
     return <div className="py-2">
         <div >Résultats: {totalVotesCount} vote(s)</div>
         <div>
@@ -47,7 +53,7 @@ export const QuestionResults = ({question, results: rawResults}) => {
                         <Col sm={2}>
                         </Col>
                         <Col>
-                            <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments} />
+                            <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments} onArgumentAdded={onArgumentAdded}/>
                         </Col>
                     </Row>
                 </div>

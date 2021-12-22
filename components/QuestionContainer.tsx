@@ -93,7 +93,8 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
             }
             { ((isSubmitted || questionAnswered) && answerResults && !isEditMode) ?
                 <>
-                    <QuestionResults question={question} results={answerResults.results}/>
+                    <QuestionResults question={question} results={answerResults.results}
+                                     onQuestionUpdated={async () => { await onQuestionUpdated() }} />
                 </>
                 : null
             }

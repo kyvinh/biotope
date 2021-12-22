@@ -1,6 +1,10 @@
 import prisma from '../../../../components/util/prismaClient'
 import {getSession} from "next-auth/react";
 
+export class NewArgumentInput {
+    argumentText: string;
+}
+
 export default async function handler(req, res) {
 
     // Check request and params
@@ -33,7 +37,7 @@ export default async function handler(req, res) {
                 creatorId: session.user.id,
             }
         })
-        return res.status(200).json({ argument})
+        return res.status(200).json({status: 'ok', argument})
 
     } catch (error) {
         console.error("QUESTION_ANSWER_ARG_ERROR", {

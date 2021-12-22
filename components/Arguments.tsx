@@ -2,27 +2,28 @@ import React, {useState} from "react";
 import {fetcher} from "./util/fetcher";
 import {useSession} from "next-auth/react";
 import {UserFlair} from "./UserFlair";
+import {useForm} from "react-hook-form";
+import {NewArgumentInput} from "../pages/api/q/[q]/argument";
 
-export const Arguments = ({answerArguments, possibleAnswerId}) => {
+export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) => {
 
-    const [showAddArgument, setShowAddArgument] = useState(false)
-    const [argumentText, setArgumentText] = useState("")
     const {data: session} = useSession({required: false})
+    const [showAddArgument, setShowAddArgument] = useState(false)
 
-    const submitArgument = async (event) => {
-        event.preventDefault();
-        event.target.disabled = true;
+    // New argument form
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-        if (session) {
-            const res = await fetcher(`/api/q/${possibleAnswerId}/argument`, { argumentText});
-            if (res?.status == 'ok') {
-                // Argument has been recorded
-            }
-        } else {
+    const onAddArgument = async (newArgument:NewArgumentInput) => {
+        if (!session) {
             // Arguments are anonymous but you should be logged in? (SO lets you add as anonymous but has a review queue in process)
             throw new Error("Currently no anonymous argument allowed!")
         }
-    }
+        const res = await fetcher(`/api/q/${possibleAnswerId}/argument`, newArgument);
+        if (res?.status == 'ok') {
+            setShowAddArgument(false);
+            onArgumentAdded(possibleAnswerId, res.argument)
+        }
+    };
 
     // console.log(questionArguments)
 
@@ -33,11 +34,17 @@ export const Arguments = ({answerArguments, possibleAnswerId}) => {
             </div>
         ) : null}
         { showAddArgument ?
-            <div>
-                <textarea value={argumentText} onChange={e => setArgumentText(e.target.value)}/>
-                <input type="submit" value="Submit argument" onClick={submitArgument} />
+            <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
+                <div className="form-group">
+                    <label htmlFor={`argument-${possibleAnswerId}-text`}>Your argument</label>
+                    <div className="form-text">Please add a convincing argument or a factual observation that leads to this vote.</div>
+                    <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
+                              rows={3} {...register("argumentText", {required: true})} />
+                    {errors.argumentText && <div className="invalid-feedback">A text is required.</div>}
+                </div>
+                <input type="submit" value="Submit argument" className="btn btn-primary" />
                 <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>
-            </div>
+            </form>
         :
             <button className="btn btn-link" onClick={() => setShowAddArgument(true)}>Add an argument/observation</button>
         }
