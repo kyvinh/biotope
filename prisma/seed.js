@@ -64,7 +64,7 @@ async function main() {
             creatorId: admin.id,
             private: true,
             headerPic: 'felixterlinden-plaque',
-            description: 'Ce biotope rassemble tous les voisins résidant dans la rue Félix Terlinden et des rues avoisinantes.'
+            description: 'Ce biotope rassemble tous les voisins résidants la rue Félix Terlinden.'
         },
     })
     const terlindenQ1name = 'Comment jugez-vous la propreté de la rue Félix Terlinden?';

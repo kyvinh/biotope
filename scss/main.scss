@@ -25,6 +25,38 @@ $input-btn-font-size: 0.9rem;
 // https://getbootstrap.com/docs/5.0/customize/optimize/
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+// *** Biotope home ***
+
+.biotope-container {
+  @extend .container-fluid;
+
+  .biotope-explainer-hero {
+    @extend .text-center;
+    @extend .mb-2;
+    @extend .py-2;
+    @extend .px-4;
+    @extend .row;
+
+    .explainer-text {
+      @extend .col-6;
+      @extend .py-1;
+    }
+
+    .explainer-side {
+      font-size: 0.8rem;
+      @extend .shadow-sm;
+      @extend .col-6;
+      @extend .justify-content-sm-center;
+    }
+  }
+
+  .biotope-hero {
+    @extend .card;
+    @extend .bg-dark;
+    @extend .text-white;
+  }
+}
+
 // *** Question container ***
 
 .questionnaire-container {

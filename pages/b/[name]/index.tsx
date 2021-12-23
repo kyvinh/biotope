@@ -5,6 +5,7 @@ import {getSession, useSession} from "next-auth/react"
 import React from "react";
 import {QuestionContainer} from "../../../components/QuestionContainer";
 import {UserFlair} from "../../../components/UserFlair";
+import {formatDate} from "../../../components/util/dates";
 
 export const getServerSideProps = async function ({req}) {
 
@@ -37,20 +38,34 @@ export default function BiotopeHome() {
     // TODO: How to make sure we only display public information until we have the certainty that the user is authorized?
 
     return b ?
-            <div className="container-fluid">
+            <div className="biotope-container">
 
-                <div className="card biotope-hero-height bg-dark text-white">
+                <div className="biotope-explainer-hero">
+                    <div className="explainer-text">
+                        <p className="align-middle">Le biotope <em>{b.name}</em> est un site de sondage citoyen disponibles à tous les citoyens de la rue Félix Terlinden.</p>
+                    </div>
+                    <div className="explainer-side">
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item">Tout voisin peut lancer un sondage</li>
+                            <li className="list-group-item">Tout voisin peut répondre aux sondages</li>
+                            <li className="list-group-item">Tout voisin peut participer anonymement</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="biotope-hero">
                     {b.headerPic ?
-                        <img className="card-img biotope-hero-height" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
+                        <img className="card-img-top" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
                         : null
                     }
-                    <div className={`${b.headerPic? "card-img-overlay":""}`}>
+                    <div className="card-body">
                         <h5 className="card-title">{b.name}</h5>
                         { b.description ? <p className="card-text">{b.description}</p> : null}
                         <p className="card-text">
-                            Biotope created by <UserFlair user={b.creator} theme="outline-light" /> on {b.createdOn}.&nbsp;
+
                             {b.contact ? <span>Contact: {b.contact}</span> : null}
                         </p>
+                        <p className="card-text"><small className="text-muted">Biotope created by <UserFlair user={b.creator} theme="outline-light" /> on {formatDate(b.createdOn)}.&nbsp;</small></p>
                     </div>
                 </div>
 
@@ -79,12 +94,6 @@ export default function BiotopeHome() {
                             </div>
                         </>
                 }
-
-                <style jsx>{`
-                  .biotope-hero-height {
-                    max-height: 15rem;
-                  }
-                `}</style>
 
             </div>
         : null
