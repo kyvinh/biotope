@@ -42,7 +42,7 @@ export default function BiotopeHome() {
 
                 <div className="biotope-explainer-hero">
                     <div className="explainer-text">
-                        <span><em>Biotope</em> est un site de sondage citoyen disponibles à tous les quartiers et associations de Bruxelles.</span>
+                        <span><em>Biotope</em> est un site de sondage citoyen disponible à tous les quartiers et associations de Bruxelles.</span>
                     </div>
                     <div className="explainer-side">
                         <ul className="list-group list-group-flush">
