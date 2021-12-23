@@ -84,9 +84,15 @@ export default function BiotopeHome() {
                         <>
                             {/*<div>{b.invitations ? b.invitations.length : "0"} invitation(s)</div>*/}
 
-                            <div><Link href={`/b/${b.name}/invite`}>Invite</Link></div>
-
                             <div>
+                                <h5>Questions:</h5>
+                                <div className="btn-group" role="group" aria-label="Questions filter">
+                                    <button type="button" className="btn btn-outline-dark active">Unanswered</button>
+                                    <button type="button" className="btn btn-outline-dark">Latest</button>
+                                    <button type="button" className="btn btn-outline-dark">Active</button>
+                                    <button type="button" className="btn btn-outline-dark">Historique</button>
+                                </div>
+
                                 {b.questions ? b.questions.map((question) => {
                                     const disabled = !authorized || !session;
                                     return <QuestionContainer key={question.id} question={question} disabled={disabled} onQuestionUpdated={reloadBiotope}/>
