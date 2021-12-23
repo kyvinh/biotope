@@ -40,6 +40,8 @@ $input-btn-font-size: 0.9rem;
     .explainer-text {
       @extend .col-6;
       @extend .py-1;
+      @extend .d-flex;
+      @extend .align-items-center;
     }
 
     .explainer-side {
@@ -54,6 +56,13 @@ $input-btn-font-size: 0.9rem;
     @extend .card;
     @extend .bg-dark;
     @extend .text-white;
+
+    img.biotope-logo {
+      max-height: 15rem;
+      object-fit: cover;
+      @extend .overflow-hidden;
+      @extend .card-img-top;
+    }
   }
 }
 

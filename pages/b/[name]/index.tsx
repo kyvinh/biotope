@@ -42,7 +42,7 @@ export default function BiotopeHome() {
 
                 <div className="biotope-explainer-hero">
                     <div className="explainer-text">
-                        <p className="align-middle">Le biotope <em>{b.name}</em> est un site de sondage citoyen disponibles à tous les citoyens de la rue Félix Terlinden.</p>
+                        <span><em>Biotope</em> est un site de sondage citoyen disponibles à tous les quartiers et associations de Bruxelles.</span>
                     </div>
                     <div className="explainer-side">
                         <ul className="list-group list-group-flush">
@@ -55,7 +55,7 @@ export default function BiotopeHome() {
 
                 <div className="biotope-hero">
                     {b.headerPic ?
-                        <img className="card-img-top" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
+                        <img className="biotope-logo" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
                         : null
                     }
                     <div className="card-body">
