@@ -62,7 +62,7 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
     return <div className="questionnaire-container">
         <div className="card-header">
             <h5>{question.name}
-                { !isEditMode && question.creator.id === session.user.id &&
+                { !isEditMode && question.creator.id === session?.user.id &&
                 <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)} }>edit</button>
                 }
             </h5>
