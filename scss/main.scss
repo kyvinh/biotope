@@ -66,6 +66,12 @@ $input-btn-font-size: 0.9rem;
   }
 }
 
+// *** User flair ***
+
+.user-flair {
+  @extend .mx-1;
+}
+
 // *** Question container ***
 
 .questionnaire-container {
