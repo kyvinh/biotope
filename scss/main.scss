@@ -27,6 +27,21 @@ $input-btn-font-size: 0.9rem;
 
 // *** Biotope home ***
 
+.main-container {
+  @extend .container-fluid;
+
+  .main-content {
+    @extend .row;
+    @include row-cols(3);
+  }
+
+  .main-card {
+    @extend .card;
+  }
+}
+
+// *** Biotope home ***
+
 .biotope-container {
   @extend .container-fluid;
 
