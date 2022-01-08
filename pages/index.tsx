@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import {HumeurList} from '../components/HumeurList';
-import {PropositionList} from '../components/PropositionList';
 
 export default function Home() {
 
@@ -31,27 +29,6 @@ export default function Home() {
             <div className="card">
               <h3>Biotope 1030 &rarr;</h3>
               <p>Le biotope 1030 est privé (seulement sur invitation) et comprend 25 membres.</p>
-            </div>
-          </Link>
-
-          <Link href="/profile">
-            <div className="card">
-              <h3>Vous &rarr;</h3>
-              <p>Votre compte, vos cercles, vos biotopes.</p>
-            </div>
-          </Link>
-
-          <Link href="/humeurs/">
-            <div className="card">
-              <h3>Humeurs &rarr;</h3>
-              <HumeurList />
-            </div>
-          </Link>
-
-          <Link href="/propositions">
-            <div className="card">
-              <h3>Propositions &rarr;</h3>
-              <PropositionList />
             </div>
           </Link>
 

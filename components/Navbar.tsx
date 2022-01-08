@@ -25,8 +25,8 @@ export default function Navbar() {
 
                 { session ?
                     <div className="d-flex justify-content-between align-items-center col-md-4 text-end">
-                                <div>{session.user.email}</div>
-                                <button type="button" onClick={() => signOut()} className="btn btn-outline-primary">Sign out</button>
+                        <div><Link href="/profile">{session.user.email}</Link></div>
+                        <button type="button" onClick={() => signOut()} className="btn btn-outline-primary">Sign out</button>
                     </div>
                 : null }
 
