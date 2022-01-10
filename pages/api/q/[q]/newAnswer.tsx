@@ -7,7 +7,7 @@ import {PossibleAnswerType, Question} from ".prisma/client";
 import prisma from "../../../../components/util/prismaClient";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
 
-const HasUserIdAuthGuard = createMiddlewareDecorator(
+export const HasUserIdAuthGuard = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
 
         const session = await getSession({req})
@@ -21,7 +21,7 @@ const HasUserIdAuthGuard = createMiddlewareDecorator(
 );
 
 // Requires req.query['userId'] and req.query['q'] !
-const QuestionCreatorAuthGuard = createMiddlewareDecorator(
+export const QuestionCreatorAuthGuard = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
 
         const userId = req.query['userId']

@@ -46,9 +46,9 @@ export default function BiotopeHome() {
                     </div>
                     <div className="explainer-side">
                         <ul className="list-group list-group-flush">
-                            <li className="list-group-item">Tout voisin peut lancer un sondage</li>
+                            <li className="list-group-item">Tout voisin peut <Link href={`/b/${b.name}/create`}>lancer un sondage</Link></li>
                             <li className="list-group-item">Tout voisin peut répondre aux sondages</li>
-                            <li className="list-group-item">Tout voisin peut participer anonymement</li>
+                            <li className="list-group-item">Tout voisin peut participer anonymement (<Link href={`/b/${b.name}/invite`}>inviter un voisin</Link>)</li>
                         </ul>
                     </div>
                 </div>

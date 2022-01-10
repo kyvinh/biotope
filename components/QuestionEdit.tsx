@@ -17,7 +17,6 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
         }
     };
 
-
     // New answer form
     const { register: registerAnswer, handleSubmit: handleAnswerSubmit, formState: { errors: answerErrors } } = useForm();
 
@@ -46,9 +45,9 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
             <div className="form-group">
                 <label htmlFor={`question-${question.id}.description`}>Description:</label>
                 <div className="form-text">Your description should provide enough context to make an informed choice, or to suggest one.</div>
-                <textarea className="form-control" id={`question-${question.id}.description`}
+                <textarea className={`form-control ${errors.description ? 'is-invalid' : ''}`} id={`question-${question.id}.description`}
                           rows={3} {...register("description", {required: true})} defaultValue={question.description}/>
-                {errors.description && <div className="invalid-feedback">A description is required.</div>}
+                <div className="invalid-feedback">A description is required.</div>
             </div>
             <input className="btn btn-primary" type="submit" value="Update question"/>
             <button className="btn btn-link" onClick={onCancel}>Cancel</button>

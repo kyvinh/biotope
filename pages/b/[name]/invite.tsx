@@ -2,7 +2,7 @@ import {useBiotope} from "../../../components/util/hooks"
 import {useRouter} from 'next/router'
 import {useState} from 'react'
 
-export default function BiotopeHome() {
+export default function BiotopeInvite() {
 
     const inviteEmail = async (event) => {
         event.preventDefault()
