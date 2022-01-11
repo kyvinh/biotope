@@ -16,6 +16,8 @@ export default function BiotopeInvite() {
             method: 'POST'
         })
 
+        // TODO: Handle errors
+
         const result = await res.json()
         console.log('Result from Invite API', result)
     }
