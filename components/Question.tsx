@@ -58,9 +58,9 @@ export const Question = ({question, answered, disabled = false, answerSubmit}) =
     const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues} = useForm();
 
     const handleAnswerSubmit = (e) => {
-        // Check we chose at least one answer!
+        // Check at least one answer!
         clearErrors()
-        const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => !!getValues(`question-${question.id}`)[answer.id], false)
+        const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => acc || !!getValues(`question-${question.id}`)[answer.id], false)
         if (!oneChecked) {
             setError(`question-${question.id}`, {type: 'manual', message: 'Please choose at least one answer, or create your own.'})
         }
