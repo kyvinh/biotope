@@ -53,19 +53,21 @@ export default function BiotopeHome() {
                     </div>
                 </div>
 
-                <div className="biotope-hero">
-                    {b.headerPic ?
-                        <img className="biotope-logo" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
-                        : null
-                    }
-                    <div className="card-body">
-                        <h5 className="card-title">{b.name}</h5>
-                        { b.description ? <p className="card-text">{b.description}</p> : null}
-                        <p className="card-text">
+                <div className="biotope-header-columns">
+                    <div className="biotope-logo">
+                        {b.headerPic ?
+                            <img className="biotope-logo" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
+                            : null
+                        }
+                    </div>
+                    <div className="biotope-intro">
+                        <h5>{b.name}</h5>
+                        { b.description ? <p>{b.description}</p> : null}
+                        <p>
 
                             {b.contact ? <span>Contact: {b.contact}</span> : null}
                         </p>
-                        <p className="card-text"><small className="text-muted">Biotope created by <UserFlair user={b.creator} theme="outline-light" /> on {formatDate(b.createdOn)}.&nbsp;</small></p>
+                        <small className="text-muted">Biotope created by <UserFlair user={b.creator} /> on {formatDate(b.createdOn)}.&nbsp;</small>
                     </div>
                 </div>
 

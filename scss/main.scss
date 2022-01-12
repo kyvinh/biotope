@@ -67,16 +67,26 @@ $input-btn-font-size: 0.9rem;
     }
   }
 
-  .biotope-hero {
-    @extend .card;
-    @extend .bg-dark;
-    @extend .text-white;
+  .biotope-header-columns {
+    @extend .d-grid;
+    @extend .gap-3;
+    grid-template-columns: 1fr 2fr;
+    @extend .my-3;
 
-    img.biotope-logo {
-      max-height: 15rem;
-      object-fit: cover;
-      @extend .overflow-hidden;
-      @extend .card-img-top;
+    .biotope-logo {
+      //@extend .bg-light;
+      //@extend .border;
+      @extend .rounded-3;
+
+      img {
+        max-height: 15rem;
+        object-fit: cover;
+        @extend .overflow-hidden;
+        //@extend .card-img-top;
+      }
+    }
+
+    .biotope-intro {
     }
   }
 }
