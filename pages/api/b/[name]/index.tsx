@@ -51,6 +51,6 @@ export default async function handler(req, res) {
         question.lastVoteDate = result ? parseISO(result.lastVoteDate) : null;
     })
 
-    console.log(b.questions)
+    // console.log(b.questions)
     return res.status(200).json(b)
 }

@@ -15,7 +15,7 @@ export default function QuestionHome() {
     const authorized = isAuthorized(session, b, authorizationError)
     const question = b?.questions.find((element) => element.id === questionId)
 
-    return <>
+    return question ? <>
         <QuestionContainer key={question.id} question={question} disabled={!authorized} onQuestionUpdated={reloadBiotope}/>
-    </>
+    </> : null
 }

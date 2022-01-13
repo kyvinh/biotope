@@ -8,7 +8,7 @@ import Link from "next/link";
 import {QuestionEdit} from "./QuestionEdit";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import {UserFlair} from "./UserFlair";
-import { formatDistance } from 'date-fns'
+import {formatDistanceToNow} from 'date-fns'
 
 
 export const QuestionContainer = ({question, disabled = false, onQuestionUpdated}) => {
@@ -66,13 +66,14 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                 <button className="btn-secondary btn-sm float-end" onClick={() => { setIsEditMode(!isEditMode)} }>edit</button>
                 }
             </h5>
-            <h6><ul>
-                <li>Asked {formatDistance(new Date(question.createdOn), new Date(), {addSuffix: true})} par <UserFlair user={question.creator} /></li>
-                <li>Last vote x days ago</li>
-                <li>x views, x arguments</li>
-            </ul></h6>
         </div>
         <div className="card-body">
+            <div className="item-summary-dates">
+                <div>Asked {formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})} by <UserFlair user={question.creator} /></div>
+                {question.lastVoteDate
+                && <div>Last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</div>}
+            </div>
+
             { !isEditMode && <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6> }
 
             {!session ?
