@@ -4,7 +4,11 @@ import '../scss/main.scss'
 import Layout from '../components/Layout'
 import {AppProps} from "next/app";
 
-export default function App({Component, pageProps}: AppProps) {
+// https://next-auth.js.org/tutorials/securing-pages-and-api-routes
+
+export default function App({  Component,
+                                pageProps: { session, ...pageProps },
+                            }: AppProps) {
     return (
         <SessionProvider session={pageProps.session}>
             <Head>

@@ -80,13 +80,38 @@ $input-btn-font-size: 0.9rem;
 
       img {
         max-height: 15rem;
-        object-fit: cover;
         @extend .overflow-hidden;
-        //@extend .card-img-top;
+        @extend .img-fluid;
       }
     }
 
     .biotope-intro {
+    }
+  }
+
+  .questions-list {
+    @extend .container-fluid;
+
+    .questions-list-item {
+      @extend .row;
+      @extend .my-3;
+
+      .question-item-stats {
+        @extend .col-1;
+        @extend .align-self-center;
+      }
+
+      .question-item-summary {
+        @extend .col-11;
+        @extend .border-bottom;
+        @extend .pb-3;
+
+        .item-summary-dates {
+          @extend .text-end;
+          @extend .text-muted;
+          font-size: 0.75rem;
+        }
+      }
     }
   }
 }

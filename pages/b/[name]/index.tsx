@@ -1,39 +1,30 @@
 import {useBiotope, useBiotopeUserHistory} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
-import {getSession, useSession} from "next-auth/react"
+import {useSession} from "next-auth/react"
 import React from "react";
-import {QuestionContainer} from "../../../components/QuestionContainer";
 import {UserFlair} from "../../../components/UserFlair";
 import {formatDate} from "../../../components/util/dates";
+import {formatDistanceToNow} from "date-fns";
 
-export const getServerSideProps = async function ({req}) {
-
-    // https://next-auth.js.org/tutorials/securing-pages-and-api-routes
-    const session = await getSession({req})
-
-    return {
-        props: {session}
+export function isAuthorized(session, biotope, authorizationError) {
+    let authorized = false;
+    if (session) {
+        if (biotope?.public || !authorizationError) {
+            authorized = true
+        }
     }
+    return authorized;
 }
-
 export default function BiotopeHome() {
 
     // Required = false -> session might be null
     const {data: session} = useSession({required: false})
-
-    let authorized = false;
-
     const {name} = useRouter().query
-
-    const {biotope: b, reloadBiotope} = useBiotope(name as string)
+    const {biotope: b} = useBiotope(name as string)
     const {error: authorizationError} = useBiotopeUserHistory(name as string)
 
-    if (session) {
-        if (b?.public || !authorizationError) {
-            authorized = true
-        }
-    }
+    let authorized = isAuthorized(session, b, authorizationError)
 
     // TODO: How to make sure we only display public information until we have the certainty that the user is authorized?
 
@@ -95,10 +86,29 @@ export default function BiotopeHome() {
                                     <button type="button" className="btn btn-outline-dark">Historique</button>
                                 </div>
 
-                                {b.questions ? b.questions.map((question) => {
-                                    const disabled = !authorized || !session;
-                                    return <QuestionContainer key={question.id} question={question} disabled={disabled} onQuestionUpdated={reloadBiotope}/>
-                                }) : null}
+                                <div className="questions-list">
+                                    {b.questions ? b.questions.map((question) => {
+
+                                        const maxShortDescriptionLength = 200;
+                                        question.shortDescription = question.description.length < maxShortDescriptionLength ? question.description : question.description.substring(0, maxShortDescriptionLength) + '…'
+
+                                        return <div className="questions-list-item">
+                                            <div className="question-item-stats">
+                                                <h6><em>{question.votes}</em> votes</h6>
+                                            </div>
+                                            <div className="question-item-summary">
+                                                <div><Link href={`/b/${b.name}/q/${question.id}`}>{question.name}</Link></div>
+                                                <div>{question.shortDescription}</div>
+                                                <div className="item-summary-dates">
+                                                    <div>Asked {formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}
+                                                    {question.lastVoteDate
+                                                    && <span>, last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }) : null}
+                                </div>
                             </div>
                         </>
                 }
