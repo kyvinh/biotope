@@ -3,6 +3,9 @@ import Likert from 'react-likert-scale';
 import React, {useState} from "react";
 import { useForm } from "react-hook-form";
 
+export const newAnswerTextProp = `newAnswerText`;
+export const newAnswerCheckProp = `newAnswerCheck`;
+
 export const Question = ({question, answered, disabled = false, answerSubmit}) => {
 
     const sortedPossibleAnswers:PossibleAnswer[] = question.possibleAnswers
@@ -37,32 +40,42 @@ export const Question = ({question, answered, disabled = false, answerSubmit}) =
     const DynamicAnswer = ({answer}) => {
         return <div className="form-check">
             <input className="form-check-input" type="checkbox"
-                {...register(`question-${question.id}.${answer.id}`)} id={`question-${question.id}.${answer.id}`} />
-            <label className="form-check-label" htmlFor={`question-${question.id}.${answer.id}`}>
+                {...register(`${formPrefix}.${answer.id}`)} id={`${formPrefix}.${answer.id}`} />
+            <label className="form-check-label" htmlFor={`${formPrefix}.${answer.id}`}>
                 {answer.possibleText}
             </label>
         </div>
     }
 
     const NewDynamicAnswer = () => {
-        return <div className="form-check" key={`possible-answer-new`}>
-            <input className="form-check-input" type="checkbox" value="false" disabled={true} />
-            <label className="form-check-label" htmlFor={`possible-answer-new`}>
-                <input />
-            </label>
-        </div>
+        /*
+        const newAnswerText = watch(newAnswerTextId, '');
+        const hasNewAnswerText = newAnswerText.length > 0;
+        */
+        return  <div className="form-check" key={`possible-answer-new`}>
+                    <div className="form-text">Add a new answer if none are relevant.</div>
+                    <input className="form-check-input" type="checkbox" value="false"
+                        {...register(newAnswerCheckboxId)} />
+                    <label className="form-check-label" htmlFor={newAnswerTextId}>Other:
+                        <input {...register(newAnswerTextId)} id={newAnswerTextId} />
+                    </label>
+                </div>
     }
 
     // -- COMPONENT --
 
-    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues} = useForm();
+    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues, unregister} = useForm();
+    const formPrefix = `question-${question.id}`;
+    const newAnswerTextId = `${formPrefix}.${newAnswerTextProp}`;
+    const newAnswerCheckboxId = `${formPrefix}.${newAnswerCheckProp}`;
 
     const handleAnswerSubmit = (e) => {
         // Check at least one answer!
         clearErrors()
-        const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => acc || !!getValues(`question-${question.id}`)[answer.id], false)
-        if (!oneChecked) {
-            setError(`question-${question.id}`, {type: 'manual', message: 'Please choose at least one answer, or create your own.'})
+        const values = getValues(formPrefix);
+        const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => acc || !!values[answer.id], false)
+        if (!oneChecked && !values['newAnswerCheck']) {
+            setError(formPrefix, {type: 'manual', message: 'Please choose at least one answer, or create your own.'})
         }
         handleSubmit(answerSubmit)(e)
     }
@@ -90,9 +103,9 @@ export const Question = ({question, answered, disabled = false, answerSubmit}) =
                     <NewDynamicAnswer />
                 </>
                 }
-                <input type="hidden" name={`question-${question.id}`} className={`${errors[`question-${question.id}`] ? 'is-invalid' : ''}`} />
+                <input type="hidden" name={formPrefix} className={`${errors[formPrefix] ? 'is-invalid' : ''}`} />
                 <input type="submit" className="btn btn-primary" value="Submit" disabled={disabled}/>
-                { errors[`question-${question.id}`] && <div className="invalid-feedback">{errors[`question-${question.id}`].message}</div>}
+                { errors[formPrefix] && <div className="invalid-feedback">{errors[formPrefix].message}</div>}
             </form>
         }
     </>

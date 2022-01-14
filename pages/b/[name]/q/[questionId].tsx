@@ -6,8 +6,7 @@ import {isAuthorized} from "../index";
 
 export default function QuestionHome() {
 
-    // Required = false -> session might be null
-    const {data: session} = useSession({required: false})
+    const {data: session} = useSession({required: false})   // Required = false -> session might be null
     const {questionId, name} = useRouter().query
     const {biotope: b, reloadBiotope} = useBiotope(name as string)
     const {error: authorizationError} = useBiotopeUserHistory(name as string)

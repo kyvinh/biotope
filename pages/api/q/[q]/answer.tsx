@@ -1,108 +1,113 @@
 import prisma from '../../../../components/util/prismaClient'
-import {getSession} from "next-auth/react";
 import {hashUid} from "../../../../components/util/user";
+import {createNewPossibleAnswer, fetchQuestion} from "./newAnswer";
+import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 
 export interface AnswerDto {
-    possibleAnswerId?: string,
+    possibleAnswerId?: string,  // Either 1 answer here OR multiple in possibleAnswerIds
     newAnswer?: {
         text?: string
     },
     possibleAnswerIds?: string[]
 }
 
-export default async function handler(req, res) {
+@HasUserIdAuthGuard()
+class AnswerHandler {
 
-    // Check request and params
+    @Post()
+    async answer(@Body() answerInput: AnswerDto, @Query('q') questionId: string, @Query('userId') userId: string) {
 
-    if (req.method !== 'POST') {
-        res.status(400).send({message: 'Only POST requests allowed'})
-        return
-    }
+        const uid = hashUid(userId)
 
-    const questionId = req.query.q;
-    const answer:AnswerDto = req.body;
+        try {
 
-    if (!answer) {
-        return res.status(400).send({message: 'Invalid POST request'})
-    }
+            // We need the questions' type to know how to store the answer value
+            const question = await prisma.question.findUnique({
+                where: {
+                    id: questionId
+                },
+                include: {
+                    possibleAnswers: true
+                }
+            })
 
-    const session = await getSession({ req })
-    if (!session) {
-        return res.status(401).json(new Error("Who are you?"))
-        // TODO Should also check whether the user is a constituent, eligible for voting? Or whether he/she has already voted?
-    }
-
-    const uid = hashUid(session.user.id)
-
-    try {
-
-        // We need the questions' type to know how to store the answer value
-        const question = await prisma.question.findUnique({
-            where: {
-                id: questionId
-            },
-            include: {
-                possibleAnswers: true
+            if (!question) {
+                // noinspection ExceptionCaughtLocallyJS
+                throw new Error('Invalid /q request!')
             }
-        })
 
-        if (!question) {
-            throw new Error('Invalid /q request!')
-        }
+            const transaction = []
 
-        const transaction = []
+            // Create new possible answer if supplied
 
-        if (answer.possibleAnswerId) {
-            transaction.push(
-                prisma.answer.upsert({
-                    where: {
-                        questionId_hashUid: {
+            if (answerInput.newAnswer) {
+                const possibleAnswer = await createNewPossibleAnswer(questionId, {newAnswer: answerInput.newAnswer.text}, userId);
+                transaction.push(
+                    prisma.answer.create({
+                        data: {
+                            possibleAnswerId: possibleAnswer.id,
+                            hashUid: uid,
+                            questionId: questionId,
+                        }
+                    })
+                )
+            }
+
+            if (answerInput.possibleAnswerId) {
+                transaction.push(
+                    prisma.answer.upsert({
+                        where: {
+                            questionId_hashUid: {
+                                questionId: questionId,
+                                hashUid: uid
+                            }
+                        },
+                        // TODO Should modify createdOn?
+                        update: {
+                            possibleAnswerId: answerInput.possibleAnswerId
+                        },
+                        create: {
+                            possibleAnswerId: answerInput.possibleAnswerId,
+                            hashUid: uid,
+                            questionId: questionId,
+                        }
+                    })
+                )
+            } else if (answerInput.possibleAnswerIds?.length > 0) {
+                transaction.push(
+                    prisma.answer.deleteMany({
+                        where: {
                             questionId: questionId,
                             hashUid: uid
                         }
-                    },
-                    // TODO Should modify createdOn?
-                    update: {
-                        possibleAnswerId: answer.possibleAnswerId
-                    },
-                    create: {
-                        possibleAnswerId: answer.possibleAnswerId,
-                        hashUid: uid,
-                        questionId: questionId,
-                    }
-                })
-            )
-        }
-        if (answer.possibleAnswerIds) {
-            transaction.push(
-                prisma.answer.deleteMany({
-                    where: {
-                        questionId: questionId,
-                        hashUid: uid
-                    }
-                })
-            )
-            transaction.push(
-                ...answer.possibleAnswerIds.map(possibleAnswerId => prisma.answer.create({
-                    data: {
-                        questionId: questionId,
-                        hashUid: uid,
-                        possibleAnswerId: possibleAnswerId,
-                    }
-                }))
-            )
+                    })
+                )
+                transaction.push(
+                    ...answerInput.possibleAnswerIds.map(possibleAnswerId => prisma.answer.create({
+                        data: {
+                            questionId: questionId,
+                            hashUid: uid,
+                            possibleAnswerId: possibleAnswerId,
+                        }
+                    }))
+                )
+            }
+
+            await prisma.$transaction(transaction);
+
+            const updatedQuestion = await fetchQuestion(questionId);
+            return {status: 'ok', updatedQuestion}
+
+        } catch (error) {
+            console.error("QUESTION_ANSWER_ERROR", {
+                identifier: questionId,
+                error
+            });
+            throw error;
         }
 
-        await prisma.$transaction(transaction);
-
-    } catch (error) {
-        console.error("QUESTION_ANSWER_ERROR", {
-            identifier: questionId,
-            error
-        });
-        throw error;
     }
-
-    return res.status(200).json({ status: 'ok'})
-
 }
+
+export default createHandler(AnswerHandler);

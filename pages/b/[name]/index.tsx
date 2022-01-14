@@ -92,7 +92,7 @@ export default function BiotopeHome() {
                                         const maxShortDescriptionLength = 200;
                                         question.shortDescription = question.description.length < maxShortDescriptionLength ? question.description : question.description.substring(0, maxShortDescriptionLength) + '…'
 
-                                        return <div className="questions-list-item">
+                                        return <div className="questions-list-item" key={question.id}>
                                             <div className="question-item-stats">
                                                 <h6><em>{question.votes}</em> votes</h6>
                                             </div>

@@ -34,7 +34,7 @@ export default async function handler(req, res) {
             questions: {
                 include: questionIncludeBiotopeQuery.include,
                 orderBy: {
-                    createdOn: 'asc',
+                    createdOn: 'desc',
                 }
             }
         }

@@ -1,4 +1,4 @@
-import {Question} from "./Question";
+import {newAnswerCheckProp, newAnswerTextProp, Question} from "./Question";
 import {QuestionResults} from "./QuestionResults";
 import {fetcher} from "./util/fetcher";
 import useSWR from "swr";
@@ -9,7 +9,7 @@ import {QuestionEdit} from "./QuestionEdit";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import {UserFlair} from "./UserFlair";
 import {formatDistanceToNow} from 'date-fns'
-
+import {AnswerDto} from "../pages/api/q/[q]/answer";
 
 export const QuestionContainer = ({question, disabled = false, onQuestionUpdated}) => {
 
@@ -31,26 +31,45 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
         For dynamic questions: {
             "question-ckxd4l25p0053i4uzwit3vy0p": {
                 "ckxd4wtfc0063ekuzl19g8dax": false,
-                "ckxd4wtfc0063ekuzl19g8qwe": true
+                "ckxd4wtfc0063ekuzl19g8qwe": true,
+                newAnswerCheck: "true",
+                newAnswerText: "new answer is here"
             }
         }
         */
         if (session) {
+            let hasNewAnswer = false
+            let newAnswerText = ''
             const possibleAnswerIds:string[] = Object.entries(values[`question-${question.id}`]).reduce((acc, [key, value])=> {
-                if (value) {
+                if (key === newAnswerCheckProp) {
+                    hasNewAnswer = value as boolean;
+                } else if (key === newAnswerTextProp) {
+                    newAnswerText = value as string;
+                } else if (value) {
                     acc.push(key)
                 }
                 return acc
             }, [])
             setIsSubmitted(true)
-            const res = await fetcher(`/api/q/${question.id}/answer`, { possibleAnswerIds });
+
+            const payload:AnswerDto = {
+                possibleAnswerIds
+            }
+            if (hasNewAnswer) {
+                payload.newAnswer = {
+                    text: newAnswerText
+                }
+            }
+            const res = await fetcher(`/api/q/${question.id}/answer`, payload);
 
             if (res?.status == 'ok') {
                 // Answer has been recorded
+                onQuestionUpdated()
                 await reloadAnswerResults()
             }
 
-            console.log('Post-Answer:', res)
+            // console.log('Post-Answer:', res)
+
         } else {
             // how to handle anonymous answers? only available to certain types of questionnaires?
             // by default, there shall not be anonymous votes

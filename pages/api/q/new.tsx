@@ -1,8 +1,8 @@
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import prisma from "../../../components/util/prismaClient";
-import {HasUserIdAuthGuard} from "./[q]/newAnswer";
 import {QuestionEditDto} from "./[q]/edit";
 import {QuestionType} from "@prisma/client";
+import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
 
 // TODO: Test that user has enough rights to create a question?!
 
