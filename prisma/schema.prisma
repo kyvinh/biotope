@@ -82,6 +82,7 @@ model Cercle {
 
 enum InvitationType {
   EMAIL
+  CODE
 }
 
 model Invitation {
@@ -90,6 +91,8 @@ model Invitation {
   invitedEmail String?          // Should only exists while no User attached (email-leak?)
   invitedUser  User?          @relation("User_InvitedUser", fields: [invitedId], references: [id], onDelete: Cascade)
   invitedId    String?
+  code         String?
+  expiration   DateTime?
   creator      User           @relation("User_InvitationCreator", fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
   cercle       Cercle         @relation(fields: [cercleId], references: [id], onDelete: Cascade)
@@ -98,6 +101,7 @@ model Invitation {
 
   @@unique([type, invitedEmail, creatorId, cercleId])
   @@unique([type, invitedId, creatorId, cercleId])
+  @@unique([type, code, cercleId])
 }
 
 enum QuestionType {
