@@ -12,7 +12,7 @@ export const emailConfig = {
   async generateVerificationToken() {
     return _crypto.randomBytes(32).toString("hex")
   },
-  maxAge: 14 * 24 * 60 * 60 // 14 days
+  maxAge: 14 * 24 * 60 * 60 // 14 days  // TODO: 14 days for invite is OK but too long for sign-in?
 };
 
 // Override PrismaAdapter to handle reputation points/log

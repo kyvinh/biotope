@@ -2,7 +2,6 @@ import {useBiotope, useBiotopeUserHistory} from "../../../components/util/hooks"
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {useSession} from "next-auth/react"
-import React from "react";
 import {UserFlair} from "../../../components/UserFlair";
 import {formatDate} from "../../../components/util/dates";
 import {formatDistanceToNow} from "date-fns";
