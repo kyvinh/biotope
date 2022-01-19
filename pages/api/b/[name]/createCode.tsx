@@ -4,6 +4,8 @@ import prisma from "../../../../components/util/prismaClient";
 import {InvitationType} from "@prisma/client";
 import { add } from 'date-fns'
 
+export const CODE_LENGTH = 6;
+
 export interface CreateCodeDto {
     code: string,
     expiration: number  // expiration in days
@@ -20,7 +22,7 @@ class CreateInvitationCode {
             }
         })
 
-        if (!b || createCodeInput.code.length != 6 || createCodeInput.expiration < 0 || createCodeInput.expiration > 365) {
+        if (!b || createCodeInput.code.length != CODE_LENGTH || createCodeInput.expiration < 0 || createCodeInput.expiration > 365) {
             throw Error('CreateCode API error: input data')
         }
 
@@ -33,6 +35,8 @@ class CreateInvitationCode {
                 expiration: add(new Date(), {days: createCodeInput.expiration})
             }
         })
+
+        // TODO: Handle when invitation code has already been used!
 
         return {status: 'ok', invitation}
     }

@@ -30,7 +30,7 @@ $input-btn-font-size: 0.9rem;
 .main-container {
   @extend .container-fluid;
 
-  .main-content {
+  .main-biotope-cards {
     @extend .row;
     @include row-cols(3);
   }
