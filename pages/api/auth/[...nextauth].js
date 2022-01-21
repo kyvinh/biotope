@@ -126,7 +126,7 @@ export default NextAuth({
     debug: process.env.NEXTAUTH_DEBUG,
 
     session: {
-        strategy: "jwt",
+        strategy: "jwt",    // jwt required for credentials custom provider
 
         // Seconds - How long until an idle session expires and is no longer valid.
         maxAge: 30 * 24 * 60 * 60, // 30 days

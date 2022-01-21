@@ -1,8 +1,11 @@
 import React, {useState} from "react";
 import {signIn, useSession} from "next-auth/react";
+import {useRouter} from "next/router";
+import {fetcher} from "./util/fetcher";
 
 export const CodeJoinForm = () => {
 
+    const router = useRouter()
     const {data: session} = useSession({required: false})
     const [codeError, setCodeError] = useState('')
 
@@ -17,19 +20,22 @@ export const CodeJoinForm = () => {
             // Disabled for now
         } else {
             // Create user and invitation
-            const result = await signIn("code-credentials", {
-                redirect: false,    // or callbackUrl: '/welcome'
+            const joinRequest = await signIn("code-credentials", {
+                redirect: false,
                 code: code,
             });
-            if (result.ok) {
-                if (result.error) {
-                    setCodeError(result.error);
+            if (joinRequest.ok) {
+                if (joinRequest.error) {
+                    setCodeError(joinRequest.error);
                 } else {
                     setCodeError(null)
-                    // TODO Need to redirect user to biotope with more information... guide new user!
+                    // Find the concerned biotope in the invitation and redirect/guide user
+                    const res = await fetcher(`/api/user/memberships?first=true`);
+                    // TODO Should have some loading animation
+                    await router.push(res.redirect)
                 }
             } else {
-                console.log('join code fatal error:', result)
+                console.log('join code fatal error:', joinRequest)
             }
         }
     }

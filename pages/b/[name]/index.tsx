@@ -13,8 +13,6 @@ export default function BiotopeHome() {
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name as string)
 
-    // TODO: How to make sure we only display public information until we have the certainty that the user is authorized?
-
     return b ?
             <div className="biotope-container">
 
@@ -47,6 +45,10 @@ export default function BiotopeHome() {
                         </p>
                         <small className="text-muted">Biotope created by <UserFlair user={b.creator} /> on {formatDate(b.createdOn)}.&nbsp;</small>
                     </div>
+                </div>
+
+                <div>
+                    GUIDE USER IF FIRST TIME!
                 </div>
 
                 {
