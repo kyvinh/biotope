@@ -72,6 +72,7 @@ export default NextAuth({
     providers: [
         EmailProvider(emailConfig),
         CredentialsProvider({
+            // From: https://github.com/mbarton/docs/blob/mbarton/anon-sessions/docs/tutorials/anonymous-sessions.md
             id: "code-credentials",
             name: "Invitation Code",
             credentials: {
@@ -95,10 +96,19 @@ export default NextAuth({
                     const user = await prisma.user.create({
                         data: {
                             email: `${anonEmail}@anon.biotope.brussels`,
+                            reputationPoints: 1,
                             reputationActions: {
-                                create: [{actionType: ActionType.REGISTER_CODE}]
+                                create: {
+                                    actionType: ActionType.REGISTER_CODE
+                                }
                             },
-                            reputationPoints: 1
+                            invitationsReceived: {
+                                create: {
+                                    type: InvitationType.CODE,
+                                    creatorId: invite.creatorId,
+                                    cercleId: invite.cercleId,
+                                }
+                            }
                         }
                     })
                     console.log('create user :: joined with code', user)
