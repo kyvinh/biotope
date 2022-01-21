@@ -1,7 +1,7 @@
 import prisma from '../../../../components/util/prismaClient'
 import {Prisma} from "@prisma/client";
 import {parseISO} from "date-fns";
-import {BadRequestException, createHandler, Get, Query, Req, UnauthorizedException} from "@storyofams/next-api-decorators";
+import {BadRequestException, createHandler, Get, Query, Req} from "@storyofams/next-api-decorators";
 import {getSession} from "next-auth/react";
 import {NextApiRequest} from "next";
 
@@ -47,29 +47,37 @@ class FetchBiotope {
             throw new BadRequestException(`${biotopeName} is not valid`)
         }
 
+        let isAuthorized:boolean
+
         if (b.private) {
             if (!userId) {
-                // Return basic info only
-                return b;
+                // Browsing a private biotope with no user
+                isAuthorized = false
             } else {
                 // Must check if we're a member or the creator
-                if (userId !== b.creatorId) {
-                    const invite = await prisma.invitations.findFirst({
+                if (userId === b.creatorId) {
+                    isAuthorized = true
+                } else {
+                    const invite = await prisma.invitation.findFirst({
                         where: {
                             invitedId: userId,
                             cercleId: b.id,
                         }
                     })
-                    if (!invite) {
-                        throw new UnauthorizedException(`${b.id} not accessible to ${userId}`)
-                    }
+                    isAuthorized = !!invite;
                 }
             }
         }
 
+        b.isAuthorized = isAuthorized
+        if (!b.isAuthorized) {
+            // Not authorized -> return basic info without throwing exception
+            return b;
+        }
+
         // We are authorized to return more details: questions, ...
 
-        b.questions = await prisma.questions.findMany({
+        b.questions = await prisma.question.findMany({
             where: {
                 cercleId: b.id
             },
@@ -77,7 +85,7 @@ class FetchBiotope {
             orderBy: {
                 createdOn: 'desc',
             }
-        })
+        });
 
         // Add some stats such as count of distinct voters and last vote date per question
 
@@ -87,11 +95,11 @@ class FetchBiotope {
         }, []);
         // TODO Will query below break if no questionIds?
         const results = await prisma.$queryRaw`SELECT questionId,
-                                                      count(distinct hashUid) as votes,
-                                                      max(createdOn)          as lastVoteDate
+                                                      COUNT(DISTINCT hashUid) AS votes,
+                                                      MAX(createdOn)          AS lastVoteDate
                                                FROM answer
-                                               WHERE questionId in (${Prisma.join(questionIds)})
-                                               group by questionId`
+                                               WHERE questionId IN (${Prisma.join(questionIds)})
+                                               GROUP BY questionId`
 
         b.questions.forEach((question) => {
             const result = results.find((element) => element.questionId === question.id)

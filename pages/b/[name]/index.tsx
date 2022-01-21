@@ -1,4 +1,4 @@
-import {useBiotope, useBiotopeUserHistory} from "../../../components/util/hooks";
+import {useBiotope} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {useSession} from "next-auth/react"
@@ -6,24 +6,12 @@ import {UserFlair} from "../../../components/UserFlair";
 import {formatDate} from "../../../components/util/dates";
 import {formatDistanceToNow} from "date-fns";
 
-export function isAuthorized(session, biotope, authorizationError) {
-    let authorized = false;
-    if (session) {
-        if (biotope?.public || !authorizationError) {
-            authorized = true
-        }
-    }
-    return authorized;
-}
 export default function BiotopeHome() {
 
     // Required = false -> session might be null
     const {data: session} = useSession({required: false})
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name as string)
-    const {error: authorizationError} = useBiotopeUserHistory(name as string)
-
-    let authorized = isAuthorized(session, b, authorizationError)
 
     // TODO: How to make sure we only display public information until we have the certainty that the user is authorized?
 
@@ -62,7 +50,7 @@ export default function BiotopeHome() {
                 </div>
 
                 {
-                    b.private && !authorized ?
+                    !b.isAuthorized ?
                         <>
                             {session ? <div>You are signed in but this is a private biotope.</div>
                                 :

@@ -1,4 +1,5 @@
-const {PrismaClient, PossibleAnswerType, QuestionType} = require('@prisma/client')
+const {PrismaClient, PossibleAnswerType, QuestionType, InvitationType} = require('@prisma/client')
+const {add} = require("date-fns");
 const prisma = new PrismaClient()
 
 // https://www.prisma.io/docs/guides/database/seed-database#integrated-seeding-with-prisma-migrate
@@ -66,6 +67,22 @@ async function main() {
             headerPic: 'felixterlinden-plaque',
             description: 'Ce biotope rassemble tous les voisins résidants la rue Félix Terlinden.'
         },
+    })
+    const codeForInvitation = '123456';
+    const codeInvite = await prisma.invitation.upsert({
+        where: {
+            type_code: { type: InvitationType.CODE, code: codeForInvitation}
+        },
+        update: {
+            expiration: add(new Date(), {days: 15}),
+        },
+        create: {
+            type: InvitationType.CODE,
+            cercleId: cercleTerlinden.id,
+            creatorId: admin.id,
+            code: codeForInvitation,
+            expiration: add(new Date(), {days: 15}),
+        }
     })
     const terlindenQ1name = 'Comment jugez-vous la propreté de la rue Félix Terlinden?';
     const terlindenQ1 = await prisma.question.upsert({
