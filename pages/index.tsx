@@ -1,42 +1,14 @@
 import Link from 'next/link'
-import {fetcher} from "../components/util/fetcher";
-import {signIn, useSession} from "next-auth/react";
+import React from "react";
+import {CodeJoinForm} from "../components/CodeJoinForm";
 
 export default function Home() {
-
-    const join = async (event) => {
-        const code = event.target.invitationCode.value
-        event.preventDefault()
-
-        const result = await signIn("code-credentials", {
-            redirect: false,
-            code: code,
-        });
-        // console.log("code signin result:", result)
-/*
-        const res = await fetcher(`/api/b/codeJoin`, {
-            code: code,
-        })
-        if (res?.status == 'ok') {
-            console.log(res)
-        }
-*/
-    }
-
-    const session = useSession({required: false})
-    console.log(session)
 
     return (
         <div className="main-container">
             <h1 className="title text-center">Sondages Citoyens pour Tous!</h1>
 
-            <div>
-                <form onSubmit={join}>
-                    <label htmlFor="invitationCode">Invitation code:</label>
-                    <input name="invitationCode" id="invitationCode" required/>
-                    <button type="submit">Join</button>
-                </form>
-            </div>
+            <CodeJoinForm />
 
             <div className="main-biotope-cards">
 
