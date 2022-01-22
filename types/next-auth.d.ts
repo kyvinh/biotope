@@ -7,6 +7,7 @@ interface User {
     id: string,
     email?: string,
     name?: string,
+    isAnon?: boolean,
 }
 
 declare module "next-auth/jwt" {

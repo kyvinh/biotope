@@ -47,9 +47,11 @@ export default function BiotopeHome() {
                     </div>
                 </div>
 
-                <div>
-                    GUIDE USER IF FIRST TIME!
-                </div>
+                {session?.user?.isAnon &&
+                    <div>
+                        You have been invited to participate in this biotope. What you can do... what is expected from the platform...
+                    </div>
+                }
 
                 {
                     !b.isAuthorized ?

@@ -5,9 +5,10 @@ import {PrismaAdapter} from '@next-auth/prisma-adapter'
 import {ActionType, InvitationType} from '@prisma/client'
 import prisma from '../../../components/util/prismaClient'
 import _crypto from "crypto";
-import addDays from 'date-fns/addDays'
 import {CODE_LENGTH} from "../b/[name]/createCode";
 import {hashUid} from "../../../components/util/user";
+
+export const ANON_EMAIL_DOMAIN = 'anon.biotope.brussels'
 
 export const emailConfig = {
     server: process.env.EMAIL_SERVER,
@@ -29,9 +30,8 @@ prismaAdapter.createUser = async (data) => {
     return prisma.user.create({data})
 }
 
-// Cleanup biotope invitations and link the invite to the userId rather than email
-// TODO: Might as well cleanup verification tokens (from all users)?
-async function cleanupInvitations(user) {
+// Cleanup biotope invitations and link the invite to the userId rather than his email
+async function linkEmailInvitations(user) {
     try {
         await prisma.$transaction([
             // Link to userId rather than email
@@ -46,21 +46,22 @@ async function cleanupInvitations(user) {
                     invitedId: user.id
                 }
             }),
-            // Delete expired unopened invitations
-            // TODO: Deleting may be wrong. What if user exists and invited to a biotope? The invitation should stay until the user logs in to activate this invite?
-            prisma.invitation.deleteMany({
-                where: {
-                    type: InvitationType.EMAIL,
-                    invitedEmail: user.email,
-                    createdOn: {
-                        lte: addDays(new Date(), -90)
-                    }
-                }
-            }),
+            // TODO: Might as well cleanup verification tokens (from all users)?
+            // TODO: Deleting for all users may be wrong. What if user exists and invited to another biotope? The invitation should stay until the user logs in to activate this invite?
+            // // Delete expired unopened invitations
+            // prisma.invitation.deleteMany({
+            //     where: {
+            //         type: InvitationType.EMAIL,
+            //         invitedEmail: user.email,
+            //         createdOn: {
+            //             lte: addDays(new Date(), -90)    // Should not be hardcoded 90 -> use expiration date
+            //         }
+            //     }
+            // }),
         ]);
     } catch (error) {
-        console.log('cleanupInvitations::error', error)
-        console.log('cleanupInvitations::error::user', user)
+        console.log('linkEmailInvitations::error', error)
+        console.log('linkEmailInvitations::error::user', user)
         // Do not block on errors...
     }
 }
@@ -95,7 +96,7 @@ export default NextAuth({
                     // Create and persist anonymous user
                     const user = await prisma.user.create({
                         data: {
-                            email: `${anonEmail}@anon.biotope.brussels`,
+                            email: `${anonEmail}@${ANON_EMAIL_DOMAIN}`,
                             reputationPoints: 1,
                             reputationActions: {
                                 create: {
@@ -154,23 +155,12 @@ export default NextAuth({
     // when an action is performed.
     // https://next-auth.js.org/configuration/callbacks
     callbacks: {
-        // async redirect(url, baseUrl) { return baseUrl },
-
+        // JWT token created once, upon login
         async jwt({token, user}) {
             if (user) {
                 token.user = user
             }
             return token;
-        },
-
-        async signIn({user, email /* true means we are not logging in but sending the invitation request */}) {
-            // Cleanup on every signin -> enables invitations in other biotopes if exist
-            // noinspection JSUnresolvedVariable
-            if (user.id && user.email && !email?.verificationRequest) {
-                // TODO This can be moved to the event callback, makes more sense!
-                await cleanupInvitations(user);
-            }
-            return true
         },
         // Add user object to session
         async session({session, user, token}) {
@@ -187,6 +177,14 @@ export default NextAuth({
                     email: token.user.email,
                 };
             }
+            // Cleanup for anonymous users
+            if (session.user?.email?.endsWith(ANON_EMAIL_DOMAIN)) {
+                session.user.email = null
+                session.user.name = 'Anonymous User'
+                session.user.isAnon = true
+            } else {
+                session.user.isAnon = false
+            }
             return session;
         }
     },
@@ -195,13 +193,24 @@ export default NextAuth({
     // https://next-auth.js.org/configuration/events
     events: {
         createUser: async (message) => {
-            // We cannot cleanup invitations in PrismaAdapter.createUser because userId does not exist yet
-            // console.log("createUser event", message)
-            await cleanupInvitations(message.user);
+            try {
+                // We cannot cleanup invitations in PrismaAdapter.createUser because userId does not exist yet
+                // console.log("createUser event", message)
+                await linkEmailInvitations(message.user);
+            } catch (e) {
+                console.log(e)  // Should not block the event processing
+            }
         },
-    },
-
-    // You can set the theme to 'light', 'dark' or use 'auto' to default to the
-    // whatever prefers-color-scheme is set to in the browser. Default is 'auto'
-    theme: 'auto'
+        signIn: async (message) => {
+            try {
+                const user = message.user;
+                // Cleanup on every signin -> enables invitations in other biotopes if exist
+                if (user.id && user.email) {
+                    await linkEmailInvitations(user);
+                }
+            } catch (e) {
+                console.log(e)  // Should not block the event processing
+            }
+        },
+    }
 })
