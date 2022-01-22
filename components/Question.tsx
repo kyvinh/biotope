@@ -1,7 +1,7 @@
 import {PossibleAnswer, QuestionType} from '@prisma/client'
 import Likert from 'react-likert-scale';
 import React, {useState} from "react";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
@@ -48,23 +48,26 @@ export const Question = ({question, answered, disabled = false, answerSubmit}) =
     }
 
     const NewDynamicAnswer = () => {
-        /*
-        const newAnswerText = watch(newAnswerTextId, '');
-        const hasNewAnswerText = newAnswerText.length > 0;
-        */
+
+        const onNewAnswerChanged = async (event) => {
+            event.preventDefault()
+            const answerText = event.target.value;
+            event.target.form[newAnswerCheckboxId].checked = answerText?.length > 0;
+        }
+
         return  <div className="form-check" key={`possible-answer-new`}>
                     <div className="form-text">Add a new answer if none are relevant.</div>
-                    <input className="form-check-input" type="checkbox" value="false"
+                    <input className="form-check-input" type="checkbox"
                         {...register(newAnswerCheckboxId)} />
                     <label className="form-check-label" htmlFor={newAnswerTextId}>Other:
-                        <input {...register(newAnswerTextId)} id={newAnswerTextId} />
+                        <input {...register(newAnswerTextId, { onChange: onNewAnswerChanged })} id={newAnswerTextId}  />
                     </label>
-                </div>
+                </div>;
     }
 
     // -- COMPONENT --
 
-    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues, unregister} = useForm();
+    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues} = useForm();
     const formPrefix = `question-${question.id}`;
     const newAnswerTextId = `${formPrefix}.${newAnswerTextProp}`;
     const newAnswerCheckboxId = `${formPrefix}.${newAnswerCheckProp}`;
@@ -74,7 +77,7 @@ export const Question = ({question, answered, disabled = false, answerSubmit}) =
         clearErrors()
         const values = getValues(formPrefix);
         const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => acc || !!values[answer.id], false)
-        if (!oneChecked && !values['newAnswerCheck']) {
+        if (!oneChecked && !values[newAnswerCheckProp]) {
             setError(formPrefix, {type: 'manual', message: 'Please choose at least one answer, or create your own.'})
         }
         handleSubmit(answerSubmit)(e)
