@@ -3,6 +3,7 @@ import {useForm} from "react-hook-form";
 import {fetcher} from "./util/fetcher";
 import {QuestionEditDto} from "../pages/api/q/[q]/edit";
 import {NewAnswerInput} from "../pages/api/q/[q]/newAnswer";
+import QuestionEditForm from "./QuestionEditForm";
 
 export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit}) => {
 
@@ -18,7 +19,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
     };
 
     // New answer form
-    const { register: registerAnswer, handleSubmit: handleAnswerSubmit, formState: { errors: answerErrors } } = useForm();
+    const { register: registerAnswer, handleSubmit: handleAnswerSubmit, formState: { errors: answerErrors }, control } = useForm();
 
     const onAddNewAnswer = async (newAnswerDto:NewAnswerInput) => {
         if (newAnswerDto.newAnswer.length > 0 && newAnswerDto.newAnswer.length < 150) {
@@ -33,22 +34,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
 
     return <>
         <form onSubmit={handleSubmit(onQuestionSubmit)} className="question-edit">
-            <h6>Edit question description</h6>
-            <div className="form-group">
-                <label htmlFor={`question-${question.id}.name`}>Your question:</label>
-                <div className="form-text">Your question should be short and precise. More context should be added in the description below.</div>
-                <input id={`question-${question.id}.name`} className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                       defaultValue={question.name}
-                       {...register("name", {required: true})} />
-                <div className="invalid-feedback">Please specify your question here.</div>
-            </div>
-            <div className="form-group">
-                <label htmlFor={`question-${question.id}.description`}>Description:</label>
-                <div className="form-text">Your description should provide enough context to make an informed choice, or to suggest one.</div>
-                <textarea className={`form-control ${errors.description ? 'is-invalid' : ''}`} id={`question-${question.id}.description`}
-                          rows={3} {...register("description", {required: true})} defaultValue={question.description}/>
-                <div className="invalid-feedback">A description is required.</div>
-            </div>
+            <QuestionEditForm errors={errors} register={register} questionId={question.id} defaultValues={question} control={control} />
             <input className="btn btn-primary" type="submit" value="Update question"/>
             <button className="btn btn-link" onClick={onCancel}>Cancel</button>
         </form>

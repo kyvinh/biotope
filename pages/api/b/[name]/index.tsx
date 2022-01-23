@@ -49,7 +49,9 @@ class FetchBiotope {
 
         let isAuthorized:boolean
 
-        if (b.private) {
+        if (!b.private) {
+            isAuthorized = true;
+        } else {
             if (!userId) {
                 // Browsing a private biotope with no user
                 isAuthorized = false

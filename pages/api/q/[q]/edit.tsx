@@ -5,7 +5,8 @@ import {questionIncludeBiotopeQuery} from "../../b/[name]";
 
 export interface QuestionEditDto {
     name: string,
-    description: string
+    description: string,
+    closingDate?: Date,
 }
 
 export default async function handler(req, res) {

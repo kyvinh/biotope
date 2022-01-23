@@ -6,7 +6,7 @@ import {useForm} from "react-hook-form";
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
 
-export const Question = ({question, answered, disabled = false, answerSubmit}) => {
+export const QuestionForm = ({question, answered, disabled = false, answerSubmit}) => {
 
     const sortedPossibleAnswers:PossibleAnswer[] = question.possibleAnswers
 

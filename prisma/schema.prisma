@@ -126,6 +126,8 @@ model Question {
   creatorId    String
   answers      Answer[]
   possibleAnswers   PossibleAnswer[]
+  closingDate  DateTime?
+  closed       Boolean        @default(false)
 
   @@unique([cercleId, name])
 }

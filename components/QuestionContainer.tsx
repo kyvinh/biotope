@@ -1,4 +1,4 @@
-import {newAnswerCheckProp, newAnswerTextProp, Question} from "./Question";
+import {newAnswerCheckProp, newAnswerTextProp, QuestionForm} from "./QuestionForm";
 import {QuestionResults} from "./QuestionResults";
 import {fetcher} from "./util/fetcher";
 import useSWR from "swr";
@@ -10,6 +10,8 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import {UserFlair} from "./UserFlair";
 import {formatDistanceToNow} from 'date-fns'
 import {AnswerDto} from "../pages/api/q/[q]/answer";
+
+// TODO Prereq: we should not be here if no session and biotope is private
 
 export const QuestionContainer = ({question, disabled = false, onQuestionUpdated}) => {
 
@@ -37,10 +39,13 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
             }
         }
         */
-        if (session) {
+        if (!session) {
+            throw new Error("Currently no anonymous vote allowed!")
+        } else {
+            setIsSubmitted(true)
             let hasNewAnswer = false
             let newAnswerText = ''
-            const possibleAnswerIds:string[] = Object.entries(values[`question-${question.id}`]).reduce((acc, [key, value])=> {
+            const possibleAnswerIds: string[] = Object.entries(values[`question-${question.id}`]).reduce((acc, [key, value]) => {
                 if (key === newAnswerCheckProp) {
                     hasNewAnswer = value as boolean;
                 } else if (key === newAnswerTextProp) {
@@ -50,9 +55,8 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                 }
                 return acc
             }, [])
-            setIsSubmitted(true)
 
-            const payload:AnswerDto = {
+            const payload: AnswerDto = {
                 possibleAnswerIds
             }
             if (hasNewAnswer) {
@@ -60,6 +64,7 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                     text: newAnswerText
                 }
             }
+
             const res = await fetcher(`/api/q/${question.id}/answer`, payload);
 
             if (res?.status == 'ok') {
@@ -67,14 +72,6 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                 onQuestionUpdated()
                 await reloadAnswerResults()
             }
-
-            // console.log('Post-Answer:', res)
-
-        } else {
-            // how to handle anonymous answers? only available to certain types of questionnaires?
-            // by default, there shall not be anonymous votes
-            // - private biotopes cannot be accessed by anonymous users
-            throw new Error("Currently no anonymous vote allowed!")
         }
     }
 
@@ -89,6 +86,8 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
         <div className="card-body">
             <div className="item-summary-dates">
                 <div>Asked {formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})} by <UserFlair user={question.creator} /></div>
+                {question.closingDate
+                && <div>Closes in {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</div>}
                 {question.lastVoteDate
                 && <div>Last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</div>}
             </div>
@@ -110,13 +109,19 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                                       onAnswerEdit={async () => { setIsEditMode(false); await reloadAnswerResults(); } }
                         />
                         :
-                        <Question question={question} answered={isSubmitted || questionAnswered}
-                                  disabled={disabled} answerSubmit={answerSubmit}/>
+                        <>
+                            {!question.closed
+                                && <QuestionForm question={question}
+                                                 answered={isSubmitted || questionAnswered} disabled={disabled}
+                                                 answerSubmit={answerSubmit} />
+                            }
+                        </>
                     }
                 </>
             }
-            { ((isSubmitted || questionAnswered) && answerResults && !isEditMode) ?
+            { ((isSubmitted || questionAnswered || question.closed) && answerResults && !isEditMode) ?
                 <>
+                    <h2>HIDE UNTIL USER HAS VOTED (and not anonymous!) CLOSING OF VOTES (just show some early stats?)</h2>
                     <QuestionResults question={question} results={answerResults.results}
                                      onQuestionUpdated={async () => { await onQuestionUpdated() }} />
                 </>

@@ -92,8 +92,12 @@ export default function BiotopeHome() {
                                                 <div>{question.shortDescription}</div>
                                                 <div className="item-summary-dates">
                                                     <div>Asked {formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}
-                                                    {question.lastVoteDate
-                                                    && <span>, last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>}
+                                                    { question.closed
+                                                        && <span>, closed {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>}
+                                                    { !question.closed && question.closingDate
+                                                        && <span>, closes in {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>}
+                                                    { question.lastVoteDate
+                                                        && <span>, last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>}
                                                     </div>
                                                 </div>
                                             </div>

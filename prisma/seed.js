@@ -1,5 +1,5 @@
 const {PrismaClient, PossibleAnswerType, QuestionType, InvitationType} = require('@prisma/client')
-const {add} = require("date-fns");
+const {add, addDays} = require("date-fns");
 const prisma = new PrismaClient()
 
 // https://www.prisma.io/docs/guides/database/seed-database#integrated-seeding-with-prisma-migrate
@@ -108,28 +108,38 @@ async function main() {
         }
     })
     const terlindenQ2name = 'Comment améliorer notre rue et les rues avoisinantes en terme de mobilité et d\'attractivité?';
+    // noinspection JSCheckFunctionSignatures
     const terlindenQ2 = await prisma.question.upsert({
         where: { cercleId_name: { name: terlindenQ2name , cercleId: cercleTerlinden.id}},
-        update: {},
+        update: {
+            closingDate: addDays(new Date(), -14),
+            closed: true,
+        },
         create: {
             name: terlindenQ2name,
             type: QuestionType.DYNAMIC,
             description: 'La rue n\'est pas safe pour les cyclistes (autorisés en sens contraire mais avec peu d\'espace). La rue n\'est pas verdurée du tout.',
             creatorId: admin.id,
-            cercleId: cercleTerlinden.id
+            cercleId: cercleTerlinden.id,
+            closingDate: addDays(new Date(), -14),
+            closed: true,
         }
     })
 
     const terlindenQ3name = 'Quelles activités voudriez-vous voir dans la rue Félix Terlinden?';
+    // noinspection JSCheckFunctionSignatures
     const terlindenQ3 = await prisma.question.upsert({
         where: { cercleId_name: { name: terlindenQ3name , cercleId: cercleTerlinden.id}},
-        update: {},
+        update: {
+            closingDate: addDays(new Date(), 14)
+        },
         create: {
             name: terlindenQ3name,
             type: QuestionType.DYNAMIC,
             description: "Quelles activités à soutenir? Rajouter une proposition d'activité si possible.",
             creatorId: admin.id,
-            cercleId: cercleTerlinden.id
+            cercleId: cercleTerlinden.id,
+            closingDate: addDays(new Date(), 14)
         }
     })
 

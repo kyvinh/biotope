@@ -24,6 +24,7 @@ class AddNewQuestionHandler {
                 description: newQuestionInput.description,
                 cercleId: b.id,
                 creatorId: userId,
+                closingDate: newQuestionInput.closingDate,
             }
         })
 
