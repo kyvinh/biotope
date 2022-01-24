@@ -2,6 +2,22 @@ import React from "react";
 import {Col, ProgressBar, Row} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 
+export const computeResults = (question, rawResults) => {
+    const totalVotesCount = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
+    const resultsWithCount = rawResults.reduce(
+        (acc, rawResult) => {
+            const possibleAnswer = question.possibleAnswers.find(element => element.id === rawResult.id)
+            const answerResult = { ...possibleAnswer }
+            answerResult.count = rawResult._count.answers
+            answerResult.percent = answerResult.count / totalVotesCount * 100
+            return [...acc, answerResult]
+        }
+        , [])
+    return {
+        totalVotesCount, resultsWithCount
+    }
+}
+
 export const QuestionResults = ({question, results: rawResults, onQuestionUpdated}) => {
     if (!rawResults) {
         return null
@@ -18,17 +34,8 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
         ]
     */
 
-    const totalVotesCount = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
-
-    const answerResults = rawResults.reduce(
-        (acc, rawResult) => {
-            const possibleAnswer = question.possibleAnswers.find(element => element.id === rawResult.id)
-            const answerResult = { ...possibleAnswer }
-            answerResult.count = rawResult._count.answers
-            answerResult.percent = answerResult.count / totalVotesCount * 100
-            return [...acc, answerResult]
-        }
-        , []).sort((n1,n2) => n1.order - n2.order)
+    const {totalVotesCount, resultsWithCount: answersWithCount} = computeResults(question, rawResults)
+    answersWithCount.sort((n1,n2) => n1.order - n2.order)
 
     const onArgumentAdded = (possibleAnswerId, argument) => {
         const possibleAnswer = question.possibleAnswers.find(element => element.id === possibleAnswerId)
@@ -39,7 +46,7 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
     return <div className="py-2">
         <div >Résultats: {totalVotesCount} vote(s)</div>
         <div>
-            { answerResults.map((answerResult, i) =>
+            { answersWithCount.map((answerResult, i) =>
                 <div key={i}>
                     <Row className="align-items-center">
                         <Col sm={2}>

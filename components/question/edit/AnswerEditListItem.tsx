@@ -15,6 +15,14 @@ export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
         }
     }
 
+    const onDeleteAnswer = async (event) => {
+        event.preventDefault()
+        const res = await fetcher(`/api/pa/${answer.id}/delete`, { deletedId: answer.id});
+        if (res?.status == 'ok') {
+            onAnswerEdit();
+        }
+    }
+
     return <div>
         {!answerFormShown ?
             <div className="row">
@@ -25,6 +33,9 @@ export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
                     <button className="btn btn-outline-dark"
                             onClick={() => setAnswerFormShown(!answerFormShown)}>Edit
                     </button>
+                    {answer.count === 0 &&
+                        <input className="btn btn-outline-danger" type="button" value="Delete" onClick={onDeleteAnswer}/>
+                    }
                 </div>
             </div>
             : <div className="row">

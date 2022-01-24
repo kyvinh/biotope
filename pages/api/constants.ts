@@ -7,3 +7,7 @@ export class NewAnswerInput {
 export class PossibleAnswerInput {
     answerText: string;
 }
+
+export class PossibleAnswerDeleteInput {
+    deletedId: string;
+}
