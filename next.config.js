@@ -1,5 +1,9 @@
 // @ts-check
 
+if (process.env.NODE_ENV === "production") {
+    require("newrelic");
+}
+
 /**
  * @type {import('next').NextConfig}
  **/
