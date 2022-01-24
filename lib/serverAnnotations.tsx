@@ -17,20 +17,24 @@ export const HasUserIdAuthGuard = createMiddlewareDecorator(
     }
 );
 
+export const isQuestionCreator = async (questionId, userId) => {
+    const originalQuestion: Question = await prisma.question.findUnique({
+        where: {
+            id: questionId
+        }
+    })
+    return originalQuestion && originalQuestion.creatorId === userId
+}
+
 // Requires req.query['userId'] and req.query['q'] !
 export const QuestionCreatorAuthGuard = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {
 
         const userId = req.query['userId']
         const questionId = req.query['q']
+        const authorized = await isQuestionCreator(questionId, userId)
 
-        const originalQuestion: Question = await prisma.question.findUnique({
-            where: {
-                id: questionId
-            }
-        })
-
-        if (!originalQuestion || originalQuestion.creatorId !== userId) {
+        if (!authorized) {
             throw new UnauthorizedException();
         }
 
