@@ -1,4 +1,4 @@
-import {newAnswerCheckProp, newAnswerTextProp, QuestionForm} from "./QuestionForm";
+import {newAnswerCheckProp, newAnswerTextProp, QuestionAnswerForm} from "./QuestionAnswerForm";
 import {QuestionResults} from "./QuestionResults";
 import {fetcher} from "./util/fetcher";
 import useSWR from "swr";
@@ -27,6 +27,7 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
     // Type of resultsObject = { questionId: { average: Int }
     const {data: answerResults, mutate: reloadAnswerResults} = useSWR(session ? `/api/q/${question.id}/results` : null, fetcher);
 
+    // noinspection SpellCheckingInspection
     const answerSubmit = async (values) => {
         /*
         console.log(values)
@@ -111,9 +112,9 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                         :
                         <>
                             {!question.closed
-                                && <QuestionForm question={question}
-                                                 answered={isSubmitted || questionAnswered} disabled={disabled}
-                                                 answerSubmit={answerSubmit} />
+                                && <QuestionAnswerForm question={question}
+                                                       answered={isSubmitted || questionAnswered} disabled={disabled}
+                                                       answerSubmit={answerSubmit} />
                             }
                         </>
                     }

@@ -6,7 +6,7 @@ import {useForm} from "react-hook-form";
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
 
-export const QuestionForm = ({question, answered, disabled = false, answerSubmit}) => {
+export const QuestionAnswerForm = ({question, answered, disabled = false, answerSubmit}) => {
 
     const sortedPossibleAnswers:PossibleAnswer[] = question.possibleAnswers
 
@@ -21,6 +21,7 @@ export const QuestionForm = ({question, answered, disabled = false, answerSubmit
 
     // -- QuestionType.LIKERT --
 
+    // noinspection JSUnusedLocalSymbols
     const [likertanswer, setLikertanswer] = useState(3)
 
     const likertOptions = {
@@ -53,6 +54,7 @@ export const QuestionForm = ({question, answered, disabled = false, answerSubmit
             event.preventDefault()
             const answerText = event.target.value;
             event.target.form[newAnswerCheckboxId].checked = answerText?.length > 0;
+            setValue(newAnswerCheckboxId, true)
         }
 
         return  <div className="form-check" key={`possible-answer-new`}>
@@ -67,7 +69,7 @@ export const QuestionForm = ({question, answered, disabled = false, answerSubmit
 
     // -- COMPONENT --
 
-    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues} = useForm();
+    const { register, formState: { errors }, handleSubmit, setError, clearErrors, getValues, setValue} = useForm();
     const formPrefix = `question-${question.id}`;
     const newAnswerTextId = `${formPrefix}.${newAnswerTextProp}`;
     const newAnswerCheckboxId = `${formPrefix}.${newAnswerCheckProp}`;
