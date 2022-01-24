@@ -3,7 +3,7 @@ import {fetcher} from "./util/fetcher";
 import {useSession} from "next-auth/react";
 import {UserFlair} from "./UserFlair";
 import {useForm} from "react-hook-form";
-import {NewArgumentInput} from "../pages/api/q/[q]/argument";
+import {NewArgumentInput} from "../pages/api/pa/[pa]/argument";
 
 export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) => {
 
@@ -11,16 +11,17 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
     const [showAddArgument, setShowAddArgument] = useState(false)
 
     // New argument form
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const onAddArgument = async (newArgument:NewArgumentInput) => {
         if (!session) {
             // Arguments are anonymous but you should be logged in? (SO lets you add as anonymous but has a review queue in process)
-            throw new Error("Currently no anonymous argument allowed!")
+            throw new Error("Currently need to be signed in to argument, even anonymously!")
         }
-        const res = await fetcher(`/api/q/${possibleAnswerId}/argument`, newArgument);
+        const res = await fetcher(`/api/pa/${possibleAnswerId}/argument`, newArgument);
         if (res?.status == 'ok') {
-            setShowAddArgument(false);
+            setShowAddArgument(false)
+            reset()
             onArgumentAdded(possibleAnswerId, res.argument)
         }
     };
@@ -28,11 +29,19 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
     // console.log(questionArguments)
 
     return <>
-        { answerArguments ? answerArguments.map((argument) =>
+        { answerArguments && answerArguments.map((argument) =>
             <div key={argument.id}>
-                <p><UserFlair user={argument.creator} />: {argument.text}</p>
+                <p>{argument.anonymous ?
+                    <UserFlair user={{
+                        name: "Anonymous",
+                        reputationsPoints: 0,
+                    }} />
+                    :
+                    <UserFlair user={argument.creator} />
+                }
+                : {argument.text}</p>
             </div>
-        ) : null}
+        )}
         { showAddArgument ?
             <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
                 <div className="form-group">
@@ -41,6 +50,13 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
                     <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
                               rows={3} {...register("argumentText", {required: true})} />
                     {errors.argumentText && <div className="invalid-feedback">A text is required.</div>}
+                </div>
+                <div className="form-check">
+                    <input className="form-check-input" type="checkbox" defaultChecked={true}
+                           {...register("argumentAnonymous")} id={`argument-${possibleAnswerId}-anonymous`} />
+                    <label className="form-check-label" htmlFor={`argument-${possibleAnswerId}-anonymous`}>
+                        Post anonymously (your name will not be displayed and encrypted)
+                    </label>
                 </div>
                 <input type="submit" value="Submit argument" className="btn btn-primary" />
                 <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>

@@ -88,8 +88,10 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
         <div className="card-body">
             <div className="item-summary-dates">
                 <div>Asked {formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})} by <UserFlair user={question.creator} /></div>
-                {question.closingDate
-                && <div>Closes in {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</div>}
+                { question.closed
+                && <span>Closed {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>}
+                { !question.closed && question.closingDate
+                && <span>Closes in {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>}
                 {question.lastVoteDate
                 && <div>Last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</div>}
             </div>

@@ -170,11 +170,20 @@ model Answer {
 model Argument {
   id           String         @id @default(cuid())
   possibleAnswer PossibleAnswer @relation(fields: [possibleAnswerId], references: [id], onDelete: Cascade)
+  anonymous    Boolean        @default(true)
   possibleAnswerId String
   text         String
   createdOn    DateTime       @default(now())
-  creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId    String
+  creator      User?           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId    String?
+  logs         ArgumentLog[]
+}
+
+model ArgumentLog {
+  id           String         @id @default(cuid())
+  argument     Argument       @relation(fields: [argumentId], references: [id], onDelete: Cascade)
+  argumentId   String
+  hashUid      String
 }
 
 enum ActionType {
