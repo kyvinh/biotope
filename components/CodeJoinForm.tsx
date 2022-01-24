@@ -40,14 +40,17 @@ export const CodeJoinForm = () => {
         }
     }
 
-    return <div className={`${userLoggedIn ? 'd-none': ''}`}>
+    return <>
+        {!userLoggedIn &&
         <form onSubmit={onCodeSubmit}>
             <div className="form-group">
                 <label htmlFor="invitationCode">Please enter your invitation code here:</label>
-                <input name="invitationCode" id="invitationCode" required className={`form-control ${codeError ? 'is-invalid' : ''}`}/>
+                <input name="invitationCode" id="invitationCode" required
+                       className={`form-control ${codeError ? 'is-invalid' : ''}`}/>
                 <div className="invalid-feedback">{codeError}</div>
                 <button type="submit" className="btn btn-primary">Join</button>
             </div>
         </form>
-    </div>;
+        }
+    </>
 }

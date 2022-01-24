@@ -106,7 +106,7 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                         <QuestionEdit question={question}
                                       onCancel={async () => { setIsEditMode(false) } }
                                       onQuestionEdit={async () => { setIsEditMode(false); await onQuestionUpdated(); } }
-                                      onAnswerEdit={async () => { setIsEditMode(false); await reloadAnswerResults(); } }
+                                      onAnswerEdit={async () => { await onQuestionUpdated(); await reloadAnswerResults(); } }
                         />
                         :
                         <>

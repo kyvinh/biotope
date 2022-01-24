@@ -8,7 +8,7 @@ import QuestionEditForm from "./QuestionEditForm";
 export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit}) => {
 
     // Question edit form
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, control } = useForm();
 
     const onQuestionSubmit = async (questionDto:QuestionEditDto) => {
         const res = await fetcher(`/api/q/${question.id}/edit`, questionDto);
@@ -19,15 +19,16 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
     };
 
     // New answer form
-    const { register: registerAnswer, handleSubmit: handleAnswerSubmit, formState: { errors: answerErrors }, control } = useForm();
+    const { register: registerAnswer, handleSubmit: handleAnswerSubmit, formState: { errors: answerErrors }, reset: resetAnswer } = useForm();
 
     const onAddNewAnswer = async (newAnswerDto:NewAnswerInput) => {
         if (newAnswerDto.newAnswer.length > 0 && newAnswerDto.newAnswer.length < 150) {
             const res = await fetcher(`/api/q/${question.id}/newAnswer`, newAnswerDto);
             if (res?.status == 'ok') {
                 question = res.updatedQuestion
-                onQuestionEdit();
+                // onQuestionEdit();
                 onAnswerEdit();
+                resetAnswer();
             }
         }
     }
