@@ -36,7 +36,7 @@ export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
                         <div className="invalid-feedback">Please specify a text for this answer.</div>
                     </div>
                     <input className="btn btn-outline-primary" type="submit" value="Rename answer"/>
-                    <button className="btn btn-link" onClick={() => setAnswerFormShown(!answerFormShown)}>Cancel</button>
+                    <input className="btn btn-link" type="button" value="Cancel" onClick={() => setAnswerFormShown(!answerFormShown)}/>
                 </form>
             </div>
         }
