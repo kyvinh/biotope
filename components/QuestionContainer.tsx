@@ -21,6 +21,7 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
 
     // Whether the user has answered this question or not
     const {data: questionAnsweredObject} = useSWR(session ? `/api/user/question/${question.id}` : null, fetcher);
+    const questionIsAnsweredKnown = !!questionAnsweredObject
     const questionAnswered = questionAnsweredObject?.answered
 
     // Results of the votes (include comments?) on this questionnaire
@@ -93,40 +94,39 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                 && <div>Last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</div>}
             </div>
 
-            { !isEditMode && <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6> }
-
-            {!session ?
-                <div>
-                    <Link href="/api/auth/signin" locale={false}>
-                        <a className="btn btn-outline-primary">Sign in</a>
-                    </Link> to vote
-                </div>
-                :
+            {!isEditMode ?
                 <>
-                    {isEditMode ?
-                        <QuestionEdit question={question}
-                                      onCancel={async () => { setIsEditMode(false) } }
-                                      onQuestionEdit={async () => { setIsEditMode(false); await onQuestionUpdated(); } }
-                                      onAnswerEdit={async () => { await onQuestionUpdated(); await reloadAnswerResults(); } }
-                        />
-                        :
-                        <>
-                            {!question.closed
-                                && <QuestionAnswerForm question={question}
-                                                       answered={isSubmitted || questionAnswered} disabled={disabled}
-                                                       answerSubmit={answerSubmit} />
-                            }
-                        </>
+                    <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6>
+                    {(!question.closed && questionIsAnsweredKnown)
+                    && <QuestionAnswerForm question={question}
+                                           answered={isSubmitted || questionAnswered} disabled={disabled}
+                                           answerSubmit={answerSubmit} />
                     }
                 </>
-            }
-            { ((isSubmitted || questionAnswered || question.closed) && answerResults && !isEditMode) ?
+                :
                 <>
-                    <h2>HIDE UNTIL USER HAS VOTED (and not anonymous!) CLOSING OF VOTES (just show some early stats?)</h2>
+                    <QuestionEdit question={question}
+                                  onCancel={async () => { setIsEditMode(false) } }
+                                  onQuestionEdit={async () => { setIsEditMode(false); await onQuestionUpdated(); } }
+                                  onAnswerEdit={async () => { await onQuestionUpdated(); await reloadAnswerResults(); } }
+                    />
+                </>
+            }
+
+            {!session &&
+            <>
+                <h6><ReactMarkdown>{question.description}</ReactMarkdown></h6>
+                <Link href="/api/auth/signin" locale={false}>
+                    <a className="btn btn-outline-primary">Sign in</a>
+                </Link> to vote and see the results
+            </>
+            }
+
+            { ((isSubmitted || questionAnswered || question.closed) && answerResults && !isEditMode && session) &&
+                <>
                     <QuestionResults question={question} results={answerResults.results}
                                      onQuestionUpdated={async () => { await onQuestionUpdated() }} />
                 </>
-                : null
             }
         </div>
     </div>
