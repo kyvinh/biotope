@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 const {PrismaClient, PossibleAnswerType, QuestionType, InvitationType} = require('@prisma/client')
 const {add, addDays} = require("date-fns");
 const prisma = new PrismaClient()
@@ -84,16 +86,35 @@ async function main() {
             expiration: add(new Date(), {days: 15}),
         }
     })
+    const tagUrbanisme = await prisma.tag.upsert({
+        where: { name: 'Urbanisme' },
+        update: {},
+        create: { name: 'Urbanisme' }
+    })
+    const tagMobilite = await prisma.tag.upsert({
+        where: { name: 'Mobilité' },
+        update: {},
+        create: { name: 'Mobilité' }
+    })
+    const tagLoisirs = await prisma.tag.upsert({
+        where: { name: 'Loisirs' },
+        update: {},
+        create: { name: 'Loisirs' }
+    })
     const terlindenQ1name = 'Comment jugez-vous la propreté de la rue Félix Terlinden?';
     const terlindenQ1 = await prisma.question.upsert({
         where: { cercleId_name: { name: terlindenQ1name , cercleId: cercleTerlinden.id}},
-        update: {},
+        update: {
+            tags: {
+                connect: { id: tagUrbanisme.id }
+            }
+        },
         create: {
             name: terlindenQ1name,
             type: QuestionType.DYNAMIC,
             description: "Bonjour, ce questionnaire sonde les habitants de la rue Félix Terlinden par rapport à la propreté publique. (MARKDOWN?) Notre rue mérite une attention particulière car elle est à proximité de plusieurs centres d'activité: La Chasse, Jourdan, Flagey.",
             creatorId: admin.id,
-            cercleId: cercleTerlinden.id
+            cercleId: cercleTerlinden.id,
         }
     })
     const terlindenQ1a1 = await prisma.possibleAnswer.upsert({
@@ -114,6 +135,9 @@ async function main() {
         update: {
             closingDate: addDays(new Date(), -14),
             closed: true,
+            tags: {
+                connect: [ { id: tagUrbanisme.id }, { id: tagMobilite.id }]
+            }
         },
         create: {
             name: terlindenQ2name,
@@ -131,7 +155,10 @@ async function main() {
     const terlindenQ3 = await prisma.question.upsert({
         where: { cercleId_name: { name: terlindenQ3name , cercleId: cercleTerlinden.id}},
         update: {
-            closingDate: addDays(new Date(), 14)
+            closingDate: addDays(new Date(), 14),
+            tags: {
+                connect: { id: tagLoisirs.id }
+            }
         },
         create: {
             name: terlindenQ3name,

@@ -8,6 +8,7 @@ import {NextApiRequest} from "next";
 export const questionIncludeBiotopeQuery = {
     include: {
         creator: true,
+        tags: true,
         possibleAnswers: {
             include: {
                 arguments: {

@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
 import {QuestionEdit} from "./QuestionEdit";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 import {UserFlair} from "./UserFlair";
 import {formatDistanceToNow} from 'date-fns'
 import {AnswerDto} from "../pages/api/q/[q]/answer";
@@ -95,6 +95,7 @@ export const QuestionContainer = ({question, disabled = false, onQuestionUpdated
                 {question.lastVoteDate
                 && <div>Last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</div>}
             </div>
+            <p>Tags: {question.tags.map((tag) => <span>{tag.name}-</span>)}</p>
 
             {!isEditMode ?
                 <>
