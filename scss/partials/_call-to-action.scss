@@ -1,0 +1,28 @@
+.cta-heading,
+.error-content {
+  @media #{$tab_device} {
+    flex-direction: column;
+  }
+  @media #{$large_mobile} {
+    flex-direction: column;
+  }
+  @media #{$small_mobile} {
+    flex-direction: column;
+  }
+}
+.undraw-illustration {
+  width: 290px;
+}
+.undraw-illustration,
+.error-content-img {
+  @media #{$tab_device} {
+    margin-bottom: 35px;
+  }
+  @media #{$large_mobile} {
+    margin-bottom: 35px;
+  }
+  @media #{$small_mobile} {
+    margin-bottom: 35px;
+    width: 100%;
+  }
+}

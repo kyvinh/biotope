@@ -1,0 +1,280 @@
+/*======== card-item =========*/
+.card-item {
+  @include border-radius(8px);
+  margin-bottom: 30px;
+  @include transition(0.3s);
+  @include box-shadow(0 0 8px rgba(82, 85, 90, 0.1));
+  border: 0;
+  .card-img {
+    @include border-radius(8px);
+    img {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      width: 100%;
+    }
+  }
+  .card-link {
+    color: $theme-color-4;
+    font-size: $fs-14;
+    display: inline-block;
+    line-height: 20px;
+    @include transition(0.3s);
+    position: relative;
+    top: -15px;
+    z-index: 2;
+    background-color: $white;
+    padding: 4px 11px;
+    @include border-radius(8px);
+    @include box-shadow(0 .125rem .25rem rgba(0,0,0,.075));
+    &:hover {
+      color: $theme-color;
+    }
+  }
+  .card-title {
+    color: $theme-color;
+    line-height: 25px;
+    font-size: $fs-20;
+    font-weight: $fw-bold;
+    a {
+      color: $theme-color;
+      @include transition(0.3s);
+      &:hover {
+        color: $theme-color-2;
+      }
+    }
+  }
+  .card-text {
+    a {
+      color: $theme-color-4;
+      @include transition(0.3s);
+      &:hover {
+        color: $theme-color-2;
+      }
+    }
+  }
+  .card-body {
+    padding: 1.6rem;
+  }
+}
+/*======== media-card =======*/
+.media-card {
+  @include border-radius(8px);
+  margin-bottom: 30px;
+  @include transition(0.3s);
+  @include box-shadow(0 0 10px rgba(82, 85, 90, 0.1));
+  padding: 25px;
+  background-color: $white;
+  .media-img {
+    width: 80px;
+    height: 80px;
+    margin-right: 15px;
+    @include border-radius(8px);
+    img {
+      width: 100%;
+      height: 100%;
+      @include border-radius(8px);
+    }
+  }
+  .media--img {
+    border: 5px solid $white;
+    @include box-shadow(0 0 6px rgba(0, 0, 0, 0.1));
+    @include border-radius(12px);
+    img {
+      @include border-radius(12px);
+    }
+  }
+  .media-body {
+    h5 {
+      color: $theme-color;
+      font-size: $fs-18;
+      font-weight: $fw-bold;
+      a {
+        color: $theme-color;
+        @include transition(0.3s);
+        &:hover {
+          color: $theme-color-2;
+        }
+      }
+    }
+  }
+}
+.media-img-sm {
+  width: 45px!important;
+  height: 45px!important;
+}
+.media-img--sm {
+  width: 39px!important;
+  height: 39px!important;
+}
+.media-img-xs {
+  width: 30px!important;
+  height: 30px!important;
+}
+/*======== media--card =======*/
+.media--card {
+  margin-bottom: 15px;
+  padding: 0;
+  .media-body {
+    border-left: 1px solid rgba(128, 137, 150, 0.1);
+    padding: 12px 20px;
+    h5 {
+      font-weight: $fw-medium;
+      font-size: $fs-16;
+    }
+  }
+}
+/*======== media--card-2 =======*/
+.media--card-2 {
+  padding: 0 0 15px 0;
+  @include border-radius(0);
+  @include box-shadow(none);
+  border-bottom: 1px solid rgba(128, 137, 150, 0.1);
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+  .media-body {
+    padding: 0;
+    border-left: 0;
+    h5 {
+      font-size: $fs-15;
+      line-height: 21px;
+    }
+  }
+}
+/*======== user-media =======*/
+.user-media {
+  @include border-radius(0);
+  @include box-shadow(none);
+  border-bottom: 1px solid rgba(128, 137, 150, 0.1);
+  margin-bottom: 0;
+  padding: 10px;
+  &.owner {
+    background-color: $color-gray-4;
+  }
+  .media-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  .media-body {
+    padding: 0;
+    border-left: 0;
+    h5 {
+      font-size: $fs-14;
+      font-weight: $fw-medium;
+    }
+  }
+}
+/*======== user--media =======*/
+.user--media {
+  border-bottom: 0;
+  padding: 0;
+}
+/*======== award-card =======*/
+.award-card {
+  .card-body {
+    color: $theme-color-4;
+    @include transition(0.2s);
+    &:hover {
+      color: $theme-color-2;
+    }
+  }
+}
+/*======== case-card =======*/
+.case-card {
+  @include box-shadow(none);
+  cursor: pointer;
+  margin-right: 8px;
+  margin-left: 8px;
+  @include transition(0s);
+  @media #{$tab_device} {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  @media #{$large_mobile} {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  @media #{$small_mobile} {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .card-text {
+    display: none;
+  }
+  .card-body {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  &.case-card-is-active {
+    .card-text {
+      display: block;
+    }
+    svg {
+      fill: $theme-color-2;
+    }
+  }
+  &.case-card-is-active,
+  &:hover {
+    @include box-shadow(0 0 40px rgba(82, 85, 90, 0.1));
+    z-index: 2;
+  }
+}
+/*======== work-content-card =======*/
+.work-content-card {
+  @include border-radius(8px);
+  width: 286px;
+  height: 286px;
+  margin: 12px;
+  @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+}
+.remote {
+  width: 334px;
+  height: 334px;
+}
+.austin,
+.munich {
+  width: 80px;
+  height: 80px;
+}
+.london {
+  width: 120px;
+  height: 120px;
+}
+/* cat-item */
+.cat-item {
+  padding: 5px 10px;
+  @include border-radius(6px);
+  @include transition(0.2s);
+  background-color: $white;
+  @include box-shadow(0 0 8px rgba(82, 85, 90, 0.1));
+  color: $theme-color;
+  font-size: $fs-14;
+  font-weight: $fw-medium;
+  .cat-number {
+    color: $theme-color-4;
+  }
+  &:hover {
+    color: $theme-color-2;
+  }
+}
+/*======== ad-banner =======*/
+.ad-banner {
+  width: 290px;
+  height: 500px;
+  background-color: rgba(128, 137, 150, 0.06);
+  position: relative;
+  .ad-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    @include transform(translate(-50%, -50%));
+    font-size: $fs-15;
+    font-weight: $fw-medium;
+  }
+}
+.ad-banner-2 {
+  height: 300px;
+}

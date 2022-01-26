@@ -1,0 +1,255 @@
+.form-group {
+  position: relative;
+}
+.input-icon {
+  position: absolute;
+  top: 50%;
+  @include transform(translateY(-50%));
+  left: 20px;
+  pointer-events: none;
+}
+.form-btn {
+  position: absolute;
+  color: $theme-color-4;
+  padding: 12px 14px;
+  top: 50%;
+  right: 0;
+  @include transform(translateY(-50%));
+  cursor: pointer;
+  @include transition(0.3s);
+  font-size: $fs-18;
+  background-color: transparent;
+  border: none;
+  .la {
+    @include transition(0.3s);
+  }
+  &:hover {
+    .la {
+      color: $theme-color;
+    }
+  }
+}
+.form--control {
+  height: 50px;
+  font-size: $fs-15;
+  border-color: rgba(127, 136, 151, 0.2);
+  padding-right: 18px;
+  padding-left: 18px;
+  color: $theme-color;
+  &:focus {
+    border-color: $theme-color-2;
+    @include box-shadow(none);
+  }
+  &::-webkit-input-placeholder {
+    color: rgba(128, 137, 150, 0.7);
+  }
+  &:-ms-input-placeholder {
+    color: rgba(128, 137, 150, 0.7);
+  }
+  &::placeholder {
+    color: rgba(128, 137, 150, 0.7);
+  }
+}
+.form--control-bg-gray {
+  background-color: rgba(127, 136, 151, 0.1);
+  border: 0;
+  &:focus {
+    background-color: rgba(127, 136, 151, 0.1);
+  }
+}
+.form-control-sm {
+  height: 35px;
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.custom-select {
+  cursor: pointer;
+  border-color: rgba(127, 136, 151, 0.2);
+  color: $theme-color-4;
+  font-size: $fs-15;
+  &:focus {
+    @include box-shadow(none);
+    border-color: $theme-color-2;
+  }
+}
+.custom--select {
+  height: 50px;
+}
+/*================= Chosen select ====================*/
+.selectize-dropdown,
+.selectize-input,
+.selectize-input input {
+  font-size: $fs-14;
+}
+.selectize-input {
+  @include box-shadow(none);
+  border-color: rgba(127, 136, 151, 0.2);
+  padding-left: 14px;
+  &.focus {
+    @include box-shadow(none);
+  }
+  >* {
+    color: $theme-color-4;
+  }
+}
+.selectize-dropdown {
+  border-color: rgba(127, 136, 151, 0.2);
+  .active {
+    background-color: rgba(127, 136, 151, 0.1);
+    color: $theme-color;
+  }
+  .option {
+    padding: 6px 14px;
+  }
+}
+.selectize-control {
+  &.multi {
+    .selectize-input {
+      > {
+        div {
+          @include border-radius(4px);
+          padding: 3px 7px;
+          background-color: rgba(127, 136, 151, 0.1);
+        }
+      }
+    }
+  }
+}
+.input--tags,
+.select--container {
+  .selectize-input {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+form.w-25 {
+  @media #{$large_mobile} {
+    width: 100%!important;
+  }
+  @media #{$small_mobile} {
+    width: 100%!important;
+  }
+}
+/*========= custom--control-label ==========*/
+.custom--control-label {
+  cursor: pointer;
+  &::before,
+  &::after {
+    top: .35rem;
+  }
+}
+.lost-pass-btn {
+  color: $theme-color-4;
+  @include transition(0.3s);
+  &:hover {
+    color: $theme-color-2;
+  }
+}
+/*==== leaflet-bar ======*/
+.leaflet-bar {
+  @include box-shadow(0 1px 5px rgba(0,0,0,.2));
+  a {
+    border-bottom-color: rgba(128, 137, 150, 0.1);
+    color: $theme-color;
+    &:first-child {
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+    }
+    &:last-child {
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+    &:hover {
+      border-bottom-color: rgba(128, 137, 150, 0.1);
+    }
+  }
+}
+.contact-information-wrap {
+  @media #{$tab_device} {
+    padding-left: 0!important;
+    padding-top: 40px;
+    border-left: 0!important;
+  }
+  @media #{$large_mobile} {
+    padding-left: 0!important;
+    padding-top: 40px;
+    border-left: 0!important;
+  }
+  @media #{$small_mobile} {
+    padding-left: 0!important;
+    padding-top: 40px;
+    border-left: 0!important;
+  }
+}
+.contact-success-message,
+.spinner-icon {
+  display: none;
+}
+/*=========== toggle-password =============*/
+.toggle-password {
+  .eye-off {
+    display: none;
+  }
+  &.active {
+    .eye-off {
+      display: block;
+    }
+    .eye-on {
+      display: none;
+    }
+  }
+  &:hover {
+    svg {
+      fill: $white;
+    }
+  }
+}
+.shape-bg {
+  background-image: url("../images/line-shape3.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.form-content {
+  h3 {
+    @media #{$small_mobile} {
+      font-size: 24px !important;
+    }
+  }
+  &.radius-top-left-8 {
+    @media #{$tab_device} {
+      border-top-right-radius: 8px;
+    }
+    @media #{$large_mobile} {
+      border-top-right-radius: 8px;
+    }
+    @media #{$small_mobile} {
+      border-top-right-radius: 8px;
+    }
+  }
+  &.radius-bottom-left-8 {
+    @media #{$tab_device} {
+      border-bottom-left-radius: 0 !important;
+    }
+    @media #{$large_mobile} {
+      border-bottom-left-radius: 0 !important;
+    }
+    @media #{$small_mobile} {
+      border-bottom-left-radius: 0 !important;
+    }
+  }
+
+}
+.form-action-wrapper {
+  @media #{$tab_device} {
+    padding-right: 50px;
+    padding-left: 50px;
+  }
+  @media #{$large_mobile} {
+    padding-right: 50px;
+    padding-left: 50px;
+  }
+  @media #{$small_mobile} {
+    padding-right: 50px;
+    padding-left: 50px;
+  }
+}

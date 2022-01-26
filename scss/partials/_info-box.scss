@@ -1,0 +1,26 @@
+/*======= info-box =======*/
+.info-box {
+  margin-bottom: 30px;
+  .icon-element {
+    position: relative;
+  }
+  .info-number {
+    position: absolute;
+    top: 0;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    background-color: rgba(128, 137, 150, 0.1);
+    @include border-radius(100%);
+    display: block;
+    font-size: $fs-16;
+    font-weight: $fw-medium;
+
+  }
+  &:hover {
+    .icon-element {
+      @include transform(translateY(-4px));
+    }
+  }
+}

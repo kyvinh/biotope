@@ -1,0 +1,62 @@
+.footer-item {
+  @media #{$tab_device} {
+    margin-bottom: 30px;
+  }
+  @media #{$large_mobile} {
+    margin-bottom: 30px;
+  }
+  @media #{$small_mobile} {
+    margin-bottom: 30px;
+  }
+}
+.copyright-wrap {
+  @media #{$tab_device} {
+    text-align: center;
+  }
+  @media #{$large_mobile} {
+    text-align: center;
+  }
+  @media #{$small_mobile} {
+    text-align: center;
+  }
+  .generic-list-item {
+    @media #{$tab_device} {
+      text-align: center!important;
+    }
+    @media #{$large_mobile} {
+      text-align: center!important;
+    }
+    @media #{$small_mobile} {
+      text-align: center!important;
+    }
+  }
+}
+.copyright-desc {
+  color: rgba(255, 255, 255, 0.5);
+  @media #{$tab_device} {
+    text-align: center!important;
+    padding-top: 10px;
+  }
+  @media #{$large_mobile} {
+    text-align: center!important;
+    padding-top: 10px;
+  }
+  @media #{$small_mobile} {
+    text-align: center!important;
+    padding-top: 10px;
+  }
+  a {
+    @include transition(0.3s);
+    color: $white;
+    &:hover {
+      color: $theme-color-2;
+    }
+  }
+}
+
+.copyright--desc {
+  color: $theme-color-4;
+  a {
+    color: $theme-color-4;
+  }
+}

@@ -1,0 +1,132 @@
+.hero-bg-1 {
+  background-image: url(../images/hero-bg.jpg);
+}
+.hero-area {
+  position: relative;
+  z-index: 1;
+  .generic-img-box {
+    @media #{$tab_device} {
+      display: none;
+    }
+    @media #{$large_mobile} {
+      display: none;
+    }
+    @media #{$small_mobile} {
+      display: none;
+    }
+  }
+}
+.hero-list {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.hero-list-bg {
+  background-image: url(../images/anonymousHeroBackground.svg);
+}
+.hero-btn-box {
+  &.text-right {
+    @media #{$tab_device} {
+      text-align: left!important;
+    }
+    @media #{$large_mobile} {
+      text-align: left!important;
+    }
+    @media #{$small_mobile} {
+      text-align: left!important;
+    }
+  }
+}
+/*====== search-form =======*/
+.search-form {
+  background-color: $white;
+  padding: 20px;
+  @include border-radius(8px);
+  @include box-shadow(0 0 10px rgba(82, 85, 90, 0.1));
+  .form-group {
+    @media #{$small_mobile} {
+      margin-right: 0!important;
+    }
+  }
+  .km-select-wrap {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 140px;
+    @include transform(translateY(-50%));
+    @media #{$tab_device} {
+      display: none;
+    }
+    @media #{$large_mobile} {
+      display: none;
+    }
+    @media #{$small_mobile} {
+      display: none;
+    }
+    .custom-select {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+/*===== hero-content =====*/
+.hero-content {
+  position: relative;
+  .section-title {
+    @media #{$tab_device} {
+      font-size: $fs-30!important;
+      line-height: 40px!important;
+    }
+    @media #{$large_mobile} {
+      font-size: $fs-30!important;
+      line-height: 40px!important;
+    }
+    @media #{$small_mobile} {
+      font-size: $fs-30!important;
+      line-height: 40px!important;
+    }
+    &.fs-28 {
+      @media #{$tab_device} {
+        font-size: $fs-28!important;
+      }
+      @media #{$large_mobile} {
+        font-size: $fs-28!important;
+      }
+      @media #{$small_mobile} {
+        font-size: $fs-28!important;
+      }
+    }
+  }
+  .svg-icon {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    height: 140px;
+    @media #{$tab_device} {
+      display: none;
+    }
+    @media #{$large_mobile} {
+      display: none;
+    }
+    @media #{$small_mobile} {
+      display: none;
+    }
+  }
+}
+/*==== search-btn-box ====*/
+.search-btn-box {
+  @media #{$large_mobile} {
+   flex-grow: 1;
+  }
+  @media #{$small_mobile} {
+   flex-grow: 1;
+  }
+  .btn {
+    @media #{$large_mobile} {
+     width: 100%;
+    }
+    @media #{$small_mobile} {
+     width: 100%;
+    }
+  }
+}

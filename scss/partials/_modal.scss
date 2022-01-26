@@ -1,0 +1,49 @@
+.modal--open {
+  overflow: hidden;
+}
+/* modal container */
+.modal-container {
+  .close {
+    padding: 0;
+    margin: 0;
+  }
+  &.fade {
+    .modal-dialog {
+      @include transform(scale(.8) translate(0, 0));
+      @include transition(0.2s)
+    }
+  }
+  .modal-header {
+    border-bottom-color: rgba(128, 137, 150, 0.1);
+  }
+  .modal-content {
+    @include border-radius(8px);
+  }
+  .modal-dialog {
+    @include transform(scale(.8) translate(0, 0));
+  }
+  &.show{
+    .modal-dialog {
+      @include transform(scale(1) translate(0, 0));
+    }
+  }
+}
+.close {
+  font-size: $fs-18;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  line-height: 32px;
+  border-radius: 100%;
+  margin: 0;
+  opacity: 1;
+  color: $theme-color;
+  text-shadow: none;
+  @include transition(0.2s);
+  &:hover {
+    background-color: rgba(128, 137, 150, 0.1);
+  }
+  &:not(:disabled):not(.disabled):hover {
+    opacity: 1;
+  }
+}

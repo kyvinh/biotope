@@ -1,0 +1,104 @@
+/*======= comments-list ========*/
+.comments-list {
+  li {
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    border-bottom: 1px solid rgba(128, 137, 150, 0.1);
+    @media #{$large_mobile} {
+      flex-direction: column;
+      text-align: center;
+    }
+    @media #{$small_mobile} {
+      flex-direction: column;
+      text-align: center;
+    }
+    &.comment-reply {
+      margin-left: 64px;
+      @media #{$large_mobile} {
+        margin-left: 0;
+      }
+      @media #{$small_mobile} {
+        margin-left: 0;
+      }
+    }
+  }
+}
+/*======= comment-actions ========*/
+.comment-actions {
+  width: 60px;
+  font-weight: $fw-medium;
+  padding: 13px;
+  font-size: $fs-14;
+  background-color: rgba(128, 137, 150, 0.04);
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  line-height: 1.5;
+}
+/*======= comment-body ========*/
+.comment-body {
+  font-size: $fs-14;
+  padding: 13px;
+  line-height: 1.5;
+}
+.comment-avatar {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  @include border-radius(100%);
+  @media #{$large_mobile} {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 13px;
+  }
+  @media #{$small_mobile} {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 13px;
+  }
+  img {
+    @include border-radius(100%);
+    width: 100%;
+    height: 100%;
+  }
+}
+.comment-user {
+  font-weight: $fw-medium;
+  margin-right: 1px;
+  &.owner {
+    background-color: rgba(13, 35, 62, 0.1);
+    padding: 1px 5px;
+    @include border-radius(2px);
+  }
+}
+.comment-separated {
+  margin-right: 1px;
+  margin-left: 1px;
+}
+.comment-user,
+.comment-date {
+  color: $theme-color;
+  @include transition(0.2s);
+  &:hover {
+    color: $theme-color-2;
+  }
+}
+/*======= comment-form =======*/
+.comment-form {
+  width: 100%;
+  background-color: rgba(128, 137, 150, 0.04);
+  padding: 10px 30px;
+}
+.comment-link {
+  font-size: $fs-14;
+  color: $theme-color-4;
+  @include transition(0.2s);
+  &:hover {
+    color: $theme-color-3;
+  }
+}

@@ -1,0 +1,30 @@
+.generic-table {
+  background-color: $white;
+  border: 0;
+  color: $theme-color;
+  @include box-shadow(0 1px 5px 0 rgba(0, 0, 0, 0.15));
+  @include border-radius(8px);
+  thead {
+    background-color: rgba(128, 137, 150, 0.1);
+    th {
+      border-top: 0;
+      border-bottom: 0;
+    }
+  }
+  td,
+  th {
+    padding: 1rem 2rem;
+    font-weight: $fw-medium;
+    vertical-align: middle;
+    border-top-color: rgba(128, 137, 150, 0.1);
+  }
+}
+.generic--table {
+  td,
+  th {
+    padding: 9px 20px;
+  }
+  td {
+    color: $theme-color-4;
+  }
+}

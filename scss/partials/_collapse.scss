@@ -1,0 +1,41 @@
+/*===== generic-accordion =======*/
+.generic-accordion {
+  .card {
+    border-color: rgba(128, 137, 150, 0.1);
+    margin-bottom: 8px;
+    @include border-radius(8px);
+    @include box-shadow(0 0 5px 0 rgba(82, 85, 90, 0.1));
+  }
+  .card-header {
+    @include border-radius(0);
+    border-bottom: 0;
+    background-color: transparent;
+    padding: 0;
+    .btn {
+      display: -webkit-flex;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      width: 100%;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      color: $theme-color;
+      font-weight: $fw-medium;
+      padding: 10px 20px;
+      border-bottom: 1px solid transparent;
+      .collapse-icon {
+        @include transition(0.3s);
+      }
+      &[aria-expanded="true"] {
+        border-bottom-color: rgba(128, 137, 150, 0.1);
+        .collapse-icon {
+          @include transform(rotate(-180deg));
+        }
+      }
+    }
+  }
+  .card-body {
+    padding: 1.15rem!important;
+  }
+}

@@ -1,0 +1,111 @@
+/*---------------- css loader ----------------*/
+@keyframes rotate {
+  0% {
+    transform:rotate(0deg);
+  }
+  100% {
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+/* Begin CSS for global animation */
+@keyframes tilt {
+  0% {
+    -webkit-transform: rotateX(-30deg);
+    -moz-transform: rotateX(-30deg);
+    transform: rotateX(-30deg); }
+
+  25% {
+    -webkit-transform: rotateX( 30deg);
+    -moz-transform: rotateX( 30deg);
+    transform: rotateX( 30deg); }
+
+  50% {
+    -webkit-transform: rotateY(-30deg);
+    -moz-transform: rotateY(-30deg);
+    transform: rotateY(-30deg); }
+
+  75% {
+    -webkit-transform: rotateY( 30deg);
+    -moz-transform: rotateY( 30deg);
+    transform: rotateY( 30deg); }
+
+  100% {
+    -webkit-transform: rotateZ( 20deg);
+    -moz-transform: rotateZ( 20deg);
+    transform: rotateZ( 20deg);
+  }
+}
+@keyframes scale {
+  0% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,100px,0);
+    transform: translate3d(0,100px,0);
+  }
+  100% {
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+}
+
+@keyframes scale {
+  0% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(2);
+    -moz-transform: scale(2);
+    transform: scale(2);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+    transform: rotate(360deg)
+  }
+}
+@keyframes swing {
+  0% {
+    -webkit-transform: translate3d(70px,0,0) rotateZ(10deg);
+    -moz-transform: translate3d(70px,0,0) rotateZ(10deg);
+    transform: translate3d(70px,0,0) rotateZ(10deg);
+  }
+  100% {
+    -webkit-transform: translate3d(-70px,0,0) rotateZ(-10deg);
+    -moz-transform: translate3d(-70px,0,0) rotateZ(-10deg);
+    transform: translate3d(-70px,0,0) rotateZ(-10deg);
+  }
+}
