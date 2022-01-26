@@ -36,7 +36,6 @@
 }
 /*====== logo-box ======*/
 .logo-box {
-  @media #{$laptop_m} {
     display: -webkit-flex;
     display: -ms-flex;
     display: flex;
@@ -44,7 +43,6 @@
     align-items: center;
     -ms-flex-pack: justify;
     justify-content: space-between;
-  }
 }
 /*====== menu-wrapper ======*/
 .menu-wrapper {
