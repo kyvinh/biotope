@@ -30,21 +30,6 @@ $input-btn-font-size: 0.9rem;
 .main-container {
   @extend .container-fluid;
 
-  .main-biotope-cards {
-    @extend .row;
-    @include row-cols(3);
-  }
-
-  .main-card {
-    @extend .card;
-  }
-}
-
-// *** Biotope home ***
-
-.biotope-container {
-  @extend .container-fluid;
-
   .biotope-explainer-hero {
     @extend .text-center;
     @extend .mb-2;
@@ -67,27 +52,20 @@ $input-btn-font-size: 0.9rem;
     }
   }
 
-  .biotope-header-columns {
-    @extend .d-grid;
-    @extend .gap-3;
-    grid-template-columns: 1fr 2fr;
-    @extend .my-3;
-
-    .biotope-logo {
-      //@extend .bg-light;
-      //@extend .border;
-      @extend .rounded-3;
-
-      img {
-        max-height: 15rem;
-        @extend .overflow-hidden;
-        @extend .img-fluid;
-      }
-    }
-
-    .biotope-intro {
-    }
+  .main-biotope-cards {
+    @extend .row;
+    @include row-cols(3);
   }
+
+  .main-card {
+    @extend .card;
+  }
+}
+
+// *** Biotope home ***
+
+.biotope-container {
+  @extend .container-fluid;
 
   .questions-list {
     @extend .container-fluid;

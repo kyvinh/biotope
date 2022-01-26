@@ -5,6 +5,7 @@ import {useSession} from "next-auth/react"
 import {UserFlair} from "../../../components/UserFlair";
 import {formatDate} from "../../../components/util/dates";
 import {formatDistanceToNow} from "date-fns";
+import React from "react";
 
 export default function BiotopeHome() {
 
@@ -13,44 +14,44 @@ export default function BiotopeHome() {
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name as string)
 
-    return b ?
+    return !b ? null :
+        <>
+            <section className="hero-area bg-white shadow-sm pt-10px pb-10px">
+                <div className="container">
+                    <div className="hero-content">
+
+                        <div className="row align-items-center">
+                            <div className="col-lg-5 ml-auto">
+                                <div className="img-box">
+                                    {b.headerPic &&
+                                        <img className="w-100 rounded-rounded lazy" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
+                                    }
+                                </div>
+                            </div>
+                            <div className="col-lg-5">
+                                <div className="hero-content py-5">
+                                    <h2 className="section-title fs-30">{b.name}</h2>
+                                    { b.description && <p className="section-desc pb-3">{b.description}</p>}
+                                    { b.contact && <p className="text-muted">Contact: {b.contact}</p>}
+                                    <p className="text-muted">Biotope created by <UserFlair user={b.creator} /> on {formatDate(b.createdOn)}.&nbsp;</p>
+                                    <p className="section-desc text-black">472,665 Questions</p>
+                                    <div>
+                                        <Link href={`/b/${b.name}/invite`}>inviter un voisin</Link> -
+                                        <Link href={`/b/${b.name}/create`}>lancer un sondage</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <div className="biotope-container">
 
-                <div className="biotope-explainer-hero">
-                    <div className="explainer-text">
-                        <span><em>Biotope</em> est un site de sondage citoyen disponible à tous les quartiers et associations de Bruxelles.</span>
-                    </div>
-                    <div className="explainer-side">
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item">Tout voisin peut <Link href={`/b/${b.name}/create`}>lancer un sondage</Link></li>
-                            <li className="list-group-item">Tout voisin peut répondre aux sondages</li>
-                            <li className="list-group-item">Tout voisin peut participer anonymement (<Link href={`/b/${b.name}/invite`}>inviter un voisin</Link>)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div className="biotope-header-columns">
-                    <div className="biotope-logo">
-                        {b.headerPic ?
-                            <img className="biotope-logo" src={`/api/file/${b.headerPic}`} alt={`${b.name} header picture`}/>
-                            : null
-                        }
-                    </div>
-                    <div className="biotope-intro">
-                        <h5>{b.name}</h5>
-                        { b.description ? <p>{b.description}</p> : null}
-                        <p>
-
-                            {b.contact ? <span>Contact: {b.contact}</span> : null}
-                        </p>
-                        <small className="text-muted">Biotope created by <UserFlair user={b.creator} /> on {formatDate(b.createdOn)}.&nbsp;</small>
-                    </div>
-                </div>
-
                 {session?.user?.isAnon &&
-                    <div>
-                        You have been invited to participate in this biotope. What you can do... what is expected from the platform...
-                    </div>
+                <div>
+                    You have been invited to participate in this biotope. What you can do... what is expected from the platform...
+                </div>
                 }
 
                 {
@@ -92,11 +93,11 @@ export default function BiotopeHome() {
                                                 <div>{question.shortDescription}</div>
                                                 <div className="item-summary-dates">
                                                     <div>Asked {formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}
-                                                    { question.closed
+                                                        { question.closed
                                                         && <span>, closed {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>}
-                                                    { !question.closed && question.closingDate
+                                                        { !question.closed && question.closingDate
                                                         && <span>, closes in {formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>}
-                                                    { question.lastVoteDate
+                                                        { question.lastVoteDate
                                                         && <span>, last vote {formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>}
                                                     </div>
                                                 </div>
@@ -109,5 +110,5 @@ export default function BiotopeHome() {
                 }
 
             </div>
-        : null
+        </>
 }
