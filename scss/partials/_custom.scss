@@ -715,6 +715,9 @@
     background-color: $color-12;
     color: $white;
   }
+  &.closed {
+    // border-color: gray;
+  }
 }
 /*===== meta =====*/
 .meta {
