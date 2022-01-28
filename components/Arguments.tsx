@@ -4,6 +4,7 @@ import {useSession} from "next-auth/react";
 import {UserFlair} from "./UserFlair";
 import {useForm} from "react-hook-form";
 import {NewArgumentInput} from "../pages/api/pa/[pa]/argument";
+import {formatDistanceToNow} from "date-fns";
 
 export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) => {
 
@@ -29,19 +30,29 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
     // console.log(questionArguments)
 
     return <>
-        { answerArguments && answerArguments.map((argument) =>
-            <div key={argument.id}>
-                <p>{argument.anonymous ?
-                    <UserFlair user={{
-                        name: "Anonymous",
-                        reputationsPoints: 0,
-                    }} />
-                    :
-                    <UserFlair user={argument.creator} />
-                }
-                : {argument.text}</p>
-            </div>
-        )}
+        <ul className="comments-list">
+            { answerArguments && answerArguments.map((argument) =>
+                <li key={argument.id}>
+                    <div className="comment-actions">
+                        <span className="comment-score">
+                            {argument.anonymous ?
+                                <UserFlair user={{
+                                    name: "Anonymous",
+                                    reputationsPoints: 0,
+                                }} theme="none" />
+                                :
+                                <UserFlair user={argument.creator} theme="none" />
+                            }
+                        </span>
+                    </div>
+                    <div className="comment-body">
+                        <span className="comment-copy">{argument.text}</span>
+                        <span className="comment-separated">-</span>
+                        <span className="comment-date">{formatDistanceToNow(new Date(argument.createdOn), {addSuffix: true})}</span>
+                    </div>
+                </li>
+            )}
+        </ul>
         { showAddArgument ?
             <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
                 <div className="form-group">

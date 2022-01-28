@@ -1,5 +1,4 @@
 import {useRouter} from "next/router";
-import {QuestionContainer} from "../../../../components/QuestionContainer";
 import {useBiotope} from "../../../../components/util/hooks";
 import Link from "next/link";
 import React, {useState} from "react";
@@ -10,6 +9,7 @@ import {useSession} from "next-auth/react";
 import useSWR from "swr";
 import {fetcher} from "../../../../components/util/fetcher";
 import {QuestionAnswerForm} from "../../../../components/QuestionAnswerForm";
+import {QuestionResults} from "../../../../components/QuestionResults";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
@@ -23,7 +23,10 @@ export default function QuestionHome() {
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
-    const {data: answerResults, mutate: reloadAnswerResults} = useSWR(session && question?.id ? `/api/q/${question.id}/results` : null, fetcher);
+    const {
+        data: answerResults,
+        mutate: reloadAnswerResults
+    } = useSWR(session && question?.id ? `/api/q/${question.id}/results` : null, fetcher);
 
     // Whether the user has answered this question or not
     const {data: questionAnsweredObject} = useSWR(session && question?.id ? `/api/user/question/${question.id}` : null, fetcher);
@@ -32,6 +35,7 @@ export default function QuestionHome() {
 
     // Component state
     const [isEditMode, setIsEditMode] = useState(false)
+    const showAnswerForm = question && !question.closed && questionIsAnsweredKnown && !questionAnswered;
 
     const onQuestionUpdated = async () => {
         await reloadBiotope()
@@ -56,72 +60,81 @@ export default function QuestionHome() {
         <section className="question-area pt-40px pb-40px">
             <div className="container">
                 <div className="question-main-bar mb-3">
-                            <div className="question-highlight">
-                                <div className="media media-card shadow-none rounded-0 mb-0 bg-transparent p-0">
-                                    <div className="media-body">
-                                        <h5 className="fs-20">{question.name}</h5>
-                                        <div className="meta d-flex flex-wrap align-items-center fs-13 lh-20 py-1">
-                                            <div className="pe-3">
-                                                <span className="pe-1">Asked</span>
-                                                <span
-                                                    className="text-black">{formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}</span>
-                                                <span className="ps-1 pe-1">by</span>
-                                                <span className="text-black"><UserFlair user={question.creator}
-                                                                                        theme="none"/></span>
-                                            </div>
-                                            {question.closed &&
-                                            <div className="pe-3">
-                                                <span className="pe-1">Closed</span>
-                                                <span
-                                                    className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
-                                            </div>
-                                            }
-                                            {(!question.closed && question.closingDate) &&
-                                            <div className="pe-3">
-                                                <span className="pe-1">Closes</span>
-                                                <span
-                                                    className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
-                                            </div>
-                                            }
-                                            <div className="pe-3">
-                                                <span className="pe-1">Last vote</span>
-                                                <span
-                                                    className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
-                                            </div>
-                                        </div>
-                                        <div className="tags">
-                                            {question.tags.map((tag) => <span className="tag-link" key={tag.id}>{tag.name}</span>)}
-                                        </div>
+                    <div className="question-highlight">
+                        <div className="media media-card shadow-none rounded-0 mb-0 bg-transparent p-0">
+                            <div className="media-body">
+                                <h5 className="fs-20">{question.name}</h5>
+                                <div className="meta d-flex flex-wrap align-items-center fs-13 lh-20 py-1">
+                                    <div className="pe-3">
+                                        <span className="pe-1">Asked</span>
+                                        <span
+                                            className="text-black">{formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}</span>
+                                        <span className="ps-1 pe-1">by</span>
+                                        <span className="text-black"><UserFlair user={question.creator}
+                                                                                theme="none"/></span>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="question d-flex">
-                                <div className="question-post-body-wrap flex-grow-1">
-                                    <div className="question-post-body">
-                                        <ReactMarkdown>{question.description}</ReactMarkdown>
-                                    </div>
-                                    {!isEditMode && question.creator.id === session?.user.id &&
-                                    <div className="question-post-user-action">
-                                        <div className="post-menu">
-                                            <button className="btn" onClick={() => { setIsEditMode(!isEditMode)}}>Edit (this should link to edit page rather than switch components?)
-                                            </button>
-                                        </div>
+                                    {question.closed &&
+                                    <div className="pe-3">
+                                        <span className="pe-1">Closed</span>
+                                        <span
+                                            className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
                                     </div>
                                     }
+                                    {(!question.closed && question.closingDate) &&
+                                    <div className="pe-3">
+                                        <span className="pe-1">Closes</span>
+                                        <span
+                                            className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
+                                    </div>
+                                    }
+                                    <div className="pe-3">
+                                        <span className="pe-1">Last vote</span>
+                                        <span
+                                            className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
+                                    </div>
+                                </div>
+                                <div className="tags">
+                                    {question.tags.map((tag) => <span className="tag-link"
+                                                                      key={tag.id}>{tag.name}</span>)}
                                 </div>
                             </div>
-
                         </div>
+                    </div>
 
-                {(!question.closed && questionIsAnsweredKnown)
-                && <QuestionAnswerForm question={question} answered={questionAnswered} onAnswerSubmitted={onQuestionUpdated} />
+                    <div className="question d-flex">
+                        <div className="question-post-body-wrap flex-grow-1">
+                            <div className="question-post-body">
+                                <ReactMarkdown>{question.description}</ReactMarkdown>
+                            </div>
+                            {!isEditMode && question.creator.id === session?.user.id &&
+                            <div className="question-post-user-action">
+                                <div className="post-menu">
+                                    <button className="btn" onClick={() => {
+                                        setIsEditMode(!isEditMode)
+                                    }}>Edit (this should link to edit page rather than switch components?)
+                                    </button>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                {showAnswerForm &&
+                <QuestionAnswerForm question={question}
+                                    onAnswerSubmitted={onQuestionUpdated}/>
+                }
+
+                {((questionAnswered || question.closed) && answerResults && !isEditMode && session) &&
+                <QuestionResults question={question} results={answerResults.results}
+                                 onQuestionUpdated={async () => {
+                                     await onQuestionUpdated()
+                                 }}/>
                 }
 
             </div>
         </section>
 
-        <QuestionContainer key={question.id} question={question} disabled={!b.isAuthorized}
-                           onQuestionUpdated={reloadBiotope}/>
     </> : null
 }

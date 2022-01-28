@@ -6,11 +6,9 @@
     display: flex;
     border-bottom: 1px solid rgba(128, 137, 150, 0.1);
     @media #{$large_mobile} {
-      flex-direction: column;
       text-align: center;
     }
     @media #{$small_mobile} {
-      flex-direction: column;
       text-align: center;
     }
     &.comment-reply {
@@ -26,7 +24,7 @@
 }
 /*======= comment-actions ========*/
 .comment-actions {
-  width: 60px;
+  //width: 60px;
   font-weight: $fw-medium;
   padding: 13px;
   font-size: $fs-14;
@@ -77,8 +75,8 @@
   }
 }
 .comment-separated {
-  margin-right: 1px;
-  margin-left: 1px;
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
 }
 .comment-user,
 .comment-date {

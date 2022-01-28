@@ -5,11 +5,12 @@ import {useForm} from "react-hook-form";
 import {AnswerDto} from "../pages/api/q/[q]/answer";
 import {fetcher} from "./util/fetcher";
 import {useSession} from "next-auth/react";
+import Link from "next/link";
 
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
 
-export const QuestionAnswerForm = ({question, answered, onAnswerSubmitted}) => {
+export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
 
     // Ref data
     const {data: session} = useSession({required: false})
@@ -140,13 +141,15 @@ export const QuestionAnswerForm = ({question, answered, onAnswerSubmitted}) => {
 
     // -- RENDER --
 
+    const showForm = session && !isSubmitted;
+
     return <>
         <div className="subheader">
             <div className="subheader-title">
                 <h3 className="fs-16">Your Answer</h3>
             </div>
         </div>
-        { (!answered && !isSubmitted) &&
+        { showForm &&
             <form onSubmit={handleAnswerSubmit}>
                 {question.type === QuestionType.LIKERT &&
                     <>
@@ -170,6 +173,13 @@ export const QuestionAnswerForm = ({question, answered, onAnswerSubmitted}) => {
                 <input type="submit" className="btn btn-primary" value="Submit" disabled={isSubmitted} />
                 { errors[formPrefix] && <div className="invalid-feedback">{errors[formPrefix].message}</div>}
             </form>
+        }
+        { !session &&
+        <>
+            <Link href="/api/auth/signin" locale={false}>
+                <a className="btn btn-outline-primary">Sign in</a>
+            </Link> to vote and see the results
+        </>
         }
     </>
 };

@@ -1,13 +1,13 @@
 import React from "react";
-import {Col, ProgressBar, Row} from "react-bootstrap";
+import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 
-export const computeResults = (question, rawResults) => {
+export const computeResults = (possibleAnswers, rawResults) => {
     const totalVotesCount = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
     const resultsWithCount = rawResults.reduce(
         (acc, rawResult) => {
-            const possibleAnswer = question.possibleAnswers.find(element => element.id === rawResult.id)
-            const answerResult = { ...possibleAnswer }
+            const possibleAnswer = possibleAnswers.find(element => element.id === rawResult.id)
+            const answerResult = {...possibleAnswer}
             answerResult.count = rawResult._count.answers
             answerResult.percent = answerResult.count / totalVotesCount * 100
             return [...acc, answerResult]
@@ -34,8 +34,8 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
         ]
     */
 
-    const {totalVotesCount, resultsWithCount: answersWithCount} = computeResults(question, rawResults)
-    answersWithCount.sort((n1,n2) => n1.order - n2.order)
+    const {totalVotesCount, resultsWithCount: answersWithCount} = computeResults(question.possibleAnswers, rawResults)
+    answersWithCount.sort((n1, n2) => n2.count - n1.count)
 
     const onArgumentAdded = (possibleAnswerId, argument) => {
         const possibleAnswer = question.possibleAnswers.find(element => element.id === possibleAnswerId)
@@ -43,28 +43,30 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
         onQuestionUpdated()
     }
 
-    return <div className="py-2">
-        <div >Résultats: {totalVotesCount} vote(s)</div>
-        <div>
-            { answersWithCount.map((answerResult, i) =>
-                <div key={i}>
-                    <Row className="align-items-center">
-                        <Col sm={2}>
-                            <div>{answerResult.possibleText? answerResult.possibleText: answerResult.possibleNumber}:</div>
-                        </Col>
-                        <Col>
-                            <ProgressBar now={answerResult.percent} label={answerResult.count} />
-                        </Col>
-                    </Row>
-                    <Row className="align-items-center">
-                        <Col sm={2}>
-                        </Col>
-                        <Col>
-                            <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments} onArgumentAdded={onArgumentAdded}/>
-                        </Col>
-                    </Row>
-                </div>
-            )}
+    return <>
+        <div className="subheader">
+            <div className="subheader-title">
+                <h3 className="fs-16">Results: {totalVotesCount} {totalVotesCount > 1 ? "votes" : "vote"}</h3>
+            </div>
         </div>
-    </div>
+        {answersWithCount.map((answerResult) =>
+            <div className="answer-wrap d-flex">
+                <div className="votes votes-styled w-auto">
+                    <div id="vote2" className="upvotejs text-center">
+                        <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? "votes" : "vote"}</span>
+                    </div>
+                </div>
+                <div key={answerResult.id} className="answer-body-wrap flex-grow-1 p-3">
+                    <div className="answer-body">
+                        <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>
+                        <ProgressBar now={answerResult.percent} label={answerResult.count}/>
+                    </div>
+                    <div className="comments-wrap">
+                        <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments}
+                                   onArgumentAdded={onArgumentAdded}/>
+                    </div>
+                </div>
+            </div>
+        )}
+    </>
 }

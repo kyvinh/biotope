@@ -118,8 +118,8 @@ export default function BiotopeHome() {
                                                     <div
                                                         className="media-body d-flex flex-wrap align-items-center justify-content-between">
                                                         <div className="d-block tags">
-                                                            {question.tags.map((tag) => <span
-                                                                className="tag-link">{tag.name}</span>)}
+                                                            {question.tags.map((tag) =>
+                                                                <span key={tag.id} className="tag-link">{tag.name}</span>)}
                                                         </div>
                                                         <div className="d-inline-flex">
                                                             {question.lastVoteDate
