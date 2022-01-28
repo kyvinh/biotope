@@ -68,30 +68,6 @@ $input-btn-font-size: 0.9rem;
   @extend .mx-1;
 }
 
-// *** Question container ***
-
-.questionnaire-container {
-  @extend .card;
-  @extend .my-3;
-
-  .card-body {
-    h6 {
-      @extend .card-title;
-      @extend .my-2;
-      font-size: 1.1rem;
-    }
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  label {
-    display: inline-block;
-    margin-bottom: .5rem;
-  }
-}
-
 // *** Question edit ***
 
 .question-edit {

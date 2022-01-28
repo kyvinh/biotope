@@ -2,12 +2,17 @@ import {PossibleAnswer, QuestionType} from '@prisma/client'
 import Likert from 'react-likert-scale';
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
+import {AnswerDto} from "../pages/api/q/[q]/answer";
+import {fetcher} from "./util/fetcher";
+import {useSession} from "next-auth/react";
 
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
 
-export const QuestionAnswerForm = ({question, answered, disabled = false, answerSubmit}) => {
+export const QuestionAnswerForm = ({question, answered, onAnswerSubmitted}) => {
 
+    // Ref data
+    const {data: session} = useSession({required: false})
     const sortedPossibleAnswers:PossibleAnswer[] = question.possibleAnswers
 
     // -- QuestionType.LONG --
@@ -73,6 +78,54 @@ export const QuestionAnswerForm = ({question, answered, disabled = false, answer
     const formPrefix = `question-${question.id}`;
     const newAnswerTextId = `${formPrefix}.${newAnswerTextProp}`;
     const newAnswerCheckboxId = `${formPrefix}.${newAnswerCheckProp}`;
+    const [isSubmitted, setIsSubmitted] = useState(false)
+
+    // noinspection SpellCheckingInspection
+    const answerSubmit = async (values) => {
+        /*
+        console.log(values)
+        For dynamic questions: {
+            "question-ckxd4l25p0053i4uzwit3vy0p": {
+                "ckxd4wtfc0063ekuzl19g8dax": false,
+                "ckxd4wtfc0063ekuzl19g8qwe": true,
+                newAnswerCheck: "true",
+                newAnswerText: "new answer is here"
+            }
+        }
+        */
+        if (!session) {
+            throw new Error("Currently no anonymous vote allowed!")
+        } else {
+            setIsSubmitted(true)
+            let hasNewAnswer = false
+            let newAnswerText = ''
+            const possibleAnswerIds: string[] = Object.entries(values[`question-${question.id}`]).reduce((acc, [key, value]) => {
+                if (key === newAnswerCheckProp) {
+                    hasNewAnswer = value as boolean;
+                } else if (key === newAnswerTextProp) {
+                    newAnswerText = value as string;
+                } else if (value) {
+                    acc.push(key)
+                }
+                return acc
+            }, [])
+
+            const payload: AnswerDto = {
+                possibleAnswerIds
+            }
+            if (hasNewAnswer) {
+                payload.newAnswer = {
+                    text: newAnswerText
+                }
+            }
+
+            const res = await fetcher(`/api/q/${question.id}/answer`, payload);
+
+            if (res?.status == 'ok') {
+                await onAnswerSubmitted()
+            }
+        }
+    }
 
     const handleAnswerSubmit = (e) => {
         // Check at least one answer!
@@ -88,7 +141,12 @@ export const QuestionAnswerForm = ({question, answered, disabled = false, answer
     // -- RENDER --
 
     return <>
-        { !answered &&
+        <div className="subheader">
+            <div className="subheader-title">
+                <h3 className="fs-16">Your Answer</h3>
+            </div>
+        </div>
+        { (!answered && !isSubmitted) &&
             <form onSubmit={handleAnswerSubmit}>
                 {question.type === QuestionType.LIKERT &&
                     <>
@@ -109,7 +167,7 @@ export const QuestionAnswerForm = ({question, answered, disabled = false, answer
                 </>
                 }
                 <input type="hidden" name={formPrefix} className={`${errors[formPrefix] ? 'is-invalid' : ''}`} />
-                <input type="submit" className="btn btn-primary" value="Submit" disabled={disabled}/>
+                <input type="submit" className="btn btn-primary" value="Submit" disabled={isSubmitted} />
                 { errors[formPrefix] && <div className="invalid-feedback">{errors[formPrefix].message}</div>}
             </form>
         }

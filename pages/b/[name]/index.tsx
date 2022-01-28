@@ -87,7 +87,7 @@ export default function BiotopeHome() {
                                                     <span
                                                         className="vote-text d-block fs-13 lh-18">{question.votes > 1 ? 'votes' : 'vote'}</span>
                                                 </div>
-                                                {question.closingDate &&
+                                                {(question.closingDate || question.closed) &&
                                                 <div
                                                     className={`answer-block ${question.closed ? 'closed' : 'answered'} my-2`}>
                                                     {question.closed
