@@ -10,7 +10,7 @@
     "allowJs": true,
     "outDir": "dist", // Required by prisma generate?
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false, // TODO Might change this to true?
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,

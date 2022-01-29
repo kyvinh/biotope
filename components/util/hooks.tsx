@@ -1,9 +1,10 @@
 import useSWR from 'swr';
 import {fetcher} from './fetcher';
 import {Cercle, Question, Tag, User} from ".prisma/client";
+import {PossibleAnswerWithArguments} from "../QuestionResults";
 
 // TODO How to type return biotope: Cercle(public/private, include questions, ...)?
 export function useBiotope(name: string) {
-    const {data: biotope, mutate: reloadBiotope, error} = useSWR<Cercle & { questions: (Question & { creator: User, lastVoteDate: Date, tags: Tag[] })[]}>(name ? `/api/b/${name}` : null, fetcher);
+    const {data: biotope, mutate: reloadBiotope, error} = useSWR<Cercle & { creator: User, isAuthorized: boolean, questions: (Question & { votes: number, creator: User, lastVoteDate: Date, shortDescription: string, tags: Tag[], possibleAnswers: PossibleAnswerWithArguments[] })[]}>(name ? `/api/b/${name}` : null, fetcher);
     return {biotope, reloadBiotope, error};
 }

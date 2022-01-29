@@ -3,8 +3,8 @@ import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 import {Argument, PossibleAnswer} from ".prisma/client";
 
-type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[]}
-type PossibleAnswerWithCount = PossibleAnswerWithArguments & { count: number; percent: number, arguments: Argument[]}
+export type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[]}
+export type PossibleAnswerWithCount = PossibleAnswerWithArguments & { count: number; percent: number, arguments: Argument[]}
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
@@ -54,7 +54,7 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
             </div>
         </div>
         {answersWithCount.map((answerResult) =>
-            <div className="answer-wrap d-flex">
+            <div className="answer-wrap d-flex" key={answerResult.id}>
                 <div className="votes votes-styled w-auto">
                     <div id="vote2" className="upvotejs text-center">
                         <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? "votes" : "vote"}</span>

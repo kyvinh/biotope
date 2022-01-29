@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {useBiotope} from "../../../../../components/util/hooks";
 import Link from "next/link";
-import React, {useState} from "react";
+import React from "react";
 import {formatDistanceToNow} from "date-fns";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 import {UserFlair} from "../../../../../components/UserFlair";
@@ -10,6 +10,7 @@ import useSWR from "swr";
 import {fetcher} from "../../../../../components/util/fetcher";
 import {QuestionAnswerForm} from "../../../../../components/QuestionAnswerForm";
 import {QuestionResults} from "../../../../../components/QuestionResults";
+import {QuestionHeader} from "../../../../../components/question/QuestionHeader";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
@@ -34,7 +35,6 @@ export default function QuestionHome() {
     const questionAnswered = questionAnsweredObject?.answered
 
     // Component state
-    const [isEditMode, setIsEditMode] = useState(false)
     const showAnswerForm = question && !question.closed && questionIsAnsweredKnown && !questionAnswered;
 
     const onQuestionUpdated = async () => {
@@ -43,19 +43,8 @@ export default function QuestionHome() {
     }
 
     return b && question ? <>
-        <section className="hero-area bg-white shadow-sm overflow-hidden pt-4 pb-3">
-            <div className="container">
-                <div className="row align-items-center">
-                    <div className="col-lg-12">
-                        <div className="hero-content">
-                            <h2 className="section-title pb-2 fs-24 lh-34"><Link href={`/b/${b.name}`}>{b.name}</Link>
-                            </h2>
-                            <p className="lh-26">{b.description}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
+        <QuestionHeader biotope={b} />
 
         <section className="question-area pt-40px pb-40px">
             <div className="container">
@@ -106,13 +95,10 @@ export default function QuestionHome() {
                             <div className="question-post-body">
                                 <ReactMarkdown >{question.description || ''}</ReactMarkdown>
                             </div>
-                            {!isEditMode && question.creator.id === session?.user.id &&
+                            {question.creator.id === session?.user.id &&
                             <div className="question-post-user-action">
                                 <div className="post-menu">
-                                    <button className="btn" onClick={() => {
-                                        setIsEditMode(!isEditMode)
-                                    }}>Edit (this should link to edit page rather than switch components?)
-                                    </button>
+                                    <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">edit</a></Link>
                                 </div>
                             </div>
                             }
@@ -126,7 +112,7 @@ export default function QuestionHome() {
                                     onAnswerSubmitted={onQuestionUpdated}/>
                 }
 
-                {((questionAnswered || question.closed) && answerResults && !isEditMode && session) &&
+                {((questionAnswered || question.closed) && answerResults  && session) &&
                 <QuestionResults question={question} results={answerResults.results}
                                  onQuestionUpdated={async () => {
                                      await onQuestionUpdated()
