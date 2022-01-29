@@ -16,7 +16,7 @@ export const QuestionEdit = ({question, onCancel, onQuestionEdit, onAnswerEdit})
     const { register, handleSubmit, formState: { errors }, control } = useForm();
     const {data: answerResults} = useSWR(`/api/q/${question.id}/results`, fetcher);
     const rawResults = answerResults.results    // TODO Is answerResults ever null?
-    const {resultsWithCount: answersWithCount} = computeResults(question, rawResults)
+    const {resultsWithCount: answersWithCount} = computeResults(question.possibleAnswers, rawResults)
 
     const onQuestionSubmit = async (questionDto:QuestionEditDto) => {
         const res = await fetcher(`/api/q/${question.id}/edit`, questionDto);

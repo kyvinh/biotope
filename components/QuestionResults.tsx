@@ -1,13 +1,17 @@
 import React from "react";
 import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
+import {Argument, PossibleAnswer} from ".prisma/client";
 
-export const computeResults = (possibleAnswers, rawResults) => {
-    const totalVotesCount = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
-    const resultsWithCount = rawResults.reduce(
+type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[]}
+type PossibleAnswerWithCount = PossibleAnswerWithArguments & { count: number; percent: number, arguments: Argument[]}
+
+export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
+    const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
+    const resultsWithCount: PossibleAnswerWithCount[] = rawResults.reduce(
         (acc, rawResult) => {
-            const possibleAnswer = possibleAnswers.find(element => element.id === rawResult.id)
-            const answerResult = {...possibleAnswer}
+            const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
+            const answerResult:PossibleAnswerWithCount = {count: 0, percent: undefined, ...possibleAnswer}
             answerResult.count = rawResult._count.answers
             answerResult.percent = answerResult.count / totalVotesCount * 100
             return [...acc, answerResult]

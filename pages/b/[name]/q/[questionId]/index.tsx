@@ -1,15 +1,15 @@
 import {useRouter} from "next/router";
-import {useBiotope} from "../../../../components/util/hooks";
+import {useBiotope} from "../../../../../components/util/hooks";
 import Link from "next/link";
 import React, {useState} from "react";
 import {formatDistanceToNow} from "date-fns";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
-import {UserFlair} from "../../../../components/UserFlair";
+import {UserFlair} from "../../../../../components/UserFlair";
 import {useSession} from "next-auth/react";
 import useSWR from "swr";
-import {fetcher} from "../../../../components/util/fetcher";
-import {QuestionAnswerForm} from "../../../../components/QuestionAnswerForm";
-import {QuestionResults} from "../../../../components/QuestionResults";
+import {fetcher} from "../../../../../components/util/fetcher";
+import {QuestionAnswerForm} from "../../../../../components/QuestionAnswerForm";
+import {QuestionResults} from "../../../../../components/QuestionResults";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
@@ -42,7 +42,7 @@ export default function QuestionHome() {
         await reloadAnswerResults()
     }
 
-    return question ? <>
+    return b && question ? <>
         <section className="hero-area bg-white shadow-sm overflow-hidden pt-4 pb-3">
             <div className="container">
                 <div className="row align-items-center">
@@ -73,7 +73,7 @@ export default function QuestionHome() {
                                         <span className="text-black"><UserFlair user={question.creator}
                                                                                 theme="none"/></span>
                                     </div>
-                                    {question.closed &&
+                                    {question.closed && question.closingDate &&
                                     <div className="pe-3">
                                         <span className="pe-1">Closed</span>
                                         <span
@@ -104,7 +104,7 @@ export default function QuestionHome() {
                     <div className="question d-flex">
                         <div className="question-post-body-wrap flex-grow-1">
                             <div className="question-post-body">
-                                <ReactMarkdown>{question.description}</ReactMarkdown>
+                                <ReactMarkdown >{question.description || ''}</ReactMarkdown>
                             </div>
                             {!isEditMode && question.creator.id === session?.user.id &&
                             <div className="question-post-user-action">
