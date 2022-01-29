@@ -95,7 +95,7 @@ export default function QuestionHome() {
                             <div className="question-post-body">
                                 <ReactMarkdown >{question.description || ''}</ReactMarkdown>
                             </div>
-                            {question.creator.id === session?.user.id &&
+                            {question.creator.id === session?.user.id && !question.closed &&
                             <div className="question-post-user-action">
                                 <div className="post-menu">
                                     <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">edit</a></Link>
