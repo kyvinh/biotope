@@ -7,20 +7,21 @@ import {linkEmailInvitations, prismaAdapter} from "../../../lib/prismaAdapter";
 
 export const ANON_EMAIL_DOMAIN = 'anon.biotope.brussels'
 
-export const emailConfig = {
+export const baseEmailConfig = {
     server: process.env.EMAIL_SERVER,
     from: process.env.EMAIL_FROM,
     async generateVerificationToken() {
         return _crypto.randomBytes(32).toString("hex")
     },
-    maxAge: 14 * 24 * 60 * 60 // 14 days  // TODO: 14 days for invite is OK but too long for sign-in?
 };
 
 export default NextAuth({
 
     adapter: prismaAdapter,
     providers: [
-        EmailProvider(emailConfig),
+        EmailProvider({
+            ...baseEmailConfig,
+        }),
         CredentialsProvider(CodeCredentialsProviderConfig),
     ],
     secret: process.env.NEXTAUTH_SECRET,
