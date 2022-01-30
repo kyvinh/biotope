@@ -6,7 +6,7 @@ import {prismaAdapter} from "../../../../lib/prismaAdapter";
 import {sendInvitationEmail} from '../../../../lib/invitationEmailProvider';
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
-import {baseEmailConfig} from '../../constants';
+import {baseEmailConfig} from '../../../../lib/constants';
 
 const adapter = prismaAdapter
 

@@ -3,7 +3,7 @@ import prisma from "../../../../lib/prismaClient";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
 import {HasUserIdAuthGuard, QuestionCreatorAuthGuard} from "../../../../lib/serverAnnotations";
 import {PossibleAnswerType} from "@prisma/client";
-import {NewAnswerInput} from "../../constants";
+import {NewAnswerInput} from "../../../../lib/constants";
 
 export async function createNewPossibleAnswer(questionId: string, newAnswerInput: NewAnswerInput, userId: string) {
 

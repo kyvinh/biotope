@@ -1,6 +1,6 @@
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
-import {PossibleAnswerDeleteInput} from "../../constants";
+import {PossibleAnswerDeleteInput} from "../../../../lib/constants";
 import {checkCreator} from "./edit";
 import prisma from "../../../../lib/prismaClient";
 import {fetchQuestion} from "../../q/[q]/newAnswer";

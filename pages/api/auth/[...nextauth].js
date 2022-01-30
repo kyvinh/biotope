@@ -3,7 +3,7 @@ import EmailProvider from "next-auth/providers/email"
 import CredentialsProvider from "next-auth/providers/credentials";
 import {CodeCredentialsProviderConfig} from "../../../lib/codeCredentialsProvider";
 import {linkEmailInvitations, prismaAdapter} from "../../../lib/prismaAdapter";
-import {ANON_EMAIL_DOMAIN, baseEmailConfig} from "../constants";
+import {ANON_EMAIL_DOMAIN, baseEmailConfig} from "../../../lib/constants";
 
 export default NextAuth({
 

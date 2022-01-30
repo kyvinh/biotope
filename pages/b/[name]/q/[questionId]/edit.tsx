@@ -11,7 +11,7 @@ import {QuestionHeader} from "../../../../../components/question/QuestionHeader"
 import {useRouter} from "next/router";
 import {useBiotope} from "../../../../../components/util/hooks";
 import Link from "next/link";
-import {QuestionEditDto} from "../../../../api/constants";
+import {QuestionEditDto} from "../../../../../lib/constants";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 

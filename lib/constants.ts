@@ -8,9 +8,7 @@ export const baseEmailConfig = {
     },
 };
 
-export const ANON_EMAIL_DOMAIN = 'anon.biotope.brussels'
-
-
+export const ANON_EMAIL_DOMAIN = process.env.ANON_EMAIL_DOMAIN || 'anon.biotope.brussels'
 export const ANSWER_MAX_LENGTH = 150
 
 export class NewAnswerInput {

@@ -2,7 +2,7 @@ import prisma from '../../../../lib/prismaClient'
 import {getSession} from "next-auth/react";
 import {Question} from ".prisma/client";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
-import {QuestionEditDto} from "../../constants";
+import {QuestionEditDto} from "../../../../lib/constants";
 
 export default async function handler(req, res) {
 

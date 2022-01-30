@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
-import {ANSWER_MAX_LENGTH, PossibleAnswerInput} from "../../../pages/api/constants";
+import {ANSWER_MAX_LENGTH, PossibleAnswerInput} from "../../../lib/constants";
 import {fetcher} from "../../util/fetcher";
 
 export const AnswerEditListItem = ({answer, onAnswerEdit}) => {

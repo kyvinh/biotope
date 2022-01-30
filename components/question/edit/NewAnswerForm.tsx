@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 import {fetcher} from "../../util/fetcher";
 import React from "react";
-import {ANSWER_MAX_LENGTH, NewAnswerInput} from "../../../pages/api/constants";
+import {ANSWER_MAX_LENGTH, NewAnswerInput} from "../../../lib/constants";
 
 export const NewAnswerForm = ({question, onAnswerEdit}) => {
 

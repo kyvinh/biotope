@@ -1,6 +1,6 @@
 import {HasUserIdAuthGuard, isQuestionCreator} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query, UnauthorizedException} from "@storyofams/next-api-decorators";
-import {PossibleAnswerInput} from "../../constants";
+import {PossibleAnswerInput} from "../../../../lib/constants";
 import {fetchQuestion} from "../../q/[q]/newAnswer";
 import prisma from "../../../../lib/prismaClient";
 
