@@ -1,4 +1,4 @@
-import prisma from '../../../../components/util/prismaClient'
+import prisma from '../../../../lib/prismaClient'
 import {getSession} from "next-auth/react";
 import {Question} from ".prisma/client";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
@@ -38,6 +38,7 @@ export default async function handler(req, res) {
         })
 
         if (!originalQuestion || originalQuestion.creatorId !== session.user.id) {
+            // noinspection ExceptionCaughtLocallyJS
             throw new Error('Invalid /q request!')
         }
 

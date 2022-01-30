@@ -9,7 +9,7 @@ import {
 } from "@storyofams/next-api-decorators";
 import {PossibleAnswerInput} from "../../constants";
 import {fetchQuestion} from "../../q/[q]/newAnswer";
-import prisma from "../../../../components/util/prismaClient";
+import prisma from "../../../../lib/prismaClient";
 
 export const checkCreator = async (possibleAnswerId: string, userId: string) => {
     // Cannot use QuestionCreatorAuthGuard because we don't have the questionId in the URL => do it manually

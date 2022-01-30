@@ -1,6 +1,6 @@
 import {getSession} from "next-auth/react";
-import {hashUid} from "../../../../components/util/user";
-import prisma from '../../../../components/util/prismaClient'
+import {hashUid} from "../../../../lib/user";
+import prisma from '../../../../lib/prismaClient'
 
 export default async function handler(req, res) {
 

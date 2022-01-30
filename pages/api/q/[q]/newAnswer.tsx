@@ -1,5 +1,5 @@
 import {Body, createHandler, Post, Query} from '@storyofams/next-api-decorators';
-import prisma from "../../../../components/util/prismaClient";
+import prisma from "../../../../lib/prismaClient";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
 import {HasUserIdAuthGuard, QuestionCreatorAuthGuard} from "../../../../lib/serverAnnotations";
 import {PossibleAnswerType} from "@prisma/client";

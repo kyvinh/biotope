@@ -1,4 +1,4 @@
-import prisma from '../../../../components/util/prismaClient'
+import prisma from '../../../../lib/prismaClient'
 import {Prisma} from "@prisma/client";
 import {parseISO} from "date-fns";
 import {BadRequestException, createHandler, Get, Query, Req} from "@storyofams/next-api-decorators";

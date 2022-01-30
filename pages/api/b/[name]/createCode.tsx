@@ -1,8 +1,8 @@
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
-import prisma from "../../../../components/util/prismaClient";
+import prisma from "../../../../lib/prismaClient";
 import {InvitationType} from "@prisma/client";
-import { add } from 'date-fns'
+import {add} from 'date-fns'
 
 export const CODE_LENGTH = 6;
 

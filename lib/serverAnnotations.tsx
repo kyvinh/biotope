@@ -2,7 +2,7 @@ import {createMiddlewareDecorator, NextFunction, UnauthorizedException} from "@s
 import {NextApiRequest, NextApiResponse} from "next";
 import {getSession} from "next-auth/react";
 import {Question} from ".prisma/client";
-import prisma from "../components/util/prismaClient";
+import prisma from "./prismaClient";
 
 export const HasUserIdAuthGuard = createMiddlewareDecorator(
     async (req: NextApiRequest, res: NextApiResponse, next: NextFunction) => {

@@ -1,7 +1,7 @@
-import prisma from '../../../../components/util/prismaClient'
+import prisma from '../../../../lib/prismaClient'
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
-import {hashUid} from "../../../../components/util/user";
+import {hashUid} from "../../../../lib/user";
 
 export const ARG_HASH_PREFIX = 'argument'
 

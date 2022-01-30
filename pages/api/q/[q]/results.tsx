@@ -1,4 +1,4 @@
-import prisma from '../../../../components/util/prismaClient'
+import prisma from '../../../../lib/prismaClient'
 import {getSession} from "next-auth/react";
 
 export default async function handler(req, res) {

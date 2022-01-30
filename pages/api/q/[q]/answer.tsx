@@ -1,5 +1,5 @@
-import prisma from '../../../../components/util/prismaClient'
-import {hashUid} from "../../../../components/util/user";
+import prisma from '../../../../lib/prismaClient'
+import {hashUid} from "../../../../lib/user";
 import {createNewPossibleAnswer, fetchQuestion} from "./newAnswer";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";

@@ -1,6 +1,6 @@
 import {createHandler, Get, Query} from "@storyofams/next-api-decorators";
 import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
-import prisma from "../../../components/util/prismaClient";
+import prisma from "../../../lib/prismaClient";
 
 @HasUserIdAuthGuard()
 class Memberships {
