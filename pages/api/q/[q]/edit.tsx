@@ -2,12 +2,7 @@ import prisma from '../../../../components/util/prismaClient'
 import {getSession} from "next-auth/react";
 import {Question} from ".prisma/client";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
-
-export interface QuestionEditDto {
-    name: string,
-    description: string,
-    closingDate?: Date,
-}
+import {QuestionEditDto} from "../../constants";
 
 export default async function handler(req, res) {
 

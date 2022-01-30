@@ -11,3 +11,9 @@ export class PossibleAnswerInput {
 export class PossibleAnswerDeleteInput {
     deletedId: string;
 }
+
+export class QuestionEditDto {
+    name: string;
+    description: string;
+    closingDate?: Date;
+}
