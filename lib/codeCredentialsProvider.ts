@@ -2,7 +2,7 @@ import {CODE_LENGTH} from "../pages/api/b/[name]/createCode";
 import prisma from "./prismaClient";
 import {ActionType, InvitationType} from "@prisma/client";
 import {hashUid} from "./user";
-import {ANON_EMAIL_DOMAIN} from "../pages/api/auth/[...nextauth]";
+import {ANON_EMAIL_DOMAIN} from "./constants";
 
 export const CodeCredentialsProviderConfig = {
     // From: https://github.com/mbarton/docs/blob/mbarton/anon-sessions/docs/tutorials/anonymous-sessions.md
