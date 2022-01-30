@@ -21,33 +21,32 @@ export const CodeCredentialsProviderConfig = {
         const invite = await prisma.invitation.findUnique({
             where: {
                 type_code: {type: InvitationType.CODE, code: code}
-            }
+            },
+            rejectOnNotFound: true,
         })
-        if (invite) {
-            const anonEmail = hashUid(`${invite.cercleId}-${invite.code}-${new Date()}`)
-            // Create and persist anonymous user
-            const user = await prisma.user.create({
-                data: {
-                    email: `${anonEmail}@${ANON_EMAIL_DOMAIN}`,
-                    reputationPoints: 1,
-                    reputationActions: {
-                        create: {
-                            actionType: ActionType.REGISTER_CODE
-                        }
-                    },
-                    invitationsReceived: {
-                        create: {
-                            type: InvitationType.CODE,
-                            creatorId: invite.creatorId,
-                            cercleId: invite.cercleId,
-                        }
+
+        const anonEmail = hashUid(`${invite.cercleId}-${invite.code}-${new Date()}`)
+        // Create and persist anonymous user
+        const user = await prisma.user.create({
+            data: {
+                email: `${anonEmail}@${ANON_EMAIL_DOMAIN}`,
+                reputationPoints: 1,
+                reputationActions: {
+                    create: {
+                        actionType: ActionType.REGISTER_CODE
+                    }
+                },
+                invitationsReceived: {
+                    create: {
+                        type: InvitationType.CODE,
+                        creatorId: invite.creatorId,
+                        cercleId: invite.cercleId,
                     }
                 }
-            })
-            console.log('create user :: joined with code', user)
-            return user
-        } else {
-            throw new Error("Could not retrieve invitation code")
-        }
+            }
+        })
+        console.log('create user :: joined with code', user)
+        return user
+
     }
 };

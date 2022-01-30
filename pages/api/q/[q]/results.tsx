@@ -38,6 +38,7 @@ export default async function handler(req, res) {
             where: {
                 id: questionId
             },
+            rejectOnNotFound: true,
         })
 
         // console.log("API Results", question.possibleAnswers)

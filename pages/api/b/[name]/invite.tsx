@@ -1,19 +1,19 @@
 import {InvitationType} from '@prisma/client'
 import {getProviders} from "next-auth/react"
-import baseEmailConfig from '../../../api/auth/[...nextauth]'
 import _crypto from "crypto";
 import prisma from '../../../../lib/prismaClient'
 import {prismaAdapter} from "../../../../lib/prismaAdapter";
 import {sendInvitationEmail} from '../../../../lib/invitationEmailProvider';
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {baseEmailConfig} from '../../constants';
 
 const adapter = prismaAdapter
 
 @HasUserIdAuthGuard()
 class EmailInvitationHandler {
     @Post()
-    async invite(@Body() {email}, @Query('name') biotopeName: string, @Query('userId') userId: string) {
+    async invite(@Body() {email}:{email: string}, @Query('name') biotopeName: string, @Query('userId') userId: string) {
 
         // Check config
 
@@ -113,13 +113,13 @@ class EmailInvitationHandler {
         try {
 
             await sendInvitationEmail({
-                email,
-                url,
                 provider: baseEmailConfig,
-                invitationEmailData: {
+                emailRefData: {
                     biotopeName: biotopeName,
                     inviterEmail: inviter.email,
                     inviterName: inviter.name,
+                    invitedEmail: email,
+                    callbackUrl: url,
                 }
             });
 

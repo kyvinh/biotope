@@ -22,21 +22,6 @@ class AnswerHandler {
 
         try {
 
-            // We need the questions' type to know how to store the answer value
-            const question = await prisma.question.findUnique({
-                where: {
-                    id: questionId
-                },
-                include: {
-                    possibleAnswers: true
-                }
-            })
-
-            if (!question) {
-                // noinspection ExceptionCaughtLocallyJS
-                throw new Error('Invalid /q request!')
-            }
-
             const transaction = []
 
             // Create new possible answer if supplied

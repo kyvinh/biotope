@@ -21,9 +21,10 @@ export const isQuestionCreator = async (questionId, userId) => {
     const originalQuestion: Question = await prisma.question.findUnique({
         where: {
             id: questionId
-        }
+        },
+        rejectOnNotFound: true,
     })
-    return originalQuestion && originalQuestion.creatorId === userId
+    return originalQuestion.creatorId === userId
 }
 
 // Requires req.query['userId'] and req.query['q'] !

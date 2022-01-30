@@ -32,7 +32,8 @@ export async function fetchQuestion(questionId: string) {
         where: {
             id: questionId
         },
-        include: questionIncludeBiotopeQuery.include
+        include: questionIncludeBiotopeQuery.include,
+        rejectOnNotFound: true,
     });
 }
 

@@ -19,10 +19,11 @@ class CreateInvitationCode {
         const b = await prisma.cercle.findUnique({
             where: {
                 name: biotopeName
-            }
+            },
+            rejectOnNotFound: true,
         })
 
-        if (!b || createCodeInput.code.length != CODE_LENGTH || createCodeInput.expiration < 0 || createCodeInput.expiration > 365) {
+        if (createCodeInput.code.length != CODE_LENGTH || createCodeInput.expiration < 0 || createCodeInput.expiration > 365) {
             throw Error('CreateCode API error: input data')
         }
 

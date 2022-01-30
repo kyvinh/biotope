@@ -14,7 +14,8 @@ class AddNewQuestionHandler {
         const b = await prisma.cercle.findUnique({
             where: {
                 name: biotopeName
-            }
+            },
+            rejectOnNotFound: true,
         })
 
         const question = await prisma.question.create({

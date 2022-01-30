@@ -34,10 +34,11 @@ export default async function handler(req, res) {
         const originalQuestion:Question = await prisma.question.findUnique({
             where: {
                 id: questionId
-            }
+            },
+            rejectOnNotFound: true,
         })
 
-        if (!originalQuestion || originalQuestion.creatorId !== session.user.id) {
+        if (originalQuestion.creatorId !== session.user.id) {
             // noinspection ExceptionCaughtLocallyJS
             throw new Error('Invalid /q request!')
         }
@@ -53,7 +54,8 @@ export default async function handler(req, res) {
             where: {
                 id: questionId
             },
-            include: questionIncludeBiotopeQuery.include
+            include: questionIncludeBiotopeQuery.include,
+            rejectOnNotFound: true,
         })
 
         return res.status(200).json({status: 'ok', updatedQuestion})

@@ -1,7 +1,7 @@
 import prisma from '../../../../lib/prismaClient'
 import {Prisma} from "@prisma/client";
 import {parseISO} from "date-fns";
-import {BadRequestException, createHandler, Get, Query, Req} from "@storyofams/next-api-decorators";
+import {createHandler, Get, Query, Req} from "@storyofams/next-api-decorators";
 import {getSession} from "next-auth/react";
 import {NextApiRequest} from "next";
 
@@ -41,12 +41,9 @@ class FetchBiotope {
             },
             include: {
                 creator: true,
-            }
+            },
+            rejectOnNotFound: true,
         })
-
-        if (!b) {
-            throw new BadRequestException(`${biotopeName} is not valid`)
-        }
 
         let isAuthorized:boolean
 
