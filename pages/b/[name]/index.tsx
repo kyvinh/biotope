@@ -39,7 +39,7 @@ export default function BiotopeHome() {
                                     <p className="section-desc text-black">472,665 Questions</p>
                                     <div>
                                         <Link href={`/b/${b.name}/invite`}>inviter un voisin</Link> -
-                                        <Link href={`/b/${b.name}/create`}>lancer un sondage</Link>
+                                        <Link href={`/b/${b.name}/q/create`}>lancer un sondage</Link>
                                     </div>
                                 </div>
                             </div>
