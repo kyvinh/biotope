@@ -1,9 +1,9 @@
 import React from "react";
 import {useForm} from "react-hook-form";
-import {fetcher} from "../../../components/util/fetcher";
+import {fetcher} from "../../../../components/util/fetcher";
 import {useRouter} from 'next/router'
-import QuestionEditForm from "../../../components/QuestionEditForm";
-import {QuestionEditDto} from "../../../lib/constants";
+import QuestionEditForm from "../../../../components/QuestionEditForm";
+import {QuestionEditDto} from "../../../../lib/constants";
 
 // TODO: Test that user has enough rights to create a question?!
 
