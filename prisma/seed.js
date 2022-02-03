@@ -2,11 +2,49 @@
 
 const {PrismaClient, PossibleAnswerType, QuestionType, InvitationType} = require('@prisma/client')
 const {add, addDays} = require("date-fns");
+const {Question} = require("@prisma/client");
 const prisma = new PrismaClient()
 
 // https://www.prisma.io/docs/guides/database/seed-database#integrated-seeding-with-prisma-migrate
 
 async function main() {
+
+    const miniLikert = ['Satisfaisant', 'Insatisfaisant']
+    const budgetLikert = [
+        'trop chers et impactent mon budget',
+        `chers mais n'impactent pas mon budget`,
+        'adaptés à mon budget',
+        `peu chers ou n'impactent pas mon budget`]
+    const agreeLikert = [
+        `Je suis tout à fait d'accord`,
+        `Je suis d'accord`,
+        `Je ne suis pas d'accord`,
+        `Je ne suis pas du tout d'accord`]
+
+    const generatePossibleAnswers = async (texts, question) => {
+        for (const [i, text] of texts.entries()) {
+            const data = {
+                type: PossibleAnswerType.TEXT,
+                creatorId: question.creatorId,
+                possibleText: text,
+            }
+            // TODO: Do not seed this file after 1st prod deploy -> changing the order of answers will create problems!
+            await prisma.possibleAnswer.upsert({
+                where: {
+                    questionId_order: {
+                        questionId: question.id,
+                        order: i+1}
+                },
+                update: { ...data },
+                create: {
+                    questionId: question.id,
+                    order: i+1,
+                    ...data
+                }
+            })
+
+        }
+    }
 
     const admin = await prisma.user.upsert({
         where: { email: 'kyvinh@gmail.com' },
@@ -16,181 +54,150 @@ async function main() {
             email: 'kyvinh@gmail.com',
         }
     })
-    const unknown = await prisma.user.upsert({
-        where: { email: 'unknown@biotope.be' },
-        update: {},
-        create: {
-            name: 'Anonymous 1',
-            email: 'unknown@biotope.be',
-        }
-    })
-    const cercleBx = await prisma.cercle.upsert({
-        where: { name: 'bx' },
-        update: {},
-        create: {
-            name: 'bx',
-            contact: 'Contact owner by mail...',
-            creatorId: admin.id,
-            private: false,
-        },
-    })
-    const q1name = 'Comment jugez-vous la propreté des rues?';
-    const q1 = await prisma.question.upsert({
-        where: { cercleId_name: { name: q1name , cercleId: cercleBx.id}},
-        update: {},
-        create: {
-            name: q1name,
-            type: QuestionType.DYNAMIC,
-            description: 'Bonjour, ce questionnaire sonde les habitants de Bruxelles par rapport à la propreté publique. Comment estimez-vous la propreté des rues dans Bruxelles en général?',
-            creatorId: admin.id,
-            cercleId: cercleBx.id
-        }
-    })
-    const q2name = 'Comment jugez-vous la mobilité dans Bruxelles et ses 19 communes?';
-    const q2 = await prisma.question.upsert({
-        where: { cercleId_name: { name: q2name , cercleId: cercleBx.id}},
-        update: {},
-        create: {
-            name: q2name,
-            type: QuestionType.DYNAMIC,
-            description: 'Comment trouvez-vous les différentes options de mobilité dans notre capitale? Que ce soit pour vos déplacements privés ou professionnels?',
-            creatorId: admin.id,
-            cercleId: cercleBx.id
-        }
-    })
-    const cercleTerlinden = await prisma.cercle.upsert({
-        where: { name: 'terlinden-1040' },
-        update: {
-            headerPic: 'clairejoie-band_oketqg',
-            longName: "Association des Parents de l'école Claire-Joie",
-            description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
+
+    const apcj1040 = 'apcj-1040';
+    const apcj1040Data = {
+        headerPic: 'clairejoie-band_oketqg',
+        longName: "Association des Parents de l'école Claire-Joie",
+        description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
 
 Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.
 
 _Cette enquête est anonyme!_`,
+        contact: 'kyvinh@gmail.com',
+        creatorId: admin.id,
+        private: true,
+    }
+    const cercleAPCJ = await prisma.cercle.upsert({
+        where: { name: apcj1040 },
+        update: {
+            ...apcj1040Data
         },
         create: {
-            name: 'terlinden-1040',
-            longName: "Association des Parents de l'école Claire-Joie",
-            contact: 'Hail me in the street',
-            creatorId: admin.id,
-            private: true,
-            headerPic: 'clairejoie-band_oketqg',
-            description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
-
-Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.`,
+            name: apcj1040,
+            ...apcj1040Data
         },
     })
-    const codeForInvitation = '123456';
+    const codeForInvitation = 'APCJ22';
     const codeInvite = await prisma.invitation.upsert({
         where: {
             type_code: { type: InvitationType.CODE, code: codeForInvitation}
         },
         update: {
-            expiration: add(new Date(), {days: 15}),
+            // expiration: add(new Date(), {days: 15}),
         },
         create: {
             type: InvitationType.CODE,
-            cercleId: cercleTerlinden.id,
-            creatorId: admin.id,
+            cercleId: cercleAPCJ.id,
+            creatorId: cercleAPCJ.creatorId,
             code: codeForInvitation,
             expiration: add(new Date(), {days: 15}),
         }
     })
-    const tagUrbanisme = await prisma.tag.upsert({
-        where: { name: 'Urbanisme' },
+    const tagPara = await prisma.tag.upsert({
+        where: { name: 'Parascolaire' },
         update: {},
-        create: { name: 'Urbanisme' }
+        create: { name: 'Parascolaire' }
     })
-    const tagMobilite = await prisma.tag.upsert({
-        where: { name: 'Mobilité' },
+    const tagSecurite = await prisma.tag.upsert({
+        where: { name: 'Sécurité' },
         update: {},
-        create: { name: 'Mobilité' }
+        create: { name: 'Sécurité' }
     })
-    const tagLoisirs = await prisma.tag.upsert({
-        where: { name: 'Loisirs' },
+    const tagFrais = await prisma.tag.upsert({
+        where: { name: 'Frais Scolaires' },
         update: {},
-        create: { name: 'Loisirs' }
+        create: { name: 'Frais Scolaires' }
     })
-    const terlindenQ1name = 'Comment jugez-vous la propreté de la rue Félix Terlinden?';
-    const terlindenQ1 = await prisma.question.upsert({
-        where: { cercleId_name: { name: terlindenQ1name , cercleId: cercleTerlinden.id}},
-        update: {
-            tags: {
-                connect: { id: tagUrbanisme.id }
-            }
-        },
-        create: {
-            name: terlindenQ1name,
-            type: QuestionType.DYNAMIC,
-            description: "Bonjour, ce questionnaire sonde les habitants de la rue Félix Terlinden par rapport à la propreté publique. (MARKDOWN?) Notre rue mérite une attention particulière car elle est à proximité de plusieurs centres d'activité: La Chasse, Jourdan, Flagey.",
-            creatorId: admin.id,
-            cercleId: cercleTerlinden.id,
-        }
-    })
-    const terlindenQ1a1 = await prisma.possibleAnswer.upsert({
-        where: { questionId_order: { order: 1, questionId: terlindenQ1.id}},
+    const tagAlimentation = await prisma.tag.upsert({
+        where: { name: 'Alimentation' },
         update: {},
-        create: {
-            type: PossibleAnswerType.TEXT,
-            order: 1,
-            possibleText: "Sale",
-            questionId: terlindenQ1.id,
-            creatorId: admin.id
-        }
+        create: { name: 'Alimentation' }
     })
-    const terlindenQ2name = 'Comment améliorer notre rue et les rues avoisinantes en terme de mobilité et d\'attractivité?';
-    // noinspection JSCheckFunctionSignatures
-    const terlindenQ2 = await prisma.question.upsert({
-        where: { cercleId_name: { name: terlindenQ2name , cercleId: cercleTerlinden.id}},
-        update: {
-            closingDate: addDays(new Date(), -14),
-            closed: true,
-            tags: {
-                connect: [ { id: tagUrbanisme.id }, { id: tagMobilite.id }]
-            }
-        },
-        create: {
-            name: terlindenQ2name,
-            type: QuestionType.DYNAMIC,
-            description: 'La rue n\'est pas safe pour les cyclistes (autorisés en sens contraire mais avec peu d\'espace). La rue n\'est pas verdurée du tout.',
-            creatorId: admin.id,
-            cercleId: cercleTerlinden.id,
-            closingDate: addDays(new Date(), -14),
-            closed: true,
-        }
+    const tagInfrastructure = await prisma.tag.upsert({
+        where: { name: 'Infrastructure' },
+        update: {},
+        create: { name: 'Infrastructure' }
     })
 
-    const terlindenQ3name = 'Quelles activités voudriez-vous voir dans la rue Félix Terlinden?';
-    // noinspection JSCheckFunctionSignatures
-    const terlindenQ3 = await prisma.question.upsert({
-        where: { cercleId_name: { name: terlindenQ3name , cercleId: cercleTerlinden.id}},
-        update: {
-            closingDate: addDays(new Date(), 14),
+    const acpjQuestions = [
+        {
+            answers: miniLikert,
+            name: 'Accueil parascolaire',
+            description: 'Comment jugez-vous les garderies le matin, le midi et le soir?',
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
+            type: QuestionType.DYNAMIC,
             tags: {
-                connect: { id: tagLoisirs.id }
+                connect: { id: tagPara.id }
             }
         },
-        create: {
-            name: terlindenQ3name,
+        {
+            answers: miniLikert,
+            name: 'Sécurité aux abords de l\'école',
+            description: 'La sécurité des enfants en les déposant le matin et en les récupérant le midi/soir nous concerne tous. Comment jugez-vous la sécurité et la convivialité aux abords de l\'école?',
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
-            description: "Quelles activités à soutenir? Rajouter une proposition d'activité si possible.",
-            creatorId: admin.id,
-            cercleId: cercleTerlinden.id,
-            closingDate: addDays(new Date(), 14)
-        }
-    })
-
-    const cercleUnknown = await prisma.cercle.upsert({
-        where: { name: 'qqpart-1030' },
-        update: {},
-        create: {
-            name: 'qqpart-1030',
-            contact: 'Contact me through the city hall',
-            creatorId: unknown.id,
-            private: true
+            tags: {
+                connect: [{ id: tagPara.id }, { id: tagSecurite.id }]
+            }
         },
-    })
+        {
+            answers: budgetLikert,
+            name: 'Frais scolaires',
+            description: 'Les frais scolaires et parascolaires (équipement, cantine, sorties, etc...) sont :',
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
+            type: QuestionType.DYNAMIC,
+            tags: {
+                connect: [{ id: tagPara.id }, { id: tagFrais.id }]
+            }
+        },
+        {
+            answers: miniLikert,
+            name: 'Cantine : repas chaud et repas tartine',
+            description: `Nos enfants doivent pouvoir s'alimenter correctement dans un environnement propice. Comment jugez-vous la qualité du temps de repas à l'école ?`,
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
+            type: QuestionType.DYNAMIC,
+            tags: {
+                connect: [{ id: tagPara.id }, { id: tagAlimentation.id }]
+            }
+        },
+        {
+            answers: agreeLikert,
+            name: 'Bâtiments',
+            description: `Les bâtiments et locaux de l'école (sauf la cour de récréation) de l'école sont adaptés, suffisants et accueillants.`,
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
+            type: QuestionType.DYNAMIC,
+            tags: {
+                connect: [{ id: tagPara.id }, { id: tagInfrastructure.id }]
+            }
+        },
+    ]
+
+    for (const acpjQuestion of acpjQuestions) {
+        const {answers, tags, ...questionData} = acpjQuestion
+        const createdQuestion = await prisma.question.upsert({
+            where: { cercleId_name: { name: questionData.name , cercleId: questionData.cercleId}},
+            update: {
+                ...questionData,
+            },
+            create: {
+                ...questionData
+            }
+        })
+        await prisma.question.update({
+            where: { cercleId_name: { name: questionData.name , cercleId: questionData.cercleId}},
+            data: {
+                tags
+            }
+        })
+        await generatePossibleAnswers(answers, createdQuestion)
+    }
+
 }
 
 main()

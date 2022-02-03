@@ -10,6 +10,7 @@ Salut [XYZ], je t'avais parlé de mon obsession pour le sondage de l'école... T
 
 # To Question page
 - User answers with new answer then submits
+- System asks for argument (skippable)
 
 # To Results page
 
