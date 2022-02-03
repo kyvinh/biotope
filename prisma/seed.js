@@ -1,7 +1,7 @@
 // noinspection JSUnusedLocalSymbols
 
 const {PrismaClient, PossibleAnswerType, QuestionType, InvitationType} = require('@prisma/client')
-const {add, addDays} = require("date-fns");
+const {add, addDays, addHours, set} = require("date-fns");
 const {Question} = require("@prisma/client");
 const prisma = new PrismaClient()
 
@@ -120,6 +120,10 @@ _Cette enquête est anonyme!_`,
         create: { name: 'Infrastructure' }
     })
 
+    let closingDate = addDays(new Date(), 14)
+    closingDate = addHours(closingDate, 1)
+    closingDate = set(closingDate, { minutes: 0, seconds: 0, milliseconds: 0})
+
     const acpjQuestions = [
         {
             answers: miniLikert,
@@ -128,6 +132,7 @@ _Cette enquête est anonyme!_`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
             tags: {
                 connect: { id: tagPara.id }
             }
@@ -139,6 +144,7 @@ _Cette enquête est anonyme!_`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
             tags: {
                 connect: [{ id: tagPara.id }, { id: tagSecurite.id }]
             }
@@ -150,6 +156,7 @@ _Cette enquête est anonyme!_`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
             tags: {
                 connect: [{ id: tagPara.id }, { id: tagFrais.id }]
             }
@@ -161,6 +168,7 @@ _Cette enquête est anonyme!_`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
             tags: {
                 connect: [{ id: tagPara.id }, { id: tagAlimentation.id }]
             }
@@ -172,6 +180,7 @@ _Cette enquête est anonyme!_`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
             tags: {
                 connect: [{ id: tagPara.id }, { id: tagInfrastructure.id }]
             }
