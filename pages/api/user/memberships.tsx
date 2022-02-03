@@ -6,6 +6,7 @@ import prisma from "../../../lib/prismaClient";
 class Memberships {
 
     @Get()
+    // Find the concerned biotope for this invitee
     async fetchMemberships(@Query('first') isFirst: string, @Query('userId') userId: string) {
         const fetchFirstOnly = !!isFirst
 
@@ -14,23 +15,30 @@ class Memberships {
             const lastInvitation = await prisma.invitation.findFirst({
                 where: {
                     invitedId: userId,
-                    cercle: {
-                        private: true,
-                    },
+                    cercle: {private: true},
                 },
-                include: {
-                    cercle: true
-                },
-                orderBy: {
-                    createdOn: 'desc',
-                }
+                include: {cercle: true},
+                orderBy: {createdOn: 'desc'}
             })
 
-            return { redirect: `/b/${lastInvitation.cercle.name}`}
+            return {redirect: `/b/${lastInvitation.cercle.name}`}
 
         } else {
-            // Find many, ...
-            throw new Error('Not implemented yet')
+
+            // Return: circles created + private circles invited + public circles
+
+            return await prisma.cercle.findMany({
+                where: {
+                    OR: [
+                        {creatorId: userId},
+                        {
+                            private: true,
+                            invitations: {some: {invitedId: userId}}
+                        },
+                        {private: false}
+                    ]
+                },
+            })
         }
     }
 }

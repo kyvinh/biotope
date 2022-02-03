@@ -93,7 +93,7 @@ export default function QuestionHome() {
                     <div className="question d-flex">
                         <div className="question-post-body-wrap flex-grow-1">
                             <div className="question-post-body">
-                                <ReactMarkdown >{question.description || ''}</ReactMarkdown>
+                                <ReactMarkdown>{question.description || ''}</ReactMarkdown>
                             </div>
                             {question.creator.id === session?.user.id && !question.closed &&
                             <div className="question-post-user-action">

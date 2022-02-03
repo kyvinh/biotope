@@ -54,7 +54,7 @@ $input-btn-font-size: 0.9rem;
 
   .main-biotope-cards {
     @extend .row;
-    @include row-cols(3);
+    @include row-cols(1);
   }
 
   .main-card {
