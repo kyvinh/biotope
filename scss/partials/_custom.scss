@@ -31,17 +31,18 @@
     font-size: $fs-30;
   }
 }
+
 .section-title,
 .section-desc {
-  br {
+  p {
     @media #{$tab_device} {
-      display: none;
+      margin-bottom: 1rem;
     }
     @media #{$large_mobile} {
-      display: none;
+      margin-bottom: 0.75rem;
     }
     @media #{$small_mobile} {
-      display: none;
+      margin-bottom: 0.5rem;
     }
   }
 }

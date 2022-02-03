@@ -56,7 +56,7 @@ export default NextAuth({
             // Cleanup for anonymous users
             if (session.user?.email?.endsWith(ANON_EMAIL_DOMAIN)) {
                 session.user.email = null
-                session.user.name = 'Anonymous User'
+                session.user.name = 'Anonymous'
                 session.user.isAnon = true
             } else {
                 session.user.isAnon = false

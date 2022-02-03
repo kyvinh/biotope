@@ -1,5 +1,7 @@
 import _crypto from "crypto";
 
+export const cloudinaryUrl = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD}`;
+
 export const baseEmailConfig = {
     server: process.env.EMAIL_SERVER,
     from: process.env.EMAIL_FROM,

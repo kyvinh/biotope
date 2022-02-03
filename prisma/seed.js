@@ -60,14 +60,23 @@ async function main() {
     })
     const cercleTerlinden = await prisma.cercle.upsert({
         where: { name: 'terlinden-1040' },
-        update: {},
+        update: {
+            headerPic: 'clairejoie-band_oketqg',
+            longName: "Association des Parents de l'école Claire-Joie",
+            description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
+
+Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.`,
+        },
         create: {
             name: 'terlinden-1040',
+            longName: "Association des Parents de l'école Claire-Joie",
             contact: 'Hail me in the street',
             creatorId: admin.id,
             private: true,
-            headerPic: 'felixterlinden-plaque',
-            description: 'Ce biotope rassemble tous les voisins résidants la rue Félix Terlinden.'
+            headerPic: 'clairejoie-band_oketqg',
+            description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
+
+Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.`,
         },
     })
     const codeForInvitation = '123456';

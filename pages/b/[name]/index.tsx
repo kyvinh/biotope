@@ -3,9 +3,10 @@ import {useRouter} from "next/router";
 import Link from 'next/link'
 import {useSession} from "next-auth/react"
 import {UserFlair} from "../../../components/UserFlair";
-import {formatDate} from "../../../components/util/dates";
 import {formatDistanceToNow} from "date-fns";
 import React from "react";
+import {cloudinaryUrl} from "../../../lib/constants";
+import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 
 export default function BiotopeHome() {
 
@@ -16,34 +17,62 @@ export default function BiotopeHome() {
 
     return !b ? null :
         <>
-            <section className="hero-area bg-white">
+            <section className="hero-area pt-3 pb-3 hero-bg-1" style={b.headerPic && {
+                backgroundImage: `url(${cloudinaryUrl}/image/upload/c_scale,e_sharpen:100,w_400,q_auto:good/${b.headerPic}.jpg)`
+            }}>
+                <div className="overlay"/>
                 <div className="container">
-                    <div className="hero-content">
-
-                        <div className="row align-items-center">
-                            <div className="col-lg-5 ml-auto">
-                                <div className="img-box">
-                                    {b.headerPic &&
-                                    <img className="w-100 rounded-rounded lazy" src={`/api/file/${b.headerPic}`}
-                                         alt={`${b.name} header picture`}/>
-                                    }
-                                </div>
+                    <div className="row align-items-center">
+                        <div className="col-lg-9">
+                            <div className="hero-content">
+                                <h2 className="section-title pb-3 text-white">{b.longName ? b.longName : b.name}</h2>
+                                {b.description &&
+                                <div className="section-desc text-white"><ReactMarkdown>{b.description}</ReactMarkdown></div>
+                                }
                             </div>
-                            <div className="col-lg-5">
-                                <div className="hero-content py-5">
-                                    <h2 className="section-title fs-30">{b.name}</h2>
-                                    {b.description && <p className="section-desc pb-3">{b.description}</p>}
-                                    {b.contact && <p className="text-muted">Contact: {b.contact}</p>}
-                                    <p className="text-muted">Biotope created by <UserFlair
-                                        user={b.creator}/> on {formatDate(b.createdOn)}.&nbsp;</p>
-                                    <p className="section-desc text-black">472,665 Questions</p>
-                                    <div>
-                                        <Link href={`/b/${b.name}/invite`}>inviter un voisin</Link> -
-                                        <Link href={`/b/${b.name}/q/create`}>lancer un sondage</Link>
-                                    </div>
+                        </div>
+
+                        {/*
+                        CALL TO ACTION: Prenez quelques minutes pour participer à notre grande enquête 2022 !
+                        <div className="col-lg-3">
+                            <div className="hero-btn-box py-4">
+                                <a href="ask-question.html" className="btn theme-btn theme-btn-white">Ask a
+                                    Question <i className="la la-arrow-right icon ml-1"/></a>
+                            </div>
+                            <div className="hero-list hero-list-bg">
+                                <div className="d-flex align-items-center pb-30px">
+                                    <img src="/images/anonymousHeroQuestions.svg" alt="question icon" className="mr-3" />
+                                        <p className="fs-15 text-white lh-20">Anybody can ask a question</p>
+                                </div>
+                                <div className="d-flex align-items-center pb-30px">
+                                    <img src="/images/anonymousHeroAnswers.svg" alt="question answer icon"
+                                         className="mr-3" />
+                                        <p className="fs-15 text-white lh-20">Anybody can answer</p>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    <img src="/images/anonymousHeroUpvote.svg" alt="vote icon" className="mr-3" />
+                                        <p className="fs-15 text-white lh-20">The best answers are voted up and rise to
+                                            the top</p>
                                 </div>
                             </div>
                         </div>
+
+                        <div className="col-lg-5">
+                            <div className="hero-content py-5">
+                                <h2 className="section-title fs-30">{b.name}</h2>
+                                {b.description && <p className="section-desc pb-3">{b.description}</p>}
+                                {b.contact && <p className="text-muted">Contact: {b.contact}</p>}
+                                <p className="text-muted">Biotope created by <UserFlair
+                                    user={b.creator}/> on {formatDate(b.createdOn)}.&nbsp;</p>
+                                <p className="section-desc text-black">472,665 Questions</p>
+                                <div>
+                                    <Link href={`/b/${b.name}/invite`}>inviter un voisin</Link> -
+                                    <Link href={`/b/${b.name}/q/create`}>lancer un sondage</Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        */}
                     </div>
                 </div>
             </section>

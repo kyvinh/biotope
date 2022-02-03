@@ -1,5 +1,6 @@
 .hero-bg-1 {
-  background-image: url(../images/hero-bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .hero-area {
   position: relative;
@@ -73,6 +74,7 @@
 .hero-content {
   position: relative;
   .section-title {
+    text-align: center;
     @media #{$tab_device} {
       font-size: $fs-30!important;
       line-height: 40px!important;

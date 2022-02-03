@@ -22,7 +22,6 @@
     "@next-auth/prisma-adapter": "^1.0.1",
     "@prisma/client": "^3.8.1",
     "@storyofams/next-api-decorators": "^1.6.1",
-    "cloudinary": "^1.28.1",
     "date-fns": "^2.27.0",
     "multer": "^1.4.4",
     "newrelic": "^8.7.1",
