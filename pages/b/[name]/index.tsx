@@ -57,6 +57,7 @@ export default function BiotopeHome() {
                             </div>
                         </div>
 
+                        // More info: ...
                         <div className="col-lg-5">
                             <div className="hero-content py-5">
                                 <h2 className="section-title fs-30">{b.name}</h2>
@@ -76,12 +77,6 @@ export default function BiotopeHome() {
                     </div>
                 </div>
             </section>
-
-            {session?.user?.isAnon &&
-            <div>
-                You have been invited to participate in this biotope. Feel free to answer and ask questions.
-            </div>
-            }
 
             {
                 !b.isAuthorized ?

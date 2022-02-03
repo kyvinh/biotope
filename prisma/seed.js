@@ -65,7 +65,9 @@ async function main() {
             longName: "Association des Parents de l'école Claire-Joie",
             description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
 
-Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.`,
+Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.
+
+_Cette enquête est anonyme!_`,
         },
         create: {
             name: 'terlinden-1040',
