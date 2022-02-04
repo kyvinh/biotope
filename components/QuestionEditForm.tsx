@@ -30,7 +30,8 @@ export default function QuestionEditForm({
         <div>
             <Controller
                 render={
-                    ({ field }) => <Calendar {...field} />                }
+                    ({ field }) => <Calendar {...field} next2Label={null} prev2Label={null} />
+                }
                 control={control}
                 name="closingDate"
                 defaultValue={new Date(defaultValues.closingDate) || addDays(new Date(), 14)}
