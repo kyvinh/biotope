@@ -13,7 +13,7 @@ export default function Navbar() {
                             <div>
                                 <Link href="/">
                                     <a className="logo"><img src="/images/logo.png" alt="logo" height="33"/>
-                                        <span className="ms-2">Biotope.brussels</span>
+                                        <span className="ms-2 fw-bold" style={{ verticalAlign: "middle"}}>Biotope</span>
                                     </a>
                                 </Link>
 
@@ -25,9 +25,11 @@ export default function Navbar() {
                                             <a className="fs-6"><i className="la la-user"/>
                                                 {session.user.name ? session.user.name : session.user.email}</a>
                                         </Link>
-                                        <button type="button" onClick={() => signOut()}
-                                                className="btn btn-sm btn-outline-dark ms-2">Sign out <i
-                                            className="la la-sign-out"/></button>
+                                        {!session.user.isAnon &&
+                                            <button type="button" onClick={() => signOut()}
+                                                    className="btn btn-sm btn-outline-dark ms-2"
+                                            >Sign out <i className="la la-sign-out"/></button>
+                                        }
                                     </>
                                     :
                                     <Link href="/api/auth/signin" locale={false}>

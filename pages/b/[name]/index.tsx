@@ -2,7 +2,6 @@ import {useBiotope} from "../../../components/util/hooks";
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import {useSession} from "next-auth/react"
-import {UserFlair} from "../../../components/UserFlair";
 import {formatDistanceToNow} from "date-fns";
 import React from "react";
 import {cloudinaryUrl} from "../../../lib/constants";
@@ -156,8 +155,7 @@ export default function BiotopeHome() {
                                                             }
                                                             <small className="meta d-block text-right ps-3">
                                                                 <span
-                                                                    className="text-black d-block lh-18">asked by <UserFlair
-                                                                    user={question.creator} theme="none"/></span>
+                                                                    className="text-black d-block lh-18">asked</span>
                                                                 <span
                                                                     className="d-block lh-18 fs-12">{formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}</span>
                                                             </small>

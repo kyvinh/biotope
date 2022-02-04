@@ -4,7 +4,8 @@ export default function Home() {
 
     return (
         <div className="main-container">
-            <h1 className="title text-center">Sondages Citoyens pour Tous!</h1>
+
+            <h1 className="title text-center py-3">Sondages Citoyens pour Tous!</h1>
 
             <CodeJoinForm />
 
