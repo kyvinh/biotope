@@ -16,22 +16,18 @@ export default function BiotopeHome() {
 
     return !b ? null :
         <>
-            <section className="hero-area pt-3 pb-3 hero-bg-1" style={b.headerPic && {
+            <section className="biotope-hero" style={b.headerPic && {
                 backgroundImage: `url(${cloudinaryUrl}/image/upload/c_scale,e_sharpen:100,w_400,q_auto:good/${b.headerPic}.jpg)`
             }}>
                 <div className="overlay"/>
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-9">
-                            <div className="hero-content">
-                                <h2 className="section-title pb-3 text-white">{b.longName ? b.longName : b.name}</h2>
-                                {b.description &&
-                                <div className="section-desc text-white"><ReactMarkdown>{b.description}</ReactMarkdown></div>
-                                }
-                            </div>
-                        </div>
+                <div className="biotope-hero-content">
+                    <h2>{b.longName ? b.longName : b.name}</h2>
+                    {b.description &&
+                    <div className="section-desc text-white"><ReactMarkdown>{b.description}</ReactMarkdown></div>
+                    }
+                </div>
 
-                        {/*
+                {/*
                         CALL TO ACTION: Prenez quelques minutes pour participer à notre grande enquête 2022 !
                         <div className="col-lg-3">
                             <div className="hero-btn-box py-4">
@@ -73,8 +69,7 @@ export default function BiotopeHome() {
                         </div>
 
                         */}
-                    </div>
-                </div>
+
             </section>
 
             {

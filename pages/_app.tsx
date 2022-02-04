@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import {SessionProvider} from 'next-auth/react'
-import '../scss/main.scss'
 import '../scss/la/line-awesome.css'
 import '../scss/disilab.scss'
 import Layout from '../components/Layout'

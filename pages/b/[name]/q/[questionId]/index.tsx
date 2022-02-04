@@ -46,14 +46,17 @@ export default function QuestionHome() {
 
         <QuestionHeader biotope={b} />
 
-        <section className="question-area pt-40px pb-40px">
+        <section className="question-area pt-2 pb-5">
             <div className="container">
                 <div className="question-main-bar mb-3">
                     <div className="question-highlight">
                         <div className="media media-card shadow-none rounded-0 mb-0 bg-transparent p-0">
                             <div className="media-body">
-                                <h5 className="fs-20">{question.name}</h5>
-                                <div className="meta d-flex flex-wrap align-items-center fs-13 lh-20 py-1">
+                                <div className="tags">
+                                    {question.tags.map((tag) => <span className="tag-link"
+                                                                      key={tag.id}>{tag.name}</span>)}
+                                </div>
+                                <div className="meta d-flex flex-wrap align-items-center fs-13 lh-20 pt-1 pb-2">
                                     <div className="pe-3">
                                         <span className="pe-1">Asked</span>
                                         <span
@@ -82,10 +85,7 @@ export default function QuestionHome() {
                                             className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
                                     </div>
                                 </div>
-                                <div className="tags">
-                                    {question.tags.map((tag) => <span className="tag-link"
-                                                                      key={tag.id}>{tag.name}</span>)}
-                                </div>
+                                <h5 className="fs-20 py-2">{question.name}</h5>
                             </div>
                         </div>
                     </div>

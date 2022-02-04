@@ -6,6 +6,10 @@
 	Description: Disilab -  Social Questions and Answers HTML Template
 	Version: 1.0
 */
+
+// requires bootstrap
+@import "bootstrap";
+
 // variable scss
 @import "partials/variables";
 
@@ -50,3 +54,24 @@
 // footer scss
 @import "partials/footer";
 
+// *** Biotope home ***
+
+.biotope-hero {
+  @extend .hero-area;
+  @extend .pt-3;
+  @extend .pb-3;
+  @extend .hero-bg-1;
+  box-shadow: 0 0.4rem 0.25rem rgb(0 0 0 / 8%) !important;
+
+  .biotope-hero-content {
+    @extend .hero-content;
+    text-align: center;
+    @extend .px-3;
+
+    h2 {
+      @extend .section-title;
+      @extend .pb-3;
+      @extend .text-white;
+    }
+  }
+}
