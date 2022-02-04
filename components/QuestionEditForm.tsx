@@ -4,10 +4,11 @@ import 'react-calendar/dist/Calendar.css';
 import {Controller} from "react-hook-form";
 import {addDays} from "date-fns";
 
+const DEFAULT_DAYS_ADDED_CLOSING_DATE = 14;
 
 export default function QuestionEditForm({
                                              register, errors, questionId = 'new', control,
-                                             defaultValues = { name: undefined, description: undefined, closingDate: undefined}}
+                                             defaultValues = { name: undefined, description: undefined, closingDate: addDays(new Date(), DEFAULT_DAYS_ADDED_CLOSING_DATE)}}
 ) {
 
     return <>
@@ -34,7 +35,7 @@ export default function QuestionEditForm({
                 }
                 control={control}
                 name="closingDate"
-                defaultValue={new Date(defaultValues.closingDate) || addDays(new Date(), 14)}
+                defaultValue={new Date(defaultValues.closingDate) || addDays(new Date(), DEFAULT_DAYS_ADDED_CLOSING_DATE)}
             />
         </div>
     </>
