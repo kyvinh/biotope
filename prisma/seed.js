@@ -146,7 +146,7 @@ _Cette enquête est anonyme!_`,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagPara.id }, { id: tagSecurite.id }]
+                connect: [{ id: tagSecurite.id }]
             }
         },
         {
@@ -170,19 +170,22 @@ _Cette enquête est anonyme!_`,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagPara.id }, { id: tagAlimentation.id }]
+                connect: [{ id: tagAlimentation.id }]
             }
         },
         {
             answers: agreeLikert,
-            name: 'Bâtiments',
-            description: `Les bâtiments et locaux de l'école (sauf la cour de récréation) de l'école sont adaptés, suffisants et accueillants.`,
+            name: 'Bâtiments et locaux',
+            description: `Est-ce que les bâtiments et locaux de l'école de l'école sont accueillants et agréables?
+             Est-ce que les couloirs et toilettes sont propres et accessibles à tous?
+             Est-ce que les classes et salles de sport sont en bon état et bien aménagés?
+             (Ne prenez pas en compte les cours de récréation car elles font partie d'un autre sondage)`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagPara.id }, { id: tagInfrastructure.id }]
+                connect: [{ id: tagInfrastructure.id }]
             }
         },
     ]

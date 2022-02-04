@@ -41,7 +41,7 @@ export default function QuestionEditHome() {
     const onQuestionSubmit = async (questionDto: QuestionEditDto) => {
         const res = await fetcher(`/api/q/${question.id}/edit`, questionDto);
         if (res?.status == 'ok') {
-            await router.push('../')
+            await router.push(`/b/${name}/q/${question.id}`)
         }
     };
 
@@ -55,12 +55,16 @@ export default function QuestionEditHome() {
             <QuestionHeader biotope={b}/>
 
             <form onSubmit={handleSubmit(onQuestionSubmit)} className="question-edit">
+
                 <QuestionEditForm errors={errors} register={register} questionId={question.id} defaultValues={question}
                                   control={control}/>
+
                 <input className="btn btn-primary" type="submit" value="Update question"/>
+
                 <Link href={`/b/${b.name}/q/${question.id}`}>
                     <a className="btn btn-link">Cancel</a>
                 </Link>
+
             </form>
 
             <div className="answers-edit">

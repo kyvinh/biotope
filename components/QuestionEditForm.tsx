@@ -1,12 +1,13 @@
 import React from "react";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { Controller } from "react-hook-form";
+import {Controller} from "react-hook-form";
+import {addDays} from "date-fns";
 
 
 export default function QuestionEditForm({
                                              register, errors, questionId = 'new', control,
-                                             defaultValues = { name: undefined, description: undefined}}
+                                             defaultValues = { name: undefined, description: undefined, closingDate: undefined}}
 ) {
 
     return <>
@@ -15,7 +16,7 @@ export default function QuestionEditForm({
             <label htmlFor={`question-${questionId}-name`}>Your question:</label>
             <div className="form-text">Your question should be short and precise. More context should be added in the description below.</div>
             <input id={`question-${questionId}-name`} className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                   defaultValue={defaultValues?.name}
+                   defaultValue={defaultValues.name}
                    {...register("name", {required: true})} />
             <div className="invalid-feedback">Please specify your question here.</div>
         </div>
@@ -32,10 +33,8 @@ export default function QuestionEditForm({
                     ({ field }) => <Calendar {...field} />                }
                 control={control}
                 name="closingDate"
-                defaultValue={new Date()}
+                defaultValue={new Date(defaultValues.closingDate) || addDays(new Date(), 14)}
             />
-
-
         </div>
     </>
 }
