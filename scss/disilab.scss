@@ -67,12 +67,16 @@
 }
 // *** Progress bar ***
 
+.progress {
+  border-radius: 0;
+}
+
 .bg-progress-other {
   background-color: gray !important;
 }
 
 .answer-post-progress-wrap {
-  @extend .px-3;
+  @extend .px-4;
   @extend .pt-3;
   @extend .pb-4;
 }
@@ -97,4 +101,19 @@
       @extend .text-white;
     }
   }
+}
+
+// *** Question home ***
+
+.question-meta {
+  @extend .meta;
+  @extend .d-flex;
+  @extend .flex-wrap;
+  @extend .justify-content-between;
+  @extend .fs-13;
+  @extend .lh-20;
+  @extend .pt-2;
+  @extend .pb-2;
+
+  border-bottom: 1px solid rgba(128, 137, 150, 0.08);
 }

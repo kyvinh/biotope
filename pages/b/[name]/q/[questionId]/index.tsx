@@ -62,8 +62,8 @@ export default function QuestionHome() {
                                     {question.tags.map((tag) => <span className="tag-link"
                                                                       key={tag.id}>{tag.name}</span>)}
                                 </div>
-                                <div className="meta d-flex flex-wrap align-items-center fs-13 lh-20 pt-1 pb-2">
-                                    <div className="pe-3">
+                                <div className="question-meta">
+                                    <div>
                                         <span className="pe-1">Asked</span>
                                         <span
                                             className="text-black">{formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}</span>
@@ -72,20 +72,20 @@ export default function QuestionHome() {
                                                                                 theme="none"/></span>
                                     </div>
                                     {question.closed && question.closingDate &&
-                                    <div className="pe-3">
+                                    <div>
                                         <span className="pe-1">Closed</span>
                                         <span
                                             className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
                                     </div>
                                     }
                                     {(!question.closed && question.closingDate) &&
-                                    <div className="pe-3">
+                                    <div>
                                         <span className="pe-1">Closes</span>
                                         <span
                                             className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
                                     </div>
                                     }
-                                    <div className="pe-3">
+                                    <div>
                                         <span className="pe-1">Last vote</span>
                                         <span
                                             className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>

@@ -44,6 +44,9 @@
   padding: 13px;
   line-height: 1.5;
 }
+.comment-copy {
+  color: $theme-color;
+}
 .comment-avatar {
   width: 50px;
   height: 50px;
@@ -80,12 +83,15 @@
 }
 .comment-user,
 .comment-date {
+  /*
   color: $theme-color;
   @include transition(0.2s);
   &:hover {
     color: $theme-color-2;
   }
+  */
 }
+
 /*======= comment-form =======*/
 .comment-form {
   width: 100%;

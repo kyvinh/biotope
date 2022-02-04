@@ -65,7 +65,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                     <ProgressBar>
                         {answersWithCount.map(answerProgress => {
                                 const isCurrent = answerProgress.id === answerResult.id;
-                                return <ProgressBar key={answerProgress.id} striped={isCurrent}
+                                return <ProgressBar key={answerProgress.id}
                                                     variant={`${isCurrent ? (answerProgress.order + 1) : 'progress-other'}`}
                                                     now={answerProgress.percent}
                                                     label={answerProgress.possibleText}/>
