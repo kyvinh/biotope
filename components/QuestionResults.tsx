@@ -22,7 +22,7 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
     }
 }
 
-export const QuestionResults = ({question, results: rawResults, onQuestionUpdated}) => {
+export const QuestionResults = ({question, results: rawResults, onArgumentUpdated}) => {
     if (!rawResults) {
         return null
     }
@@ -44,7 +44,7 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
     const onArgumentAdded = (possibleAnswerId, argument) => {
         const possibleAnswer = question.possibleAnswers.find(element => element.id === possibleAnswerId)
         possibleAnswer.arguments.push(argument)
-        onQuestionUpdated()
+        onArgumentUpdated()
     }
 
     return <>
@@ -53,21 +53,34 @@ export const QuestionResults = ({question, results: rawResults, onQuestionUpdate
                 <h3 className="fs-16">Results: {totalVotesCount} {totalVotesCount > 1 ? "votes" : "vote"}</h3>
             </div>
         </div>
-        {answersWithCount.map((answerResult) =>
+        {answersWithCount.map(answerResult =>
             <div className="answer-wrap d-flex" key={answerResult.id}>
                 <div className="votes votes-styled w-auto">
                     <div id="vote2" className="upvotejs text-center">
                         <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? "votes" : "vote"}</span>
                     </div>
                 </div>
-                <div key={answerResult.id} className="answer-body-wrap flex-grow-1 p-3">
-                    <div className="answer-body">
-                        <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>
-                        <ProgressBar now={answerResult.percent} label={answerResult.count}/>
-                    </div>
-                    <div className="comments-wrap">
-                        <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments}
-                                   onArgumentAdded={onArgumentAdded}/>
+                <div key={answerResult.id} className="answer-body-wrap flex-grow-1">
+                    { answerResult.percent > 0 &&
+                    <ProgressBar>
+                        {answersWithCount.map(answerProgress => {
+                                const isCurrent = answerProgress.id === answerResult.id;
+                                return <ProgressBar key={answerProgress.id} striped={isCurrent}
+                                                    variant={`${isCurrent ? (answerProgress.order + 1) : 'progress-other'}`}
+                                                    now={answerProgress.percent}
+                                                    label={answerProgress.possibleText}/>
+                            }
+                        )}
+                    </ProgressBar>
+                    }
+                    <div className="answer-post-progress-wrap">
+                        <div className="answer-body">
+                            <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>
+                        </div>
+                        <div className="comments-wrap">
+                            <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments}
+                                       onArgumentAdded={onArgumentAdded}/>
+                        </div>
                     </div>
                 </div>
             </div>

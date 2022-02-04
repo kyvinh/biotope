@@ -30,14 +30,20 @@ export default function QuestionHome() {
     } = useSWR(session && question?.id ? `/api/q/${question.id}/results` : null, fetcher);
 
     // Whether the user has answered this question or not
-    const {data: questionAnsweredObject} = useSWR(session && question?.id ? `/api/user/question/${question.id}` : null, fetcher);
+    const {data: questionAnsweredObject, mutate: reloadQuestionAnswered} = useSWR(session && question?.id ? `/api/user/question/${question.id}` : null, fetcher);
     const questionIsAnsweredKnown = !!questionAnsweredObject
     const questionAnswered = questionAnsweredObject?.answered
 
     // Component state
     const showAnswerForm = question && !question.closed && questionIsAnsweredKnown && !questionAnswered;
 
-    const onQuestionUpdated = async () => {
+    const onArgumentAdded = async () => {
+        await reloadAnswerResults()
+        await reloadBiotope()   // Should we really await?
+    }
+
+    const onAnswer = async () => {
+        await reloadQuestionAnswered({answered: true})
         await reloadBiotope()
         await reloadAnswerResults()
     }
@@ -92,7 +98,7 @@ export default function QuestionHome() {
 
                     <div className="question d-flex">
                         <div className="question-post-body-wrap flex-grow-1">
-                            <div className="question-post-body">
+                            <div className="question-post-body markdown">
                                 <ReactMarkdown>{question.description || ''}</ReactMarkdown>
                             </div>
                             {question.creator.id === session?.user.id && !question.closed &&
@@ -109,14 +115,12 @@ export default function QuestionHome() {
 
                 {showAnswerForm &&
                 <QuestionAnswerForm question={question}
-                                    onAnswerSubmitted={onQuestionUpdated}/>
+                                    onAnswerSubmitted={onAnswer}/>
                 }
 
                 {((questionAnswered || question.closed) && answerResults  && session) &&
                 <QuestionResults question={question} results={answerResults.results}
-                                 onQuestionUpdated={async () => {
-                                     await onQuestionUpdated()
-                                 }}/>
+                                 onArgumentUpdated={onArgumentAdded} />
                 }
 
             </div>

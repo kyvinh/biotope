@@ -1122,6 +1122,7 @@ div.upvotejs {
 /*======= question-post-body-wrap =======*/
 .question-post-body-wrap,
 .answer-body-wrap {
+  border-top: 1px solid rgba(128, 137, 150, 0.08);
   // padding: 15px 0 15px 15px;
   // width: calc(100% - 60px);
 }

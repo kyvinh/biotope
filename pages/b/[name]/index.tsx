@@ -23,7 +23,7 @@ export default function BiotopeHome() {
                 <div className="biotope-hero-content">
                     <h2>{b.longName ? b.longName : b.name}</h2>
                     {b.description &&
-                    <div className="section-desc text-white"><ReactMarkdown>{b.description}</ReactMarkdown></div>
+                    <div className="section-desc text-white markdown"><ReactMarkdown>{b.description}</ReactMarkdown></div>
                     }
                 </div>
 
