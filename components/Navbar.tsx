@@ -12,8 +12,7 @@ export default function Navbar() {
                         <div className="logo-box">
                             <div>
                                 <Link href="/">
-                                    <a className="logo"><img src="/images/logo.png" alt="logo" height="33"/>
-                                        <span className="ms-2 fw-bold" style={{ verticalAlign: "middle"}}>Biotope</span>
+                                    <a className="logo"><img src="/images/logo.png" alt="logo" height="35"/>
                                     </a>
                                 </Link>
 
