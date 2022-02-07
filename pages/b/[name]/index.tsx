@@ -97,8 +97,8 @@ export default function BiotopeHome() {
                                         question.shortDescription = question.description.length < maxShortDescriptionLength ? question.description : question.description.substring(0, maxShortDescriptionLength) + '…'
 
                                         return <div key={question.id}
-                                                    className="d-flex media media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">
-                                            <div className="votes text-center votes-2">
+                                                    className="media d-flex align-items-start media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">
+                                            <div className="votes text-center">
                                                 <div className="vote-block">
                                                     <span
                                                         className="vote-counts d-block text-center pr-0 lh-20 fw-medium">{question.votes}</span>
@@ -127,11 +127,11 @@ export default function BiotopeHome() {
                                                 </div>
                                                 }
                                             </div>
-                                            <div className="media-body flex-grow-1">
+                                            <div className="media-body d-flex flex-column flex-grow-1">
                                                 <h5 className="mb-2 fw-medium">
                                                     <Link href={`/b/${b.name}/q/${question.id}`}><a>{question.name}</a></Link>
                                                 </h5>
-                                                <p className="mb-2 truncate lh-20 fs-15">{question.shortDescription}</p>
+                                                <div className="mb-2 truncate lh-20 fs-15">{question.shortDescription}</div>
                                                 <div className="media media-card user-media px-0 border-bottom-0 pb-0">
                                                     <div
                                                         className="media-body d-flex flex-wrap align-items-center justify-content-between">
