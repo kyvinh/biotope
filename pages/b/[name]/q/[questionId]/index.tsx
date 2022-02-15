@@ -85,11 +85,13 @@ export default function QuestionHome() {
                                             className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
                                     </div>
                                     }
-                                    <div>
-                                        <span className="pe-1">Last vote</span>
-                                        <span
-                                            className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
-                                    </div>
+                                    {question.lastVoteDate &&
+                                        <div>
+                                            <span className="pe-1">Last vote</span>
+                                            <span
+                                                className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
+                                        </div>
+                                    }
                                 </div>
                                 <h5 className="fs-20 py-2">{question.name}</h5>
                             </div>

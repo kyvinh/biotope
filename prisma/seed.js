@@ -94,47 +94,27 @@ _Cette enquête est anonyme!_`,
             expiration: add(new Date(), {days: 15}),
         }
     })
-    const tagPara = await prisma.tag.upsert({
-        where: { name: 'Parascolaire' },
+    const tagEnquete = await prisma.tag.upsert({
+        where: { name: 'Enquête 2022' },
         update: {},
-        create: { name: 'Parascolaire' }
-    })
-    const tagSecurite = await prisma.tag.upsert({
-        where: { name: 'Sécurité' },
-        update: {},
-        create: { name: 'Sécurité' }
-    })
-    const tagFrais = await prisma.tag.upsert({
-        where: { name: 'Frais Scolaires' },
-        update: {},
-        create: { name: 'Frais Scolaires' }
-    })
-    const tagAlimentation = await prisma.tag.upsert({
-        where: { name: 'Alimentation' },
-        update: {},
-        create: { name: 'Alimentation' }
-    })
-    const tagInfrastructure = await prisma.tag.upsert({
-        where: { name: 'Infrastructure' },
-        update: {},
-        create: { name: 'Infrastructure' }
+        create: { name: 'Enquête 2022' }
     })
 
     let closingDate = addDays(new Date(), 14)
     closingDate = addHours(closingDate, 1)
     closingDate = set(closingDate, { minutes: 0, seconds: 0, milliseconds: 0})
 
-    const acpjQuestions = [
+    const apcjQuestions = [
         {
             answers: miniLikert,
             name: 'Accueil parascolaire',
-            description: 'Comment jugez-vous les garderies le matin, le midi et le soir?',
+            description: "Comment jugez-vous l'accueil le matin, le midi et le soir?",
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: { id: tagPara.id }
+                connect: { id: tagEnquete.id }
             }
         },
         {
@@ -146,7 +126,7 @@ _Cette enquête est anonyme!_`,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagSecurite.id }]
+                connect: { id: tagEnquete.id }
             }
         },
         {
@@ -158,7 +138,7 @@ _Cette enquête est anonyme!_`,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagPara.id }, { id: tagFrais.id }]
+                connect: { id: tagEnquete.id }
             }
         },
         {
@@ -170,7 +150,7 @@ _Cette enquête est anonyme!_`,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagAlimentation.id }]
+                connect: { id: tagEnquete.id }
             }
         },
         {
@@ -185,13 +165,13 @@ _Cette enquête est anonyme!_`,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
-                connect: [{ id: tagInfrastructure.id }]
+                connect: { id: tagEnquete.id }
             }
         },
     ]
 
-    for (const acpjQuestion of acpjQuestions) {
-        const {answers, tags, ...questionData} = acpjQuestion
+    for (const apcjQuestion of apcjQuestions) {
+        const {answers, tags, ...questionData} = apcjQuestion
         const createdQuestion = await prisma.question.upsert({
             where: { cercleId_name: { name: questionData.name , cercleId: questionData.cercleId}},
             update: {
