@@ -3,7 +3,14 @@ import _crypto from "crypto";
 export const cloudinaryUrl = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD}`;
 
 export const baseEmailConfig = {
-    server: process.env.EMAIL_SERVER,
+    server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD
+        }
+    },
     from: process.env.EMAIL_FROM,
     async generateVerificationToken() {
         return _crypto.randomBytes(32).toString("hex")
