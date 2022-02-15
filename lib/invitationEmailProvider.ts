@@ -15,7 +15,11 @@ export const sendInvitationEmail = async ({
                                               provider: {server, from},
                                               emailRefData,
                                           }: {
-                                                provider: {server: string, from: string},
+                                                provider: {server: {
+                                                        host: string,
+                                                        port: string,
+                                                        auth: { user: string, pass: string}
+                                                    }, from: string},
                                                 emailRefData: invitationEmailData
                                         }) => {
     emailRefData.site = process.env.NEXTAUTH_URL
