@@ -3,8 +3,7 @@ import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators"
 import prisma from "../../../../lib/prismaClient";
 import {InvitationType} from "@prisma/client";
 import {add} from 'date-fns'
-
-export const CODE_LENGTH = 6;
+import {CODE_LENGTH} from "../../../../lib/constants";
 
 export interface CreateCodeDto {
     code: string,

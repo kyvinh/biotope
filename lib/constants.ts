@@ -2,6 +2,10 @@ import _crypto from "crypto";
 
 export const cloudinaryUrl = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD}`;
 
+export const CODE_LENGTH = 6;
+export const ANON_EMAIL_DOMAIN = process.env.ANON_EMAIL_DOMAIN || 'anon.biotope.brussels'
+export const ANSWER_MAX_LENGTH = 150
+
 export const baseEmailConfig = {
     server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -16,9 +20,6 @@ export const baseEmailConfig = {
         return _crypto.randomBytes(32).toString("hex")
     },
 };
-
-export const ANON_EMAIL_DOMAIN = process.env.ANON_EMAIL_DOMAIN || 'anon.biotope.brussels'
-export const ANSWER_MAX_LENGTH = 150
 
 export class NewAnswerInput {
     newAnswer: string;

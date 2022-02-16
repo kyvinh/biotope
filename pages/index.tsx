@@ -2,8 +2,7 @@ import {CodeJoinForm} from "../components/CodeJoinForm";
 
 export default function Home() {
 
-    return (
-        <div className="main-container">
+    return <div className="main-container">
 
             <h1 className="title text-center py-3">Sondages Citoyens pour Tous!</h1>
 
@@ -24,5 +23,4 @@ export default function Home() {
             </div>
 
         </div>
-    )
 }
