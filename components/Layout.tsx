@@ -13,7 +13,7 @@ export default function Layout({children}) {
                     <div className="container">
                         <div className="row align-items-center pb-1 copyright-wrap">
                             <div className="col-12">
-                                <p className="copyright-desc fs-12">Biotope: sondages de rue</p>
+                                <p className="copyright-desc fs-12"><a href="mailto:info@biotope.brussels">Biotope</a>: sondages de proximité</p>
                             </div>
                         </div>
                     </div>
