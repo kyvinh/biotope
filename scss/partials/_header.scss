@@ -17,10 +17,8 @@
 .header-area {
   position: relative;
   z-index: 1025;
-//  @media #{$laptop_m} {
-    padding-top: 14px;
-    padding-bottom: 14px;
-//  }
+  padding-top: 7px;
+  padding-bottom: 7px;
   &.fixed-top {
     position: fixed;
     @include box-shadow(0 .125rem .625rem -.1875rem rgba(0,0,0,.1));

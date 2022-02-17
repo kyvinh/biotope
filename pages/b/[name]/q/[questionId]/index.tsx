@@ -29,13 +29,8 @@ export default function QuestionHome() {
         mutate: reloadAnswerResults
     } = useSWR(session && question?.id ? `/api/q/${question.id}/results` : null, fetcher);
 
-    // Whether the user has answered this question or not
-    const {data: questionAnsweredObject, mutate: reloadQuestionAnswered} = useSWR(session && question?.id ? `/api/user/question/${question.id}` : null, fetcher);
-    const questionIsAnsweredKnown = !!questionAnsweredObject
-    const questionAnswered = questionAnsweredObject?.answered
-
     // Component state
-    const showAnswerForm = question && !question.closed && questionIsAnsweredKnown && !questionAnswered;
+    const showAnswerForm = question && !question.closed && !question.userAnswered;
 
     const onArgumentAdded = async () => {
         await reloadAnswerResults()
@@ -43,12 +38,12 @@ export default function QuestionHome() {
     }
 
     const onAnswer = async () => {
-        await reloadQuestionAnswered({answered: true})
+        question.userAnswered = true;
         await reloadBiotope()
         await reloadAnswerResults()
     }
 
-    return b && question ? <>
+    return (b && question) ? <>
 
         <QuestionHeader biotope={b} />
 
@@ -120,7 +115,7 @@ export default function QuestionHome() {
                                     onAnswerSubmitted={onAnswer}/>
                 }
 
-                {((questionAnswered || question.closed) && answerResults  && session) &&
+                {((question.userAnswered || question.closed) && answerResults  && session) &&
                 <QuestionResults question={question} results={answerResults.results}
                                  onArgumentUpdated={onArgumentAdded} />
                 }

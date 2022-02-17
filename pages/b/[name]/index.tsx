@@ -4,8 +4,7 @@ import Link from 'next/link'
 import {useSession} from "next-auth/react"
 import {formatDistanceToNow} from "date-fns";
 import React from "react";
-import {cloudinaryUrl} from "../../../lib/constants";
-import {ReactMarkdown} from "react-markdown/lib/react-markdown";
+import {QuestionHeader} from "../../../components/question/QuestionHeader";
 
 export default function BiotopeHome() {
 
@@ -16,19 +15,9 @@ export default function BiotopeHome() {
 
     return !b ? null :
         <>
-            <section className="biotope-hero" style={b.headerPic && {
-                backgroundImage: `url(${cloudinaryUrl}/image/upload/c_scale,e_sharpen:100,w_400,q_auto:good/${b.headerPic}.jpg)`
-            }}>
-                <div className="overlay"/>
-                <div className="biotope-hero-content">
-                    <h2>{b.longName ? b.longName : b.name}</h2>
-                    {b.description &&
-                    <div className="section-desc text-white markdown"><ReactMarkdown>{b.description}</ReactMarkdown></div>
-                    }
-                </div>
+            <QuestionHeader biotope={b} />
 
-                {/*
-                        CALL TO ACTION: Prenez quelques minutes pour participer à notre grande enquête 2022 !
+            {/* CALL TO ACTION? Prenez quelques minutes pour participer à notre grande enquête 2022 !
                         <div className="col-lg-3">
                             <div className="hero-btn-box py-4">
                                 <a href="ask-question.html" className="btn theme-btn theme-btn-white">Ask a
@@ -69,8 +58,6 @@ export default function BiotopeHome() {
                         </div>
 
                         */}
-
-            </section>
 
             {
                 !b.isAuthorized ?

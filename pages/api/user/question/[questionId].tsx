@@ -2,6 +2,9 @@ import {getSession} from "next-auth/react";
 import {hashUid} from "../../../../lib/user";
 import prisma from '../../../../lib/prismaClient'
 
+/**
+ * @deprecated since question.userAnswered is added on biotope fetch
+ */
 export default async function handler(req, res) {
 
     const session = await getSession({req})
