@@ -1,17 +1,35 @@
-import {useBiotope} from "../../../components/util/hooks";
-import {useRouter} from "next/router";
 import Link from 'next/link'
-import {useSession} from "next-auth/react"
+import {getSession, useSession} from "next-auth/react"
 import {formatDistanceToNow} from "date-fns";
 import React from "react";
 import {QuestionHeader} from "../../../components/question/QuestionHeader";
+import {fetchBiotope} from "../../api/b/[name]";
 
-export default function BiotopeHome() {
+export async function getServerSideProps({params, req}) {
+    const session = await getSession({req})
+    const userId = session?.user?.id;
+    const b = await fetchBiotope(userId, params.name);
+    const redirectQuestion = b.questions?.find(element => element.starred && !element.userAnswered && !element.closed)
+    if (redirectQuestion) {
+        return {
+            redirect: {
+                destination: `/b/${params.name}/q/${redirectQuestion.id}`,
+                permanent: false,
+            },
+        };
+    } else {
+        return {
+            props: {
+                b
+            }
+        }
+    }
+}
+
+export default function BiotopeHome({b}) {
 
     // Required = false -> session might be null
     const {data: session} = useSession({required: false})
-    const {name} = useRouter().query
-    const {biotope: b} = useBiotope(name as string)
 
     return !b ? null :
         <>
