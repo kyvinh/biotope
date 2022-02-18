@@ -28,16 +28,13 @@ class AnswerHandler {
 
             if (answerInput.newAnswer) {
                 const possibleAnswer = await createNewPossibleAnswer(questionId, {newAnswer: answerInput.newAnswer.text}, userId);
-                transaction.push(
-                    prisma.answer.create({
-                        data: {
-                            possibleAnswerId: possibleAnswer.id,
-                            hashUid: uid,
-                            questionId: questionId,
-                        }
-                    })
-                )
+                if (!answerInput.possibleAnswerIds) {
+                    answerInput.possibleAnswerIds = [];
+                }
+                answerInput.possibleAnswerIds.push(possibleAnswer.id)
             }
+
+            // Record single or multiple answers
 
             if (answerInput.possibleAnswerId) {
                 transaction.push(

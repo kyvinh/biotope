@@ -6,6 +6,7 @@ import {AnswerDto} from "../pages/api/q/[q]/answer";
 import {fetcher} from "./util/fetcher";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
+import {ANSWER_MAX_LENGTH} from "../lib/constants";
 
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
@@ -64,11 +65,13 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
         }
 
         return  <div className="form-check" key={`possible-answer-new`}>
-                    <div className="form-text">Add a new answer if none are relevant.</div>
                     <input className="form-check-input" type="checkbox"
                         {...register(newAnswerCheckboxId)} />
-                    <label className="form-check-label" htmlFor={newAnswerTextId}>Other:
-                        <input {...register(newAnswerTextId, { onChange: onNewAnswerChanged })} id={newAnswerTextId}  />
+                    <label className="form-check-label" htmlFor={newAnswerTextId}>Ajouter une réponse:
+                        <input className={`form-control ms-2 ${errors[newAnswerTextId] ? 'is-invalid' : ''}`}
+                               {...register(newAnswerTextId, {
+                                    onChange: onNewAnswerChanged, maxLength: ANSWER_MAX_LENGTH})
+                                } id={newAnswerTextId}  />
                     </label>
                 </div>;
     }
@@ -150,7 +153,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
             </div>
         </div>
         { showForm &&
-            <form onSubmit={handleAnswerSubmit}>
+            <form className="answer-form" onSubmit={handleAnswerSubmit}>
                 {question.type === QuestionType.LIKERT &&
                     <>
                         <Likert {...likertOptions} layout='stacked'/>
@@ -170,7 +173,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
                 </>
                 }
                 <input type="hidden" name={formPrefix} className={`${errors[formPrefix] ? 'is-invalid' : ''}`} />
-                <input type="submit" className="btn btn-primary" value="Submit" disabled={isSubmitted} />
+                <input type="submit" className="btn-answer btn btn-primary" value="Submit" disabled={isSubmitted} />
                 { errors[formPrefix] && <div className="invalid-feedback">{errors[formPrefix].message}</div>}
             </form>
         }

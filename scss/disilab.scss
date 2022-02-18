@@ -117,3 +117,25 @@
 
   border-bottom: 1px solid rgba(128, 137, 150, 0.08);
 }
+
+.answer-form {
+  @extend .pt-2;
+
+  .form-check {
+    @extend .py-1;
+  }
+
+  .btn-answer {
+    @extend .my-3;
+    @extend .fs-15;
+  }
+
+  label {
+    display: block;
+  }
+
+  .form-control {
+    display: initial;
+    width: 70%;
+  }
+}
