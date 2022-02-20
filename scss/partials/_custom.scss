@@ -1128,6 +1128,9 @@ div.upvotejs {
   border-top: 1px solid rgba(128, 137, 150, 0.08);
   // padding: 15px 0 15px 15px;
   // width: calc(100% - 60px);
+  .progress {
+    background-color: white;
+  }
 }
 .meta {
   &.text-right {
@@ -1139,6 +1142,7 @@ div.upvotejs {
 /*======= question-post-body =======*/
 .question-post-body,
 .answer-body {
+  margin-bottom: 1rem;
   p {
     margin-bottom: 15px;
     color: rgba(13, 35, 62, 0.8);

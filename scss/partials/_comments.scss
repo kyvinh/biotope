@@ -90,13 +90,18 @@
     color: $theme-color-2;
   }
   */
+  font-size: 12px;
 }
 
 /*======= comment-form =======*/
 .comment-form {
   width: 100%;
   background-color: rgba(128, 137, 150, 0.04);
-  padding: 10px 30px;
+  padding: 5px 30px;
+
+  .form-check-input {
+    margin-top: 0.5rem;
+  }
 }
 .comment-link {
   font-size: $fs-14;

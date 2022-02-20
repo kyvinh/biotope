@@ -53,27 +53,30 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
                 </li>
             )}
         </ul>
-        { showAddArgument ?
-            <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
-                <div className="form-group">
-                    <label htmlFor={`argument-${possibleAnswerId}-text`}>Your argument</label>
-                    <div className="form-text">Please add a convincing argument or a factual observation that leads to this vote.</div>
-                    <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
-                              rows={3} {...register("argumentText", {required: true})} />
-                    {errors.argumentText && <div className="invalid-feedback">A text is required.</div>}
-                </div>
-                <div className="form-check">
-                    <input className="form-check-input" type="checkbox" defaultChecked={true}
-                           {...register("argumentAnonymous")} id={`argument-${possibleAnswerId}-anonymous`} />
-                    <label className="form-check-label" htmlFor={`argument-${possibleAnswerId}-anonymous`}>
-                        Post anonymously (your name will not be displayed and encrypted)
-                    </label>
-                </div>
-                <input type="submit" value="Submit argument" className="btn btn-primary" />
-                <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>
-            </form>
-        :
-            <button className="btn btn-link" onClick={() => setShowAddArgument(true)}>Add an argument/observation</button>
-        }
+
+        <div className="comment-form">
+            { showAddArgument ?
+                <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
+                    <div className="form-group">
+                        <label htmlFor={`argument-${possibleAnswerId}-text`}>Your argument</label>
+                        <div className="form-text">Please add a convincing argument or a factual observation that leads to this vote.</div>
+                        <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
+                                  rows={3} {...register("argumentText", {required: true})} />
+                        {errors.argumentText && <div className="invalid-feedback">A text is required.</div>}
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="checkbox" defaultChecked={true}
+                               {...register("argumentAnonymous")} id={`argument-${possibleAnswerId}-anonymous`} />
+                        <label className="form-check-label form-text" htmlFor={`argument-${possibleAnswerId}-anonymous`}>
+                            Post anonymously (your name will not be displayed and encrypted)
+                        </label>
+                    </div>
+                    <input type="submit" value="Submit argument" className="btn btn-primary" />
+                    <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>
+                </form>
+                :
+                <button className="btn btn-link comment-link" onClick={() => setShowAddArgument(true)}>Add an argument/observation</button>
+            }
+        </div>
     </>
 }

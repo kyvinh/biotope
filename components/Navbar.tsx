@@ -6,7 +6,7 @@ export default function Navbar() {
 
     return (
         <header className="header-area bg-white shadow-sm">
-            <div className="container">
+            <div className="container-fluid">
                 <div className="row align-items-center">
                     <div className="col-12">
                         <div className="logo-box">
