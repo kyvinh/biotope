@@ -58,8 +58,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
             { showAddArgument ?
                 <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
                     <div className="form-group">
-                        <label htmlFor={`argument-${possibleAnswerId}-text`}>Your argument</label>
-                        <div className="form-text">Please add a convincing argument or a factual observation that leads to this vote.</div>
+                        <label className="form-text" htmlFor={`argument-${possibleAnswerId}-text`}>Please add a convincing argument or a factual observation that leads to this vote.</label>
                         <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
                                   rows={3} {...register("argumentText", {required: true})} />
                         {errors.argumentText && <div className="invalid-feedback">A text is required.</div>}

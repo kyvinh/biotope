@@ -13,7 +13,7 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
             const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
             const answerResult:PossibleAnswerWithCount = {count: 0, percent: undefined, ...possibleAnswer}
             answerResult.count = rawResult._count.answers
-            answerResult.percent = answerResult.count / totalVotesCount * 100
+            answerResult.percent = Number((answerResult.count / totalVotesCount * 100).toFixed(0))
             return [...acc, answerResult]
         }
         , [])
