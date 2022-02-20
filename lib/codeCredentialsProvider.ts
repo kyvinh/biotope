@@ -12,7 +12,7 @@ export const CodeCredentialsProviderConfig = {
     },
     async authorize(credentials) {
         // noinspection JSUnresolvedVariable
-        const code = credentials.code
+        const code = credentials.code?.toUpperCase()
         if (code?.length !== CODE_LENGTH) {
             throw new Error("Invalid invitation code")
         }

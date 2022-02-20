@@ -14,6 +14,24 @@ import {QuestionHeader} from "../../../../../components/question/QuestionHeader"
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
+const NextPager = ({b, question, nextQuestion}) => {
+    return <div className="question-post-user-action d-flex flex-row-reverse mt-3">
+        <div className="post-menu">
+            {nextQuestion && question.userAnswered &&
+                <Link href={`/b/${b.name}/q/${nextQuestion.id}/`}>
+                    <a className="btn fs-16"><u>Next question <i className="las la-arrow-circle-right"/></u></a>
+                </Link>
+            }
+            {!nextQuestion && question.userAnswered &&
+                <Link href={`/b/${b.name}/`}>
+                    <a className="btn fs-16"><u>Finish <i className="las la-arrow-circle-right"/></u></a>
+                </Link>
+            }
+        </div>
+    </div>
+
+}
+
 export default function QuestionHome() {
 
     // Ref data
@@ -21,6 +39,8 @@ export default function QuestionHome() {
     const {questionId, name} = useRouter().query
     const {biotope: b, reloadBiotope} = useBiotope(name as string)
     const question = b?.questions?.find((element) => element.id === questionId)
+
+    const nextQuestion = b?.questions?.find(element => element?.id !== questionId && element.starred && !element.userAnswered && !element.closed)
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
@@ -100,15 +120,18 @@ export default function QuestionHome() {
                                     <div className="question-post-body markdown">
                                         <ReactMarkdown>{question.description || ''}</ReactMarkdown>
                                     </div>
-                                    {question.creator.id === session?.user.id && !question.closed &&
-                                        <div className="question-post-user-action">
-                                            <div className="post-menu">
-                                                <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">edit</a></Link>
-                                            </div>
-                                        </div>
-                                    }
                                 </div>
                             </div>
+
+                            {question.creator.id === session?.user.id && !question.closed &&
+                                <div className="question-post-user-action">
+                                    <div className="post-menu">
+                                        <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">edit</a></Link>
+                                    </div>
+                                </div>
+                            }
+
+                            <NextPager b={b} nextQuestion={nextQuestion} question={question} />
 
                         </div>
 
@@ -121,6 +144,9 @@ export default function QuestionHome() {
                             <QuestionResults question={question} results={answerResults.results}
                                              onArgumentUpdated={onArgumentAdded} />
                         }
+
+                        <NextPager b={b} nextQuestion={nextQuestion} question={question} />
+
                     </div>
                 </div>
             </div>
