@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {fetcher} from "./util/fetcher";
+import {getSession} from "next-auth/react";
 
 export const EmailJoinForm = () => {
 
@@ -13,6 +14,8 @@ export const EmailJoinForm = () => {
         const res = await fetcher(`/api/user/saveEmail`, { email });
         if (res?.status == 'ok') {
             setSuccess(true)
+            await fetcher(`/api/auth/session?update`)   // Updates the JWT token
+            await getSession()  // Updates the email shown to user
         }
     }
 

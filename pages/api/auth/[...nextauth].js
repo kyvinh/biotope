@@ -4,8 +4,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import {CodeCredentialsProviderConfig} from "../../../lib/codeCredentialsProvider";
 import {linkEmailInvitations, prismaAdapter} from "../../../lib/prismaAdapter";
 import {ANON_EMAIL_DOMAIN, baseEmailConfig} from "../../../lib/constants";
+import prisma from "../../../lib/prismaClient";
 
-export default NextAuth({
+const createOptions = (req) => ({
 
     adapter: prismaAdapter,
     providers: [
@@ -33,8 +34,10 @@ export default NextAuth({
     callbacks: {
         // Add user object to JWT token (created once, upon login)
         async jwt({token, user}) {
-            console.log("jwt callback user", user)
-            console.log("jwt callback token", token)
+            if(req.url === "/api/auth/session?update" && token?.user?.id){
+                // https://github.com/nextauthjs/next-auth/issues/371#issuecomment-1006261430
+                user = await prisma.user.findUnique({ where: { id: token.user.id}})
+            }
             if (user) {
                 token.user = user
             }
@@ -42,7 +45,6 @@ export default NextAuth({
         },
         // Add user object to session
         async session({session, user, token}) {
-            console.log("session callback init token", token)
             if (user) {
                 session.user = {
                     id: user.id,
@@ -64,7 +66,6 @@ export default NextAuth({
             } else {
                 session.user.isAnon = false
             }
-            console.log("session callback end", session.user)
             return session;
         }
     },
@@ -93,3 +94,8 @@ export default NextAuth({
         },
     }
 })
+
+
+export default async (req, res) => {
+    return NextAuth(req, res, createOptions(req));
+};
