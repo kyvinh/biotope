@@ -31,7 +31,7 @@ export default function BiotopeHome({b}) {
     // Required = false -> session might be null
     const {data: session} = useSession({required: false})
 
-    return !b ? null :
+    return !b ? <></> :
         <>
             <QuestionHeader biotope={b} />
 
@@ -90,7 +90,6 @@ export default function BiotopeHome({b}) {
                             </div>}
                     </>
                     :
-
                     <section className="question-area">
                         <div className="container">
                             <div className="question-main-bar">

@@ -125,6 +125,22 @@
 .answer-form {
   @extend .pt-2;
 
+  .dynamic-answer {
+    @extend .d-flex;
+    @extend .align-items-center;
+
+    .form-check-input {
+      @extend .me-2;
+      margin-top: 0;
+    }
+  }
+
+  .dynamic-new-answer {
+    label {
+      display: inherit;
+    }
+  }
+
   .form-check {
     @extend .py-1;
   }
@@ -132,10 +148,6 @@
   .btn-answer {
     @extend .my-3;
     @extend .fs-15;
-  }
-
-  label {
-    display: block;
   }
 
   .form-control {

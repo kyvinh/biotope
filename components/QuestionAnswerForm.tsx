@@ -46,7 +46,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
     // -- QuestionType.DYNAMIC --
 
     const DynamicAnswer = ({answer}) => {
-        return <div className="form-check">
+        return <div className="dynamic-answer form-check">
             <input className="form-check-input" type="checkbox"
                 {...register(`${formPrefix}.${answer.id}`)} id={`${formPrefix}.${answer.id}`} />
             <label className="form-check-label" htmlFor={`${formPrefix}.${answer.id}`}>
@@ -64,16 +64,15 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
             setValue(newAnswerCheckboxId, true)
         }
 
-        return  <div className="form-check" key={`possible-answer-new`}>
-                    <input className="form-check-input" type="checkbox"
-                        {...register(newAnswerCheckboxId)} />
-                    <label className="form-check-label" htmlFor={newAnswerTextId}>Ajouter une réponse:
-                        <input className={`form-control ms-2 ${errors[newAnswerTextId] ? 'is-invalid' : ''}`}
-                               {...register(newAnswerTextId, {
-                                    onChange: onNewAnswerChanged, maxLength: ANSWER_MAX_LENGTH})
-                                } id={newAnswerTextId}  />
-                    </label>
-                </div>;
+        return <div className="dynamic-answer dynamic-new-answer form-check flex-row" key={`possible-answer-new`}>
+            <input className="form-check-input" type="checkbox" {...register(newAnswerCheckboxId)} />
+            <label className="form-check-label" htmlFor={newAnswerTextId}>Ajouter une réponse:</label>
+            <input className={`form-control ms-2 ${errors[newAnswerTextId] ? 'is-invalid' : ''}`}
+                   {...register(newAnswerTextId, {
+                       onChange: onNewAnswerChanged, maxLength: ANSWER_MAX_LENGTH
+                   })
+                   } id={newAnswerTextId}/>
+        </div>;
     }
 
     // -- COMPONENT --
