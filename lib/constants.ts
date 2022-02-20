@@ -38,3 +38,7 @@ export class QuestionEditDto {
     description: string;
     closingDate?: Date;
 }
+
+export class EmailSubDto {
+    email: string;
+}

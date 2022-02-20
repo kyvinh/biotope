@@ -70,7 +70,7 @@ export default function QuestionHome() {
         <section className="question-area pt-2 pb-5">
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-lg-10 offset-lg-1">
                         <div className="question-main-bar mb-3">
                             <div className="question-highlight">
                                 <div className="media media-card shadow-none rounded-0 mb-0 bg-transparent p-0">

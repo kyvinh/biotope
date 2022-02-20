@@ -148,7 +148,8 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
     return <>
         <div className="subheader">
             <div className="subheader-title">
-                <h3 className="fs-16">Your Answer</h3>
+                <h3 className="fs-16">Your Answer
+                    <small className="text-muted ms-2">(N'hésitez pas à "Ajouter une réponse" si les réponses prédéfinies ne vous conviennent pas!)</small></h3>
             </div>
         </div>
         { showForm &&

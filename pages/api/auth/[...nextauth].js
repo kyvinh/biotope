@@ -33,6 +33,8 @@ export default NextAuth({
     callbacks: {
         // Add user object to JWT token (created once, upon login)
         async jwt({token, user}) {
+            console.log("jwt callback user", user)
+            console.log("jwt callback token", token)
             if (user) {
                 token.user = user
             }
@@ -40,6 +42,7 @@ export default NextAuth({
         },
         // Add user object to session
         async session({session, user, token}) {
+            console.log("session callback init token", token)
             if (user) {
                 session.user = {
                     id: user.id,
@@ -61,6 +64,7 @@ export default NextAuth({
             } else {
                 session.user.isAnon = false
             }
+            console.log("session callback end", session.user)
             return session;
         }
     },

@@ -59,12 +59,19 @@
 }
 
 .markdown {
+  p {
+    @extend .my-2;
+  }
   ul {
     padding: revert;
     margin: revert;
     list-style-type: revert;
   }
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.75rem;
+  }
 }
+
 // *** Progress bar ***
 
 .progress {

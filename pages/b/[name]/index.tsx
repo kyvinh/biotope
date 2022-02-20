@@ -4,6 +4,8 @@ import {formatDistanceToNow} from "date-fns";
 import React from "react";
 import {QuestionHeader} from "../../../components/question/QuestionHeader";
 import {fetchBiotope} from "../../api/b/[name]";
+import {ReactMarkdown} from "react-markdown/lib/react-markdown";
+import {EmailJoinForm} from "../../../components/EmailJoinForm";
 
 export async function getServerSideProps({params, req}) {
     const session = await getSession({req})
@@ -30,6 +32,18 @@ export default function BiotopeHome({b}) {
 
     // Required = false -> session might be null
     const {data: session} = useSession({required: false})
+    const anonUser = !!session?.user.isAnon
+
+    const ctaTest = `#### Merci pour votre participation ! Vos avis et commentaires sont précieux.
+
+Bien que nous ne puissions pas organiser de festivités (Halloween, brocante, etc...) à cause des mesures sanitaires, nous restons actifs.
+
+Voici quelques projets de l'APCJ en cours :
+- Activités : contes et histoires lus par des parents
+- Bâtiments : NeTournonsPasAutourDuPot.be
+- Alimentation : présence à la commission des menus
+- Sécurité : création de zones Kiss & Ride, rue scolaire et de lignes de Pédibus
+`
 
     return !b ? <></> :
         <>
@@ -91,6 +105,22 @@ export default function BiotopeHome({b}) {
                     </>
                     :
                     <section className="question-area">
+                        <div className="container">
+                            <div className="card card-item">
+                                <div className="card-body">
+                                    <ReactMarkdown className="markdown" children={ctaTest} />
+                                </div>
+                            </div>
+                        </div>
+                        {anonUser &&
+                            <div className="container">
+                                <div className="alert alert-info" role="alert">
+                                    Pour être notifié-e des résultats finaux ou avoir la possibilité de revenir changer
+                                    vos réponses, veuillez renseigner votre email:
+                                    <EmailJoinForm />
+                                </div>
+                            </div>
+                        }
                         <div className="container">
                             <div className="question-main-bar">
                                 <div className="questions-snippet border-top border-top-gray">
