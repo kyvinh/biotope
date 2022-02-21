@@ -12,7 +12,7 @@ import messages from "../lib/messages.fr";
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
 
-export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
+export const QuestionAnswerForm = ({question, onAnswerSubmitted, cancelForm}) => {
 
     // Ref data
     const {data: session} = useSession({required: false})
@@ -174,7 +174,10 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
                 </>
                 }
                 <input type="hidden" name={formPrefix} className={`${errors[formPrefix] ? 'is-invalid' : ''}`} />
-                <input type="submit" className="btn-answer btn btn-primary" value="Submit" disabled={isSubmitted} />
+                {question.userAnswered &&
+                    <a className="btn btn-link" onClick={cancelForm}>{messages.general.cancel}</a>
+                }
+                <input type="submit" className="btn-answer btn btn-primary" value={messages["answer-edit"]["answer-action"]} disabled={isSubmitted} />
                 { errors[formPrefix] && <div className="invalid-feedback">{errors[formPrefix].message}</div>}
             </form>
         }

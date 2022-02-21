@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {useBiotope} from "../../../../../components/util/hooks";
 import Link from "next/link";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 import {UserFlair} from "../../../../../components/UserFlair";
 import {useSession} from "next-auth/react";
@@ -16,7 +16,7 @@ import messages from "../../../../../lib/messages.fr";
 // TODO Prereq: we should not be here if no session and biotope is private
 
 const NextPager = ({b, question, nextQuestion, unansweredNum = 0}) => {
-    return <div>
+    return <>
             {unansweredNum > 0 &&
                 <div className="mx-3">{unansweredNum} {messages.question["remaining-questions"]}</div>
             }
@@ -30,7 +30,7 @@ const NextPager = ({b, question, nextQuestion, unansweredNum = 0}) => {
                     <a className="btn fs-16"><u>{messages.question["finished-questionnaire-link"]} <i className="las la-arrow-circle-right"/></u></a>
                 </Link>
             }
-        </div>
+        </>
 }
 
 export default function QuestionHome() {
@@ -52,7 +52,11 @@ export default function QuestionHome() {
     } = useSWR(session && question?.id ? `/api/q/${question.id}/results` : null, fetcher);
 
     // Component state
-    const showAnswerForm = question && !question.closed && !question.userAnswered;
+    const [showAnswerForm, setShowAnswerForm] = useState(false)
+
+    useEffect(() => {
+        setShowAnswerForm(question && !question.closed && !question.userAnswered)
+    }, [question])
 
     const onArgumentAdded = async () => {
         await reloadAnswerResults()
@@ -63,6 +67,10 @@ export default function QuestionHome() {
         question.userAnswered = true;
         await reloadBiotope()
         await reloadAnswerResults()
+    }
+
+    const onShowAnswerFormClick = () => {
+        setShowAnswerForm(!showAnswerForm);
     }
 
     return (b && question) ? <>
@@ -131,6 +139,9 @@ export default function QuestionHome() {
                                             {question.creator.id === session?.user.id && !question.closed &&
                                                 <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">{messages.question["edit-question-link"]}</a></Link>
                                             }
+                                            {question.userAnswered && !showAnswerForm &&
+                                                <a className="btn" onClick={onShowAnswerFormClick}>{messages.question["change-answers-link"]}</a>
+                                            }
                                         </div>
                                         <div className="d-flex align-items-center">
                                             <NextPager b={b} nextQuestion={nextQuestion} question={question} unansweredNum={numStarredUnanswered} />
@@ -139,12 +150,17 @@ export default function QuestionHome() {
                                 </div>
                         </div>
 
+                        {showAnswerForm && question.userAnswered &&
+                            <div className="alert alert-info" role="alert">
+                                {messages.question["change-answers-info"]}
+                            </div>
+                        }
                         {showAnswerForm &&
                             <QuestionAnswerForm question={question}
-                                                onAnswerSubmitted={onAnswer}/>
+                                                onAnswerSubmitted={onAnswer} cancelForm={() => { setShowAnswerForm(false)}}/>
                         }
 
-                        {((question.userAnswered || question.closed) && answerResults  && session) &&
+                        {((question.userAnswered || question.closed) && answerResults && !showAnswerForm && session) &&
                             <QuestionResults question={question} results={answerResults.results}
                                              onArgumentUpdated={onArgumentAdded} />
                         }
