@@ -26,7 +26,7 @@ export async function useJoinCode(code, setCodeError: (value: (((prevState: stri
     }
 }
 
-export const CodeJoinForm = () => {
+export const CodeJoinForm = ({setParentLoading = null}) => {
 
     const router = useRouter()
     const {data: session} = useSession({required: false})
@@ -38,7 +38,10 @@ export const CodeJoinForm = () => {
     const onCodeSubmit = async (event) => {
         event.preventDefault()
         setLoading(true)
-        const code = event.target.invitationCode.value
+        if (setParentLoading) {
+            setParentLoading(true)
+        }
+        const code = event.target.invitationCode.value;
 
         if (userLoggedIn) {
             // Add an invitation to an existing user
@@ -46,6 +49,9 @@ export const CodeJoinForm = () => {
         } else {
             await useJoinCode(code, setCodeError, router);
             setLoading(false)
+            if (setParentLoading) {
+                setParentLoading(false)
+            }
         }
     }
 

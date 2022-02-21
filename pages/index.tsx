@@ -2,11 +2,13 @@ import {CodeJoinForm} from "../components/CodeJoinForm";
 import messages from "../lib/messages.fr";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
+import {useState} from "react";
 
 export default function Home() {
 
     const {data: session} = useSession({required: false})
     const userLoggedIn = !!session?.user
+    const [loading, setLoading] = useState(false)
 
     return <div className="main-container">
 
@@ -17,7 +19,7 @@ export default function Home() {
                     <span><em>Biotope</em> est un site de sondage participatif disponible à tous les quartiers et associations de Bruxelles.</span>
                 </div>
 
-                <CodeJoinForm />
+                <CodeJoinForm setParentLoading={setLoading} />
 
                 {!userLoggedIn &&
                     <div className="explainer-text">
@@ -29,7 +31,7 @@ export default function Home() {
                     </div>
                 }
 
-                {userLoggedIn &&
+                {(userLoggedIn && !loading) &&
                     <Link href="/user/profile">Allez à votre profil</Link>
                 }
 
