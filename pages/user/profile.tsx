@@ -3,6 +3,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import {fetcher} from "../../components/util/fetcher";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
+import messages from "../../lib/messages.fr";
 
 export default function Profile() {
     const {data: session} = useSession({required: false})
@@ -10,16 +11,17 @@ export default function Profile() {
 
     return session?.user ? <>
         <div className="main-container">
-            <h1 className="title text-center">Hello {session.user.name}!</h1>
+            <div className="d-flex justify-content-between my-4">
+                <h1 className="title text-center">{messages.user.hello} {session.user.name}!</h1>
+                {session.user.isAnon &&
+                    <button type="button" onClick={() => signOut()}
+                            className="btn btn-sm btn-outline-dark ms-2">{messages.user["signout-action"]} <i className="la la-sign-out"/></button>
+                }
+            </div>
 
-            {session.user.isAnon &&
-                <button type="button" onClick={() => signOut()}
-                        className="btn btn-sm btn-outline-dark ms-2">Sign out <i className="la la-sign-out"/></button>
-            }
-
-            <div className="main-biotope-cards">
-
-                {biotopes && biotopes.map(b => <div className="col" key={b.id}>
+            <div className="main-biotope-cards my-2">
+                <h2>{messages.user["your-biotopes"]}:</h2>
+                {biotopes && biotopes.map(b => <div className="col gy-2" key={b.id}>
                         <div className="main-card">
                             <div className="card-body">
                                 <h5 className="card-title"><Link href={`/b/${b.name}`}>{b.longName}</Link> &rarr;</h5>

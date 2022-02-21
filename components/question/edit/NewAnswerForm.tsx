@@ -2,6 +2,7 @@ import {useForm} from "react-hook-form";
 import {fetcher} from "../../util/fetcher";
 import React from "react";
 import {ANSWER_MAX_LENGTH, NewAnswerInput} from "../../../lib/constants";
+import messages from "../../../lib/messages.fr";
 
 export const NewAnswerForm = ({question, onAnswerEdit}) => {
 
@@ -17,14 +18,12 @@ export const NewAnswerForm = ({question, onAnswerEdit}) => {
     }
 
     return <form onSubmit={handleSubmit(onAddNewAnswer)} className="add-new-answer">
-        <h6>Add new answer</h6>
+        <h6>{messages["answer-edit"]["add-answer-lead"]}</h6>
         <div className="form-group">
-            <div className="form-text">Your new answer will be suggested to new voters. Previous voters will be informed
-                through their biotope feed.
-            </div>
+            <div className="form-text">{messages["answer-edit"]["add-answer-info"]}</div>
             <input className={`form-control ${errors.newAnswer ? 'is-invalid' : ''}`}
                    {...register("newAnswer", {required: true, maxLength: ANSWER_MAX_LENGTH})} />
-            <div className="invalid-feedback">Please specify a new answer to be suggested to the voters.</div>
+            <div className="invalid-feedback">{messages["answer-edit"]["edit-answer-required-error"]}</div>
         </div>
         <input className="btn btn-outline-primary" type="submit" value="Add new answer"/>
     </form>

@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {ANSWER_MAX_LENGTH, PossibleAnswerInput} from "../../../lib/constants";
 import {fetcher} from "../../util/fetcher";
+import messages from "../../../lib/messages.fr";
 
 export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
     const [answerFormShown, setAnswerFormShown] = useState(false)
@@ -31,23 +32,23 @@ export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
                 </div>
                 <div className="col-3">
                     <button className="btn btn-outline-dark"
-                            onClick={() => setAnswerFormShown(!answerFormShown)}>Edit
+                            onClick={() => setAnswerFormShown(!answerFormShown)}>{messages["answer-edit"].edit}
                     </button>
                     {answer.count === 0 &&
-                        <input className="btn btn-outline-danger" type="button" value="Delete" onClick={onDeleteAnswer}/>
+                        <input className="btn btn-outline-danger" type="button" value={messages["answer-edit"].delete} onClick={onDeleteAnswer}/>
                     }
                 </div>
             </div>
             : <div className="row">
                 <form onSubmit={handleSubmit(onEditAnswer)} className="edit-answer col-10">
                     <div className="form-group">
-                        <div className="form-text">Editing your answer will need to be approved eventually!</div>
+                        <div className="form-text">{messages["answer-edit"]["edit-answer-info"]}</div>
                         <input className={`form-control ${errors.answerText ? 'is-invalid' : ''}`} defaultValue={answer.possibleText}
                                {...register("answerText", {required: true, maxLength: ANSWER_MAX_LENGTH})} />
-                        <div className="invalid-feedback">Please specify a text for this answer.</div>
+                        <div className="invalid-feedback">{messages["answer-edit"]["edit-answer-required-error"]}</div>
                     </div>
-                    <input className="btn btn-outline-primary" type="submit" value="Rename answer"/>
-                    <input className="btn btn-link" type="button" value="Cancel" onClick={() => setAnswerFormShown(!answerFormShown)}/>
+                    <input className="btn btn-outline-primary" type="submit" value={messages["answer-edit"]["edit-answer-rename"]} />
+                    <input className="btn btn-link" type="button" value={messages.general.cancel} onClick={() => setAnswerFormShown(!answerFormShown)} />
                 </form>
             </div>
         }

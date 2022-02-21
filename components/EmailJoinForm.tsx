@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {fetcher} from "./util/fetcher";
 import {getSession} from "next-auth/react";
+import messages from "../lib/messages.fr";
 
 export const EmailJoinForm = () => {
 
@@ -26,13 +27,10 @@ export const EmailJoinForm = () => {
                        className={`form-control ${codeError ? 'is-invalid' : ''}`}/>
             </div>
             <div className="col-12">
-                <button type="submit" className="btn btn-primary">Enregistrer</button>
+                <button type="submit" className="btn btn-primary">{messages.invitation["code-join-action"]}</button>
             </div>
         </>
         }
-        {success && <div className="col-12 lead">
-            Merci pour votre inscription. Vous recevrez des nouvelles par email.
-        </div>
-        }
+        {success && <div className="col-12 lead">{messages.invitation["email-join-success"]}</div> }
     </form>
 }

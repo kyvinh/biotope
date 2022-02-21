@@ -38,10 +38,11 @@ $input-btn-font-size: 0.9rem;
     @extend .row;
 
     .explainer-text {
-      @extend .col-6;
+      @extend .col-12;
       @extend .py-1;
       @extend .d-flex;
       @extend .align-items-center;
+      @extend .justify-content-center;
     }
 
     .explainer-side {

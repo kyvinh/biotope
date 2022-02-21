@@ -12,6 +12,7 @@ import {useRouter} from "next/router";
 import {useBiotope} from "../../../../../components/util/hooks";
 import Link from "next/link";
 import {QuestionEditDto} from "../../../../../lib/constants";
+import messages from "../../../../../lib/messages.fr";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
@@ -68,7 +69,7 @@ export default function QuestionEditHome() {
             </form>
 
             <div className="answers-edit">
-                <h6>Edit possible answers</h6>
+                <h6>{messages.question["edit-answers-lead"]}</h6>
                 {answersWithCount.map(answer =>
                     <AnswerEditListItem answer={answer} key={answer.id} onAnswerEdit={onAnswerEdit}/>
                 )}

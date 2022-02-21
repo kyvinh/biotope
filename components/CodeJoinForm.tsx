@@ -3,6 +3,7 @@ import {signIn, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import {fetcher} from "./util/fetcher";
 import Router, {BaseRouter} from "next/dist/shared/lib/router/router";
+import messages from "../lib/messages.fr";
 
 export async function useJoinCode(code, setCodeError: (value: (((prevState: string) => string) | string)) => void, router: BaseRouter & Pick<Router, "push">) {
     // Create user and invitation
@@ -47,13 +48,18 @@ export const CodeJoinForm = () => {
 
     return <>
         {!userLoggedIn &&
-        <form onSubmit={onCodeSubmit}>
-            <div className="form-group">
-                <label htmlFor="invitationCode">Please enter your invitation code here:</label>
-                <input name="invitationCode" id="invitationCode" required
-                       className={`form-control ${codeError ? 'is-invalid' : ''}`}/>
-                <div className="invalid-feedback">{codeError}</div>
-                <button type="submit" className="btn btn-primary">Join</button>
+        <form className="row row-cols-1 g-3 align-items-center" onSubmit={onCodeSubmit}>
+
+            <div className="col">
+                <label htmlFor="invitationCode">{messages.invitation["code-join-label"]}</label>
+            </div>
+            <div className="col d-flex align-items-center justify-content-center">
+                <div>
+                    <input name="invitationCode" id="invitationCode" required
+                           className={`form-control ${codeError ? 'is-invalid' : ''}`}/>
+                    <div className="invalid-feedback">{codeError}</div>
+                </div>
+                <button type="submit" className="btn btn-primary ms-2">{messages.invitation["code-join-action"]}</button>
             </div>
         </form>
         }

@@ -2,11 +2,12 @@ import {useBiotope} from "../../../components/util/hooks"
 import {useRouter} from 'next/router'
 import {useState} from 'react'
 import {fetcher} from "../../../components/util/fetcher";
+import messages from "../../../lib/messages.fr";
 
 export const INVITE_CODE_EXPIRATIONS = [
-    { name: 'exp_14d', value: 14, label: '2 weeks'},
-    { name: 'exp_1m', value: 30,label: '1 month', default: true},
-    { name: 'exp_3m', value: 91,label: '3 months'},
+    { name: 'exp_14d', value: 14, label: messages.invitation["expire-2-weeks"]},
+    { name: 'exp_1m', value: 30,label: messages.invitation["expire-1-month"], default: true},
+    { name: 'exp_3m', value: 91,label: messages.invitation["expire-3-months"]},
 ]
 
 export default function BiotopeInvite() {
@@ -38,12 +39,12 @@ export default function BiotopeInvite() {
     const [codeExpiration, setCodeExpiration] = useState(30);
 
     return b ? <>
-        Invite your friend to {b.name}:
+        {messages.invitation["invite-header"]} {b.name}:
         <form onSubmit={inviteEmail}>
-            <label htmlFor="email">Email to invite:</label>
+            <label htmlFor="email">{messages.invitation["invite-to-label"]}:</label>
             <input id="email" type="email" autoComplete="email" required
                    value={invitedEmail} onChange={e => setInvitedEmail(e.target.value)}/>
-            <button type="submit">Invite</button>
+            <button type="submit">{messages.invitation["invite-action"]}</button>
         </form>
         <hr />
         Create invitation code:

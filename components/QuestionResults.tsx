@@ -2,6 +2,7 @@ import React from "react";
 import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 import {Argument, PossibleAnswer} from ".prisma/client";
+import messages from "../lib/messages.fr";
 
 export type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[]}
 export type PossibleAnswerWithCount = PossibleAnswerWithArguments & { count: number; percent: number, arguments: Argument[]}
@@ -50,14 +51,14 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
     return <>
         <div className="subheader">
             <div className="subheader-title">
-                <h3 className="fs-16">Results: {totalVotesCount} {totalVotesCount > 1 ? "votes" : "vote"}</h3>
+                <h3 className="fs-16">Results: {totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote}</h3>
             </div>
         </div>
         {answersWithCount.map(answerResult =>
             <div className="answer-wrap d-flex" key={answerResult.id}>
                 <div className="votes votes-styled w-auto">
                     <div id="vote2" className="upvotejs text-center">
-                        <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? "votes" : "vote"}</span>
+                        <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? messages.results.votes : messages.results.vote}</span>
                     </div>
                 </div>
                 <div key={answerResult.id} className="answer-body-wrap flex-grow-1">

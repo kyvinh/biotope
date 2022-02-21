@@ -4,7 +4,8 @@ import {useSession} from "next-auth/react";
 import {UserFlair} from "./UserFlair";
 import {useForm} from "react-hook-form";
 import {NewArgumentInput} from "../pages/api/pa/[pa]/argument";
-import {formatDistanceToNow} from "date-fns";
+import {formatDistance} from "./util/dates";
+import messages from "../lib/messages.fr";
 
 export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) => {
 
@@ -17,7 +18,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
     const onAddArgument = async (newArgument:NewArgumentInput) => {
         if (!session) {
             // Arguments are anonymous but you should be logged in? (SO lets you add as anonymous but has a review queue in process)
-            throw new Error("Currently need to be signed in to argument, even anonymously!")
+            throw new Error(messages.arguments["argument-no-user-error"])
         }
         const res = await fetcher(`/api/pa/${possibleAnswerId}/argument`, newArgument);
         if (res?.status == 'ok') {
@@ -27,8 +28,6 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
         }
     };
 
-    // console.log(questionArguments)
-
     return <>
         <ul className="comments-list">
             { answerArguments && answerArguments.map((argument) =>
@@ -37,7 +36,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
                         <span className="comment-score">
                             {argument.anonymous ?
                                 <UserFlair user={{
-                                    name: "Anonymous",
+                                    name: messages.user["anonymous-name"],
                                     reputationsPoints: 0,
                                 }} theme="none" />
                                 :
@@ -48,7 +47,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
                     <div className="comment-body">
                         <span className="comment-copy">{argument.text}</span>
                         <span className="comment-separated">-</span>
-                        <span className="comment-date">{formatDistanceToNow(new Date(argument.createdOn), {addSuffix: true})}</span>
+                        <span className="comment-date">{formatDistance(argument.createdOn)}</span>
                     </div>
                 </li>
             )}
@@ -58,23 +57,23 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
             { showAddArgument ?
                 <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
                     <div className="form-group">
-                        <label className="form-text" htmlFor={`argument-${possibleAnswerId}-text`}>Please add a convincing argument or a factual observation that leads to this vote.</label>
+                        <label className="form-text" htmlFor={`argument-${possibleAnswerId}-text`}>{messages.arguments["add-argument-info"]}</label>
                         <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
                                   rows={3} {...register("argumentText", {required: true})} />
-                        {errors.argumentText && <div className="invalid-feedback">A text is required.</div>}
+                        {errors.argumentText && <div className="invalid-feedback">{messages.arguments["add-argument-required-error"]}</div>}
                     </div>
                     <div className="form-check">
-                        <input className="form-check-input" type="checkbox" defaultChecked={true}
+                        <input className="form-check-input" type="checkbox" defaultChecked={true} readOnly={true}
                                {...register("argumentAnonymous")} id={`argument-${possibleAnswerId}-anonymous`} />
                         <label className="form-check-label form-text" htmlFor={`argument-${possibleAnswerId}-anonymous`}>
-                            Post anonymously (your name will not be displayed and encrypted)
+                            {messages.arguments["post-anonymously-label"]}
                         </label>
                     </div>
-                    <input type="submit" value="Submit argument" className="btn btn-primary" />
-                    <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>Cancel</button>
+                    <input type="submit" value={messages.arguments["add-argument-action"]} className="btn btn-primary" />
+                    <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>{messages.general.cancel}</button>
                 </form>
                 :
-                <button className="btn btn-link comment-link" onClick={() => setShowAddArgument(true)}>Add an argument/observation</button>
+                <button className="btn btn-link comment-link" onClick={() => setShowAddArgument(true)}>{messages.arguments["add-argument-form-toggle"]}</button>
             }
         </div>
     </>

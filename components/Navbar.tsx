@@ -1,5 +1,6 @@
 import {signOut, useSession} from "next-auth/react";
 import Link from "next/link";
+import messages from "../lib/messages.fr";
 
 export default function Navbar() {
     const {data: session} = useSession({required: false}) // Should add serverSideProps so session is loaded on server?
@@ -27,13 +28,13 @@ export default function Navbar() {
                                         {!session.user.isAnon &&
                                             <button type="button" onClick={() => signOut()}
                                                     className="btn btn-sm btn-outline-dark ms-2"
-                                            >Sign out <i className="la la-sign-out"/></button>
+                                            >{messages.user["signout-action"]} <i className="la la-sign-out"/></button>
                                         }
                                     </>
                                     :
                                     <Link href="/api/auth/signin" locale={false}>
                                         <a className="btn btn-outline-primary"><i
-                                            className="la la-sign-in mr-1"/> Sign in</a>
+                                            className="la la-sign-in mr-1"/> {messages.user["signin-action"]}</a>
                                     </Link>
                                 }
                             </div>

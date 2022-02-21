@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer"
+import messages from "./messages.fr";
 
 type invitationEmailData = {
     biotopeName: string,
@@ -27,7 +28,7 @@ export const sendInvitationEmail = async ({
     await transport.sendMail({
         to: emailRefData.invitedEmail,
         from,
-        subject: `Invitation to ${emailRefData.site}`,
+        subject: `${messages["email"].subject} ${emailRefData.inviterName}`,
         text: emailAsText(emailRefData),
         html: html(emailRefData),
     })
@@ -57,28 +58,28 @@ const html = (data: invitationEmailData) => {
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedSite}</strong>
+        <strong>${escapedSite} - ${data.biotopeName}</strong>
       </td>
     </tr>
   </table>
   <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${mainBackgroundColor}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedInvitedEmail}</strong>, you have been invited by <strong>${data.inviterName} (${escapedInviterEmail})</strong> to <strong>${data.biotopeName}</strong>
+        <strong>${escapedInvitedEmail}</strong>, ${messages.email["body-invited-by"]} <strong>${data.inviterName} (${escapedInviterEmail})</strong> ${messages.email["body-invited-to"]} <strong>${data.biotopeName}</strong>
       </td>
     </tr>
     <tr>
       <td align="center" style="padding: 20px 0;">
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="center" style="border-radius: 5px;" bgcolor="${buttonBackgroundColor}"><a href="${data.callbackUrl}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; text-decoration: none;border-radius: 5px; padding: 10px 20px; border: 1px solid ${buttonBorderColor}; display: inline-block; font-weight: bold;">Join</a></td>
+            <td align="center" style="border-radius: 5px;" bgcolor="${buttonBackgroundColor}"><a href="${data.callbackUrl}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; text-decoration: none;border-radius: 5px; padding: 10px 20px; border: 1px solid ${buttonBorderColor}; display: inline-block; font-weight: bold;">${messages.email["body-action"]}</a></td>
           </tr>
         </table>
       </td>
     </tr>
     <tr>
       <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${data.biotopeName}</strong> contains debates and questions surrounding life in its community.
+        <strong>${data.biotopeName}</strong> ${messages.email["body-context"]}
       </td>
     </tr>
   </table>
@@ -87,4 +88,4 @@ const html = (data: invitationEmailData) => {
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-const emailAsText = (data: invitationEmailData) => `Join ${data.biotopeName} (${data.site})\n${data.callbackUrl}\n\n`
+const emailAsText = (data: invitationEmailData) => `${messages.email["body-action"]} ${data.biotopeName} (${data.site})\n${data.callbackUrl}\n\n`

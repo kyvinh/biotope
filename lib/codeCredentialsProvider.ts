@@ -2,6 +2,7 @@ import prisma from "./prismaClient";
 import {ActionType, InvitationType} from "@prisma/client";
 import {hashUid} from "./user";
 import {ANON_EMAIL_DOMAIN, CODE_LENGTH} from "./constants";
+import messages from "./messages.fr";
 
 export const CodeCredentialsProviderConfig = {
     // From: https://github.com/mbarton/docs/blob/mbarton/anon-sessions/docs/tutorials/anonymous-sessions.md
@@ -14,7 +15,7 @@ export const CodeCredentialsProviderConfig = {
         // noinspection JSUnresolvedVariable
         const code = credentials.code?.toUpperCase()
         if (code?.length !== CODE_LENGTH) {
-            throw new Error("Invalid invitation code")
+            throw new Error(messages.invitation["code-join-invalid"])
         }
         // Check whether this code is linked to an Invite
         const invite = await prisma.invitation.findUnique({

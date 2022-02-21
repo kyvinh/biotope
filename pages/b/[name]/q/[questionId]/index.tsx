@@ -2,7 +2,6 @@ import {useRouter} from "next/router";
 import {useBiotope} from "../../../../../components/util/hooks";
 import Link from "next/link";
 import React from "react";
-import {formatDistanceToNow} from "date-fns";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 import {UserFlair} from "../../../../../components/UserFlair";
 import {useSession} from "next-auth/react";
@@ -11,6 +10,8 @@ import {fetcher} from "../../../../../components/util/fetcher";
 import {QuestionAnswerForm} from "../../../../../components/QuestionAnswerForm";
 import {QuestionResults} from "../../../../../components/QuestionResults";
 import {QuestionHeader} from "../../../../../components/question/QuestionHeader";
+import {formatDistance} from "../../../../../components/util/dates";
+import messages from "../../../../../lib/messages.fr";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
@@ -19,12 +20,12 @@ const NextPager = ({b, question, nextQuestion}) => {
         <div className="post-menu">
             {nextQuestion && question.userAnswered &&
                 <Link href={`/b/${b.name}/q/${nextQuestion.id}/`}>
-                    <a className="btn fs-16"><u>Next question <i className="las la-arrow-circle-right"/></u></a>
+                    <a className="btn fs-16"><u>{messages.question["next-question-link"]} <i className="las la-arrow-circle-right"/></u></a>
                 </Link>
             }
             {!nextQuestion && question.userAnswered &&
                 <Link href={`/b/${b.name}/`}>
-                    <a className="btn fs-16"><u>Finish <i className="las la-arrow-circle-right"/></u></a>
+                    <a className="btn fs-16"><u>{messages.question["finished-questionnaire-link"]} <i className="las la-arrow-circle-right"/></u></a>
                 </Link>
             }
         </div>
@@ -83,30 +84,30 @@ export default function QuestionHome() {
                                             <div>
                                                 <span className="pe-1">Asked</span>
                                                 <span
-                                                    className="text-black">{formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}</span>
+                                                    className="text-black">{formatDistance(question.createdOn)}</span>
                                                 <span className="ps-1 pe-1">by</span>
                                                 <span className="text-black"><UserFlair user={question.creator}
                                                                                         theme="none"/></span>
                                             </div>
                                             {question.closed && question.closingDate &&
                                                 <div>
-                                                    <span className="pe-1">Closed</span>
+                                                    <span className="pe-1">{messages.question.closed}</span>
                                                     <span
-                                                        className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
+                                                        className="text-black">{formatDistance(question.closingDate)}</span>
                                                 </div>
                                             }
                                             {(!question.closed && question.closingDate) &&
                                                 <div>
-                                                    <span className="pe-1">Closes</span>
+                                                    <span className="pe-1">{messages.question["closes-in"]}</span>
                                                     <span
-                                                        className="text-black">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: true})}</span>
+                                                        className="text-black">{formatDistance(question.closingDate)}</span>
                                                 </div>
                                             }
                                             {question.lastVoteDate &&
                                                 <div>
-                                                    <span className="pe-1">Last vote</span>
+                                                    <span className="pe-1">{messages.question["last-vote"]}</span>
                                                     <span
-                                                        className="text-black">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
+                                                        className="text-black">{formatDistance(question.lastVoteDate)}</span>
                                                 </div>
                                             }
                                         </div>
@@ -126,7 +127,7 @@ export default function QuestionHome() {
                             {question.creator.id === session?.user.id && !question.closed &&
                                 <div className="question-post-user-action">
                                     <div className="post-menu">
-                                        <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">edit</a></Link>
+                                        <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">{messages.question["edit-question-link"]}</a></Link>
                                     </div>
                                 </div>
                             }

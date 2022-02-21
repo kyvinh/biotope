@@ -5,6 +5,7 @@ import {CodeCredentialsProviderConfig} from "../../../lib/codeCredentialsProvide
 import {linkEmailInvitations, prismaAdapter} from "../../../lib/prismaAdapter";
 import {ANON_EMAIL_DOMAIN, baseEmailConfig} from "../../../lib/constants";
 import prisma from "../../../lib/prismaClient";
+import messages from "../../../lib/messages.fr";
 
 const createOptions = (req) => ({
 
@@ -61,7 +62,7 @@ const createOptions = (req) => ({
             // Cleanup for anonymous users
             if (session.user?.email?.endsWith(ANON_EMAIL_DOMAIN)) {
                 session.user.email = null
-                session.user.name = 'Anonymous'
+                session.user.name = messages.user["anonymous-name"]
                 session.user.isAnon = true
             } else {
                 session.user.isAnon = false

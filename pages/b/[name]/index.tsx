@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import {getSession, useSession} from "next-auth/react"
-import {formatDistanceToNow} from "date-fns";
 import React from "react";
 import {QuestionHeader} from "../../../components/question/QuestionHeader";
 import {fetchBiotope} from "../../api/b/[name]";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 import {EmailJoinForm} from "../../../components/EmailJoinForm";
+import {formatDistance} from "../../../components/util/dates";
+import messages from "../../../lib/messages.fr";
 
 export async function getServerSideProps({params, req}) {
     const session = await getSession({req})
@@ -95,12 +96,10 @@ Voici quelques projets de l'APCJ en cours :
                 !b.isAuthorized ?
                     <>
                         {session ?
-                            <div>You are signed in but this is a private biotope. Request to join through the contact
-                                information above.</div>
+                            <div>{messages.biotope["private-no-user-error"]}</div>
                             :
-                            <div>Please
-                                <Link href="/api/auth/signin" locale={false}>SIGN IN</Link>
-                                to access this private biotope.
+                            <div>
+                                <Link href="/api/auth/signin" locale={false}>{messages.user["signin-action"]}</Link> pour accéder à ce biotope.
                             </div>}
                     </>
                     :
@@ -115,8 +114,7 @@ Voici quelques projets de l'APCJ en cours :
                         {anonUser &&
                             <div className="container">
                                 <div className="alert alert-info" role="alert">
-                                    Pour être notifié-e des résultats finaux ou avoir la possibilité de revenir changer
-                                    vos réponses, veuillez renseigner votre email:
+                                    {messages.invitation["email-join-info"]}:
                                     <EmailJoinForm />
                                 </div>
                             </div>
@@ -137,25 +135,24 @@ Voici quelques projets de l'APCJ en cours :
                                                     <span
                                                         className="vote-counts d-block text-center pr-0 lh-20 fw-medium">{question.votes}</span>
                                                     <span
-                                                        className="vote-text d-block fs-13 lh-18">{question.votes > 1 ? 'votes' : 'vote'}</span>
+                                                        className="vote-text d-block fs-13 lh-18">{question.votes > 1 ? messages.results.votes : messages.results.vote}</span>
                                                 </div>
                                                 {(question.closingDate || question.closed) &&
                                                 <div
                                                     className={`answer-block ${question.closed ? 'closed' : 'answered'} my-2`}>
                                                     {question.closed
                                                     && <div>
-                                                        <span className="answer-text d-block fs-13 lh-18">closed</span>
+                                                        <span className="answer-text d-block fs-13 lh-18">{messages.question.closed}</span>
                                                         <span
-                                                            className="answer-counts d-block lh-20 fw-medium">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: false})}</span>
-                                                        <span className="answer-text d-block fs-13 lh-18">ago</span>
+                                                            className="answer-counts d-block lh-20 fw-medium">{formatDistance(question.closingDate)}</span>
                                                     </div>
                                                     }
                                                     {!question.closed && question.closingDate
                                                     && <div>
                                                         <span
-                                                            className="answer-text d-block fs-13 lh-18">closes in</span>
+                                                            className="answer-text d-block fs-13 lh-18">{messages.question["closes-in"]}</span>
                                                         <span
-                                                            className="answer-counts d-block lh-20 fw-medium">{formatDistanceToNow(new Date(question.closingDate), {addSuffix: false})}</span>
+                                                            className="answer-counts d-block lh-20 fw-medium">{formatDistance(question.closingDate)}</span>
                                                     </div>
                                                     }
                                                 </div>
@@ -177,16 +174,16 @@ Voici quelques projets de l'APCJ en cours :
                                                             {question.lastVoteDate
                                                             && <small className="meta d-block text-right">
                                                                 <span
-                                                                    className="text-black d-block lh-18">last vote</span>
+                                                                    className="text-black d-block lh-18">{messages.question["last-vote"]}</span>
                                                                 <span
-                                                                    className="d-block lh-18 fs-12">{formatDistanceToNow(new Date(question.lastVoteDate), {addSuffix: true})}</span>
+                                                                    className="d-block lh-18 fs-12">{formatDistance(question.lastVoteDate)}</span>
                                                             </small>
                                                             }
                                                             <small className="meta d-block text-right ps-3">
                                                                 <span
-                                                                    className="text-black d-block lh-18">asked</span>
+                                                                    className="text-black d-block lh-18">{messages.question["asked-since"]}</span>
                                                                 <span
-                                                                    className="d-block lh-18 fs-12">{formatDistanceToNow(new Date(question.createdOn), {addSuffix: true})}</span>
+                                                                    className="d-block lh-18 fs-12">{formatDistance(question.createdOn)}</span>
                                                             </small>
                                                         </div>
                                                     </div>

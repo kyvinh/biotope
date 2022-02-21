@@ -7,6 +7,7 @@ import {fetcher} from "./util/fetcher";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
 import {ANSWER_MAX_LENGTH} from "../lib/constants";
+import messages from "../lib/messages.fr";
 
 export const newAnswerTextProp = `newAnswerText`;
 export const newAnswerCheckProp = `newAnswerCheck`;
@@ -19,7 +20,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
 
     // -- QuestionType.LONG --
 
-    const [longanswer, setLonganswer] = useState("test")
+    const [longanswer, setLonganswer] = useState("")
 
     const updateLongAnswer = (value) => {
         setLonganswer(value)
@@ -66,7 +67,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
 
         return <div className="dynamic-answer dynamic-new-answer form-check flex-row" key={`possible-answer-new`}>
             <input className="form-check-input" type="checkbox" {...register(newAnswerCheckboxId)} />
-            <label className="form-check-label" htmlFor={newAnswerTextId}>Ajouter une réponse:</label>
+            <label className="form-check-label" htmlFor={newAnswerTextId}>{messages["answer-edit"]["add-answer-label"]}:</label>
             <input className={`form-control ms-2 ${errors[newAnswerTextId] ? 'is-invalid' : ''}`}
                    {...register(newAnswerTextId, {
                        onChange: onNewAnswerChanged, maxLength: ANSWER_MAX_LENGTH
@@ -97,7 +98,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
         }
         */
         if (!session) {
-            throw new Error("Currently no anonymous vote allowed!")
+            throw new Error(messages["answer-edit"]["answer-no-user-error"])
         } else {
             setIsSubmitted(true)
             let hasNewAnswer = false
@@ -136,7 +137,7 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
         const values = getValues(formPrefix);
         const oneChecked = sortedPossibleAnswers.reduce((acc, answer) => acc || !!values[answer.id], false)
         if (!oneChecked && !values[newAnswerCheckProp]) {
-            setError(formPrefix, {type: 'manual', message: 'Please choose at least one answer, or create your own.'})
+            setError(formPrefix, {type: 'manual', message: messages["answer-edit"]["answer-no-answer-error"]})
         }
         handleSubmit(answerSubmit)(e)
     }
@@ -148,8 +149,8 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
     return <>
         <div className="subheader">
             <div className="subheader-title">
-                <h3 className="fs-16">Your Answer
-                    <small className="text-muted ms-2">(N'hésitez pas à "Ajouter une réponse" si les réponses prédéfinies ne vous conviennent pas!)</small></h3>
+                <h3 className="fs-16">{messages["answer-edit"]["answer-lead"]}
+                    <small className="text-muted ms-2">({messages["answer-edit"]["answer-lead-info"]})</small></h3>
             </div>
         </div>
         { showForm &&
@@ -180,8 +181,8 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted}) => {
         { !session &&
         <>
             <Link href="/api/auth/signin" locale={false}>
-                <a className="btn btn-outline-primary">Sign in</a>
-            </Link> to vote and see the results
+                <a className="btn btn-outline-primary">{messages.user["signin-action"]}</a>
+            </Link> {messages["answer-edit"]["answer-signin-suffix"]}
         </>
         }
     </>

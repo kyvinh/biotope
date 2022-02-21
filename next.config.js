@@ -12,8 +12,9 @@ const nextConfig = {
     productionBrowserSourceMaps: true,
     reactStrictMode: true,
     i18n: {
-        locales: ['fr', 'nl', 'en'],
+        locales: ['fr'/*, 'nl', 'en'*/],
         defaultLocale: 'fr',
+        localeDetection: false,
     }
 }
 module.exports = nextConfig

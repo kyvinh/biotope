@@ -4,6 +4,7 @@ import {fetcher} from "../../../../components/util/fetcher";
 import {useRouter} from 'next/router'
 import QuestionEditForm from "../../../../components/QuestionEditForm";
 import {QuestionEditDto} from "../../../../lib/constants";
+import messages from "../../../../lib/messages.fr";
 
 // TODO: Test that user has enough rights to create a question?!
 
@@ -24,11 +25,11 @@ export default function BiotopeCreateQuestion() {
     };
 
     return <div className="container">
-        <h3>Create new question:</h3>
+        <h3>{messages.question["create-question-header"]}:</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="question-edit">
             <QuestionEditForm register={register} errors={errors} control={control} />
-            <input className="btn btn-primary" type="submit" value="Create question"/>
-            <button className="btn btn-link" onClick={() => router.back()}>Cancel</button>
+            <input className="btn btn-primary" type="submit" value={messages.question["create-question-action"]} />
+            <button className="btn btn-link" onClick={() => router.back()}>{messages.general.cancel}</button>
         </form>
     </div>
 }
