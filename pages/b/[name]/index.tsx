@@ -127,7 +127,7 @@ Voici quelques projets de l'APCJ en cours :
 
                                         return <div key={question.id}
                                                     className="media d-flex align-items-start media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">
-                                            <div className="votes text-center w-15">
+                                            <div className="votes text-center flex-fill">
                                                 <div className="vote-block">
                                                     <span
                                                         className="vote-counts d-block text-center pr-0 lh-20 fw-medium">{question.votes}</span>
@@ -153,11 +153,11 @@ Voici quelques projets de l'APCJ en cours :
                                                 </div>
                                                 }
                                             </div>
-                                            <div className="media-body d-flex flex-column flex-grow-1">
+                                            <div className="media-body d-flex w-100 flex-column flex-fill">
                                                 <h5 className="mb-2 fw-medium">
                                                     <Link href={`/b/${b.name}/q/${question.id}`}><a>{question.name}</a></Link>
                                                 </h5>
-                                                <div className="mb-2 truncate lh-20 fs-15">{question.shortDescription}</div>
+                                                <div className="mb-2 lh-20 fs-15">{question.shortDescription}</div>
                                                 <div className="media media-card user-media px-0 border-bottom-0 pb-0">
                                                     <div
                                                         className="media-body d-flex flex-wrap align-items-center justify-content-between">

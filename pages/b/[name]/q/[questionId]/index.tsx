@@ -18,7 +18,7 @@ import messages from "../../../../../lib/messages.fr";
 const NextPager = ({b, question, nextQuestion, unansweredNum = 0}) => {
     return <>
             {unansweredNum > 0 &&
-                <div className="mx-3">{unansweredNum} {messages.question["remaining-questions"]}</div>
+                <div className="mx-3 fs-14">{unansweredNum} {messages.question["remaining-questions"]}</div>
             }
             {nextQuestion && question.userAnswered &&
                 <Link href={`/b/${b.name}/q/${nextQuestion.id}/`}>

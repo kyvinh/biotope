@@ -9,17 +9,26 @@ const prisma = new PrismaClient()
 
 async function main() {
 
-    const miniLikert = ['Satisfaisant', 'Insatisfaisant']
+    const miniLikert = ['Satisfaisant', 'Insatisfaisant', 'Sans avis']
     const budgetLikert = [
-        'trop chers et impactent mon budget',
-        `chers mais n'impactent pas mon budget`,
-        'adaptés à mon budget',
-        `peu chers ou n'impactent pas mon budget`]
+        'Trop chers et impactent mon budget',
+        `Chers mais n'impactent pas mon budget`,
+        'Adaptés à mon budget',
+        `Peu chers ou n'impactent pas mon budget`,
+        'Sans avis']
     const agreeLikert = [
         `Je suis tout à fait d'accord`,
         `Je suis d'accord`,
         `Je ne suis pas d'accord`,
         `Je ne suis pas du tout d'accord`]
+    const infraLikert = [
+        'Accueillant et agréable',
+        'Propre',
+        'En bon état',
+        'Aménagé et sécurisé',
+        'Accessibles à tous (personnes à mobilité réduite, déficience visuelle ou auditive, ou toute autre différence)',
+        'Sans avis'
+    ]
 
     const generatePossibleAnswers = async (texts, question) => {
         for (const [i, text] of texts.entries()) {
@@ -154,12 +163,33 @@ _Cette enquête est anonyme!_`,
             }
         },
         {
-            answers: agreeLikert,
+            answers: infraLikert,
             name: 'Bâtiments et locaux',
-            description: `Est-ce que les bâtiments et locaux de l'école de l'école sont accueillants et agréables?
-             Est-ce que les couloirs et toilettes sont propres et accessibles à tous?
-             Est-ce que les classes et salles de sport sont en bon état et bien aménagés?
-             (Ne prenez pas en compte les cours de récréation car elles font partie d'un autre sondage)`,
+            description: `Dans quel état sont les bâtiments et locaux de l'école ?`,
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
+            type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
+            tags: {
+                connect: { id: tagEnquete.id }
+            }
+        },
+        {
+            answers: infraLikert,
+            name: 'Couloirs et toilettes',
+            description: `Dans quel état sont les couloirs et toilettes de l'école?`,
+            creatorId: cercleAPCJ.creatorId,
+            cercleId: cercleAPCJ.id,
+            type: QuestionType.DYNAMIC,
+            closingDate: closingDate,
+            tags: {
+                connect: { id: tagEnquete.id }
+            }
+        },
+        {
+            answers: infraLikert,
+            name: 'Classes et salles de sport',
+            description: `Dans quel état sont les classes et salles de sport de l'école?`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
@@ -170,6 +200,7 @@ _Cette enquête est anonyme!_`,
         },
     ]
 
+    apcjQuestions.reverse() // So that seeding starts with the last question -> homepage shows question by createdOn DESC
     for (const apcjQuestion of apcjQuestions) {
         const {answers, tags, ...questionData} = apcjQuestion
         const createdQuestion = await prisma.question.upsert({
