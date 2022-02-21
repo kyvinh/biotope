@@ -104,7 +104,7 @@ Voici quelques projets de l'APCJ en cours :
                     </>
                     :
                     <section className="question-area">
-                        <div className="container-fluid">
+                        <div className="container">
                             <div className="card card-item">
                                 <div className="card-body">
                                     <ReactMarkdown className="markdown" children={ctaTest} />
@@ -116,7 +116,7 @@ Voici quelques projets de l'APCJ en cours :
                                 <EmailJoinForm />
                             </div>
                         }
-                        <div className="container-fluid">
+                        <div className="container">
                             <div className="question-main-bar">
                                 <div className="questions-snippet border-top border-top-gray">
 
