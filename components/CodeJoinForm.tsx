@@ -31,11 +31,13 @@ export const CodeJoinForm = () => {
     const router = useRouter()
     const {data: session} = useSession({required: false})
     const [codeError, setCodeError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const userLoggedIn = !!session?.user
 
     const onCodeSubmit = async (event) => {
         event.preventDefault()
+        setLoading(true)
         const code = event.target.invitationCode.value
 
         if (userLoggedIn) {
@@ -43,11 +45,12 @@ export const CodeJoinForm = () => {
             // Disabled for now
         } else {
             await useJoinCode(code, setCodeError, router);
+            setLoading(false)
         }
     }
 
     return <>
-        {!userLoggedIn &&
+        {(!userLoggedIn && !loading) &&
         <form className="row row-cols-1 g-3 align-items-center mb-4" onSubmit={onCodeSubmit}>
 
             <div className="col">
@@ -62,6 +65,11 @@ export const CodeJoinForm = () => {
                 <button type="submit" className="btn btn-primary ms-2">{messages.invitation["code-join-action"]}</button>
             </div>
         </form>
+        }
+        {loading &&
+            <div className="spinner-border text-info w-auto mb-4" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
         }
     </>
 }

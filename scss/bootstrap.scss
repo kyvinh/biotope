@@ -36,6 +36,7 @@ $input-btn-font-size: 0.9rem;
     @extend .py-2;
     @extend .px-4;
     @extend .row;
+    @extend .justify-content-center;
 
     .explainer-text {
       @extend .col-12;
