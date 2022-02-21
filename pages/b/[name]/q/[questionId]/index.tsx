@@ -151,7 +151,7 @@ export default function QuestionHome() {
                         </div>
 
                         {showAnswerForm && question.userAnswered &&
-                            <div className="alert alert-info" role="alert">
+                            <div className="alert alert-info fs-15 py-1 px-2" role="alert">
                                 {messages.question["change-answers-info"]}
                             </div>
                         }
