@@ -3,6 +3,7 @@ import {useSession} from "next-auth/react";
 import {useJoinCode} from "../../components/CodeJoinForm";
 import {useEffect, useState} from "react";
 import {CODE_LENGTH} from "../../lib/constants";
+import messages from "../../lib/messages.fr";
 
 export default function DirectJoin() {
 
@@ -25,7 +26,7 @@ export default function DirectJoin() {
             // setCodeError("Please sign out before using this code")
             router.push('/user/profile')
         } else if (!joinCode || joinCode.length !== CODE_LENGTH) {
-            setCodeError("Invalid code")
+            setCodeError(messages.invitation["code-join-invalid"])
         } else {
             join()  // Careful of race conditions -> useEffect should not use async functions
         }

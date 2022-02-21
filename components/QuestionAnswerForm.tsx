@@ -177,8 +177,8 @@ export const QuestionAnswerForm = ({question, onAnswerSubmitted, cancelForm}) =>
                 {question.userAnswered &&
                     <a className="btn btn-link" onClick={cancelForm}>{messages.general.cancel}</a>
                 }
-                <input type="submit" className="btn-answer btn btn-primary" value={messages["answer-edit"]["answer-action"]} disabled={isSubmitted} />
                 { errors[formPrefix] && <div className="invalid-feedback">{errors[formPrefix].message}</div>}
+                <input type="submit" className="btn-answer btn btn-primary" value={messages["answer-edit"]["answer-action"]} disabled={isSubmitted} />
             </form>
         }
         { !session &&
