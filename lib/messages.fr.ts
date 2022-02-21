@@ -62,6 +62,7 @@ export const messages = {
         'asked-by': "par",
         'next-question-link': "Question suivante",
         'finished-questionnaire-link': "Terminer",
+        'remaining-questions': "questions restantes",
     },
     'invitation': {
         'code-join-label': "Veuillez rentrer votre code d'invitation au sondage:",

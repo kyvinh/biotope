@@ -15,9 +15,11 @@ import messages from "../../../../../lib/messages.fr";
 
 // TODO Prereq: we should not be here if no session and biotope is private
 
-const NextPager = ({b, question, nextQuestion}) => {
-    return <div className="question-post-user-action d-flex flex-row-reverse mt-3">
-        <div className="post-menu">
+const NextPager = ({b, question, nextQuestion, unansweredNum = 0}) => {
+    return <div>
+            {unansweredNum > 0 &&
+                <div className="mx-3">{unansweredNum} {messages.question["remaining-questions"]}</div>
+            }
             {nextQuestion && question.userAnswered &&
                 <Link href={`/b/${b.name}/q/${nextQuestion.id}/`}>
                     <a className="btn fs-16"><u>{messages.question["next-question-link"]} <i className="las la-arrow-circle-right"/></u></a>
@@ -29,8 +31,6 @@ const NextPager = ({b, question, nextQuestion}) => {
                 </Link>
             }
         </div>
-    </div>
-
 }
 
 export default function QuestionHome() {
@@ -42,6 +42,7 @@ export default function QuestionHome() {
     const question = b?.questions?.find((element) => element.id === questionId)
 
     const nextQuestion = b?.questions?.find(element => element?.id !== questionId && element.starred && !element.userAnswered && !element.closed)
+    const numStarredUnanswered = b?.questions?.reduce((previous, current) => (current.starred && !current.userAnswered && !current.closed) ? (previous + 1) : previous, 0)
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
@@ -124,16 +125,18 @@ export default function QuestionHome() {
                                 </div>
                             </div>
 
-                            {question.creator.id === session?.user.id && !question.closed &&
                                 <div className="question-post-user-action">
-                                    <div className="post-menu">
-                                        <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">{messages.question["edit-question-link"]}</a></Link>
+                                    <div className="post-menu d-flex justify-content-between">
+                                        <div>
+                                            {question.creator.id === session?.user.id && !question.closed &&
+                                                <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">{messages.question["edit-question-link"]}</a></Link>
+                                            }
+                                        </div>
+                                        <div className="d-flex align-items-center">
+                                            <NextPager b={b} nextQuestion={nextQuestion} question={question} unansweredNum={numStarredUnanswered} />
+                                        </div>
                                     </div>
                                 </div>
-                            }
-
-                            <NextPager b={b} nextQuestion={nextQuestion} question={question} />
-
                         </div>
 
                         {showAnswerForm &&
@@ -146,7 +149,11 @@ export default function QuestionHome() {
                                              onArgumentUpdated={onArgumentAdded} />
                         }
 
-                        <NextPager b={b} nextQuestion={nextQuestion} question={question} />
+                        <div className="question-post-user-action d-flex flex-row-reverse mt-3">
+                            <div className="post-menu d-flex justify-content-between">
+                                <NextPager b={b} nextQuestion={nextQuestion} question={question} />
+                            </div>
+                        </div>
 
                     </div>
                 </div>

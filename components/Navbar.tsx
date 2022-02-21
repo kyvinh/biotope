@@ -12,10 +12,14 @@ export default function Navbar() {
                     <div className="col-12">
                         <div className="logo-box">
                             <div>
+{/*
                                 <Link href="/">
+*/}
                                     <a className="logo"><img src="/images/logo.png" alt="logo" height="35"/>
                                     </a>
+{/*
                                 </Link>
+*/}
 
                             </div>
                             <div className="user-action">

@@ -104,7 +104,7 @@ Voici quelques projets de l'APCJ en cours :
                     </>
                     :
                     <section className="question-area">
-                        <div className="container">
+                        <div className="container-fluid">
                             <div className="card card-item">
                                 <div className="card-body">
                                     <ReactMarkdown className="markdown" children={ctaTest} />
@@ -116,7 +116,7 @@ Voici quelques projets de l'APCJ en cours :
                                 <EmailJoinForm />
                             </div>
                         }
-                        <div className="container">
+                        <div className="container-fluid">
                             <div className="question-main-bar">
                                 <div className="questions-snippet border-top border-top-gray">
 
@@ -127,7 +127,7 @@ Voici quelques projets de l'APCJ en cours :
 
                                         return <div key={question.id}
                                                     className="media d-flex align-items-start media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">
-                                            <div className="votes text-center">
+                                            <div className="votes text-center w-15">
                                                 <div className="vote-block">
                                                     <span
                                                         className="vote-counts d-block text-center pr-0 lh-20 fw-medium">{question.votes}</span>
@@ -147,9 +147,7 @@ Voici quelques projets de l'APCJ en cours :
                                                     {!question.closed && question.closingDate
                                                     && <div>
                                                         <span
-                                                            className="answer-text d-block fs-13 lh-18">{messages.question["closes-in"]}</span>
-                                                        <span
-                                                            className="answer-counts d-block lh-20 fw-medium">{formatDistance(question.closingDate)}</span>
+                                                            className="answer-text d-block fs-13 lh-18">{messages.question["closes-in"]} {formatDistance(question.closingDate)}</span>
                                                     </div>
                                                     }
                                                 </div>
