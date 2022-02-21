@@ -2,6 +2,7 @@ import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import {EmailSubDto} from "../../../lib/constants";
 import prisma from "../../../lib/prismaClient";
+import messages from "../../../lib/messages.fr";
 
 @HasUserIdAuthGuard()
 class SaveEmail {
@@ -9,14 +10,22 @@ class SaveEmail {
     @Post()
     async saveEmail(@Body() emailInput: EmailSubDto, @Query('userId') userId: string) {
 
-        const user = await prisma.user.update({
-            where: { id: userId},
-            data: {
-                email: emailInput.email
-            }
-        })
+        try {
+            const user = await prisma.user.update({
+                where: { id: userId},
+                data: {
+                    email: emailInput.email
+                }
+            })
 
-        return {status: 'ok', email: user.email}
+            return {status: 'ok', email: user.email}
+        } catch (e) {
+            if (e.meta.target === 'User_email_key' || e.code === 'P2002') {
+                return {status: 'ok', error: messages.invitation["email-duplicate-error"]}
+            } else {
+                return {status: 'ok', error: `Error ${e.code}: ${e.toString()}`}
+            }
+        }
     }
 }
 

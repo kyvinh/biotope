@@ -82,10 +82,10 @@ export default function QuestionHome() {
                                         </div>
                                         <div className="question-meta">
                                             <div>
-                                                <span className="pe-1">Asked</span>
+                                                <span className="pe-1">{messages.question["asked-since"]}</span>
                                                 <span
                                                     className="text-black">{formatDistance(question.createdOn)}</span>
-                                                <span className="ps-1 pe-1">by</span>
+                                                <span className="ps-1 pe-1">{messages.question["asked-by"]}</span>
                                                 <span className="text-black"><UserFlair user={question.creator}
                                                                                         theme="none"/></span>
                                             </div>

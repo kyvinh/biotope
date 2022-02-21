@@ -26,7 +26,7 @@ export default function Navbar() {
                                                 {session.user.name ? session.user.name : session.user.email}</a>
                                         </Link>
                                         {!session.user.isAnon &&
-                                            <button type="button" onClick={() => signOut()}
+                                            <button type="button" onClick={() => signOut({callbackUrl: '/'})}
                                                     className="btn btn-sm btn-outline-dark ms-2"
                                             >{messages.user["signout-action"]} <i className="la la-sign-out"/></button>
                                         }

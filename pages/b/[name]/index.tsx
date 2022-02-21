@@ -113,10 +113,7 @@ Voici quelques projets de l'APCJ en cours :
                         </div>
                         {anonUser &&
                             <div className="container">
-                                <div className="alert alert-info" role="alert">
-                                    {messages.invitation["email-join-info"]}:
-                                    <EmailJoinForm />
-                                </div>
+                                <EmailJoinForm />
                             </div>
                         }
                         <div className="container">

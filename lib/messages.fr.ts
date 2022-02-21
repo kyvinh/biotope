@@ -40,7 +40,7 @@ export const messages = {
         'add-argument-required-error': "Veuillez rentrer du texte pour cet argument.",
         'add-argument-action': 'Publier',
         'add-argument-form-toggle': 'Ajouter un argument ou une observation',
-        'post-anonymously-label': "Publier anonymement (votre nom ne sera caché et chiffré en base de donnée)"
+        'post-anonymously-label': "Publier anonymement (votre nom sera caché et chiffré en base de donnée)"
     },
     'question': {
         'create-question-header': "Poser une nouvelle question",
@@ -56,9 +56,10 @@ export const messages = {
         'edit-answers-lead': "Modifier les réponses proposées",
         'closed': "Close",
         'answered': "Répondue",
-        'closes-in': "Clôt dans",
+        'closes-in': "Clôt",
         'last-vote': "Dernier vote",
         'asked-since': "Publiée",
+        'asked-by': "par",
         'next-question-link': "Question suivante",
         'finished-questionnaire-link': "Terminer",
     },
@@ -67,7 +68,8 @@ export const messages = {
         'code-join-action': "Rejoindre",
         'code-join-invalid': "Ce code est invalide.",
         'email-join-success': "Merci pour votre inscription. Vous recevrez des nouvelles par email.",
-        'email-join-info': "Pour être notifié-e des résultats finaux ou avoir la possibilité de revenir changer vos réponses, veuillez renseigner votre email",
+        'email-join-info': "Pour être notifié-e des résultats finaux, de nouvelles question ou revenir changer vos réponses, veuillez renseigner votre email",
+        'email-duplicate-error': "Cet email est déjà utilisé.",
         'expire-2-weeks': "2 semaines",
         'expire-1-month': "1 mois",
         'expire-3-months': "3 mois",

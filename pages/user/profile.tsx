@@ -4,6 +4,7 @@ import useSWR from "swr";
 import {fetcher} from "../../components/util/fetcher";
 import {ReactMarkdown} from "react-markdown/lib/react-markdown";
 import messages from "../../lib/messages.fr";
+import {EmailJoinForm} from "../../components/EmailJoinForm";
 
 export default function Profile() {
     const {data: session} = useSession({required: false})
@@ -14,10 +15,12 @@ export default function Profile() {
             <div className="d-flex justify-content-between my-4">
                 <h1 className="title text-center">{messages.user.hello} {session.user.name}!</h1>
                 {session.user.isAnon &&
-                    <button type="button" onClick={() => signOut()}
+                    <button type="button" onClick={() => signOut({callbackUrl: '/'})}
                             className="btn btn-sm btn-outline-dark ms-2">{messages.user["signout-action"]} <i className="la la-sign-out"/></button>
                 }
             </div>
+
+            <EmailJoinForm />
 
             <div className="main-biotope-cards my-2">
                 <h2>{messages.user["your-biotopes"]}:</h2>
