@@ -7,6 +7,7 @@ export const messages = {
         'anonymous-name': 'Anonyme',
         'signout-action': "Se déconnecter",
         'signin-action': "Se connecter",
+        'signin-action-phrase': "connectez-vous",
         'reputation-points': "points de réputation",
         'hello': "Bonjour",
         'your-biotopes': "Vos biotopes",

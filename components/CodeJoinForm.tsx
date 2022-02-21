@@ -48,7 +48,7 @@ export const CodeJoinForm = () => {
 
     return <>
         {!userLoggedIn &&
-        <form className="row row-cols-1 g-3 align-items-center" onSubmit={onCodeSubmit}>
+        <form className="row row-cols-1 g-3 align-items-center mb-4" onSubmit={onCodeSubmit}>
 
             <div className="col">
                 <label htmlFor="invitationCode">{messages.invitation["code-join-label"]}</label>

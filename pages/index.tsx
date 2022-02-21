@@ -1,7 +1,12 @@
 import {CodeJoinForm} from "../components/CodeJoinForm";
 import messages from "../lib/messages.fr";
+import Link from "next/link";
+import {useSession} from "next-auth/react";
 
 export default function Home() {
+
+    const {data: session} = useSession({required: false})
+    const userLoggedIn = !!session?.user
 
     return <div className="main-container">
 
@@ -13,6 +18,20 @@ export default function Home() {
                 </div>
 
                 <CodeJoinForm />
+
+                {!userLoggedIn &&
+                    <div className="explainer-text">
+                        Ou <Link href="/api/auth/signin" locale={false}>
+                        <a className="btn btn-outline-primary mx-2"><i
+                            className="la la-sign-in mr-1"/> {messages.user["signin-action-phrase"]}</a>
+                    </Link>
+                        si vous êtes déjà inscrit.
+                    </div>
+                }
+
+                {userLoggedIn &&
+                    <Link href="/user/profile">Allez à votre profil</Link>
+                }
 
                 {/*
                 <div className="explainer-side">
