@@ -54,6 +54,9 @@
 // footer scss
 @import "partials/footer";
 
+$color-red: #A30B37;
+$color-green: #0ba31f;
+
 .link-pointer {
   cursor: pointer;
 }
@@ -112,11 +115,55 @@
 
 // *** Question home ***
 
-.question-area {
-
+.vote-block .la-vote-yea {
+  color: $color-green;
 }
 
-.question-meta {
+.question-meta-list-item {
+  @extend .media;
+  @extend .pt-1;
+  @extend .pb-0;
+  @extend .px-0;
+  @extend .border-bottom-0;
+  @extend .media-body;
+  @extend .d-flex;
+  @extend .flex-wrap;
+  @extend .align-items-center;
+  @extend .justify-content-between;
+
+  .tag {
+    @extend .d-block;
+  }
+
+  .meta-dates {
+    @extend .d-inline-flex;
+
+    small {
+      @extend .ps-2;
+      @extend .meta;
+      @extend .d-block;
+      @extend .text-right;
+    }
+
+    .meta-label {
+      @extend .text-black;
+      @extend .d-block;
+      @extend .lh-18;
+    }
+
+    .meta-value {
+      @extend .d-block;
+      @extend .lh-18;
+      @extend .fs-12;
+    }
+
+    .meta-red {
+      color: $color-red;
+    }
+  }
+}
+
+.question-meta-full-width {
   @extend .meta;
   @extend .d-flex;
   @extend .flex-wrap;

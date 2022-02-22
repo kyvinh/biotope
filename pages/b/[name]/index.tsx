@@ -92,104 +92,98 @@ Voici quelques projets de l'APCJ en cours :
 
                         */}
 
-            {
-                !b.isAuthorized ?
-                    <>
-                        {session ?
-                            <div>{messages.biotope["private-no-user-error"]}</div>
-                            :
-                            <div>
-                                <Link href="/api/auth/signin" locale={false}>{messages.user["signin-action"]}</Link> pour accéder à ce biotope.
-                            </div>}
-                    </>
-                    :
-                    <section className="question-area">
-                        <div className="container">
-                            <div className="card card-item">
-                                <div className="card-body">
-                                    <ReactMarkdown className="markdown" children={ctaTest} />
-                                </div>
+            {!b.isAuthorized && session &&
+                <div>{messages.biotope["private-error"]}</div>
+            }
+            {!b.isAuthorized && !session &&
+                <div>
+                    <Link href="/api/auth/signin" locale={false}>{messages.user["signin-action"]}</Link> pour accéder à ce biotope.
+                </div>
+            }
+            {b.isAuthorized &&
+                <section className="question-area">
+                    <div className="container">
+                        <div className="card card-item">
+                            <div className="card-body">
+                                <ReactMarkdown className="markdown" children={ctaTest} />
                             </div>
                         </div>
-                        {anonUser &&
-                            <div className="container">
-                                <EmailJoinForm />
-                            </div>
-                        }
+                    </div>
+                    {anonUser &&
                         <div className="container">
-                            <div className="question-main-bar">
-                                <div className="questions-snippet border-top border-top-gray">
+                            <EmailJoinForm />
+                        </div>
+                    }
+                    <div className="container">
+                        <div className="questions-snippet border-top border-top-gray">
 
-                                    {b.questions && b.questions.map((question) => {
+                            {b.questions && b.questions.map((question) => {
 
-                                        const maxShortDescriptionLength = 200;
-                                        question.shortDescription = question.description.length < maxShortDescriptionLength ? question.description : question.description.substring(0, maxShortDescriptionLength) + '…'
+                                const maxShortDescriptionLength = 200;
+                                question.shortDescription = question.description.substring(0, maxShortDescriptionLength) + '…';
 
-                                        return <div key={question.id}
-                                                    className="media d-flex align-items-start media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">
-                                            <div className="votes text-center flex-fill">
-                                                <div className="vote-block">
-                                                    <span
-                                                        className="vote-counts d-block text-center pr-0 lh-20 fw-medium">{question.votes}</span>
-                                                    <span
-                                                        className="vote-text d-block fs-13 lh-18">{question.votes > 1 ? messages.results.votes : messages.results.vote}</span>
-                                                </div>
-                                                {(question.closingDate || question.closed) &&
-                                                <div
-                                                    className={`answer-block ${question.closed ? 'closed' : 'answered'} my-2`}>
-                                                    {question.closed
-                                                    && <div>
-                                                        <span className="answer-text d-block fs-13 lh-18">{messages.question.closed}</span>
-                                                        <span
-                                                            className="answer-counts d-block lh-20 fw-medium">{formatDistance(question.closingDate)}</span>
-                                                    </div>
-                                                    }
-                                                    {!question.closed && question.closingDate
-                                                    && <div>
-                                                        <span
-                                                            className="answer-text d-block fs-13 lh-18">{messages.question["closes-in"]} {formatDistance(question.closingDate)}</span>
-                                                    </div>
-                                                    }
-                                                </div>
-                                                }
+                                return <div key={question.id}
+                                            className="media d-flex align-items-start media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">
+                                    <div className="votes text-center flex-fill">
+                                        <div className="vote-block">
+                                            <span
+                                                className="vote-counts d-block text-center lh-20 fw-medium">{question.votes}</span>
+                                            <span
+                                                className="vote-text d-block fs-13 lh-18">{question.votes > 1 ? messages.results.votes : messages.results.vote}</span>
+                                        </div>
+                                        {question.userAnswered &&
+                                            <div className="vote-block">
+                                            <span className="vote-counts d-block text-center text-color-3 mt-3 fs-30 fw-medium">
+                                                <i className="las la-vote-yea"/></span>
+                                                <span className="vote-text d-block fs-13 lh-18 text-nowrap">A voté</span>
                                             </div>
-                                            <div className="media-body d-flex w-100 flex-column flex-fill">
-                                                <h5 className="mb-2 fw-medium">
-                                                    <Link href={`/b/${b.name}/q/${question.id}`}><a>{question.name}</a></Link>
-                                                </h5>
-                                                <div className="mb-2 lh-20 fs-15">{question.shortDescription}</div>
-                                                <div className="media media-card user-media px-0 border-bottom-0 pb-0">
-                                                    <div
-                                                        className="media-body d-flex flex-wrap align-items-center justify-content-between">
-                                                        <div className="d-block tags">
-                                                            {question.tags.map((tag) =>
-                                                                <span key={tag.id} className="tag-link">{tag.name}</span>)}
-                                                        </div>
-                                                        <div className="d-inline-flex">
-                                                            {question.lastVoteDate
-                                                            && <small className="meta d-block text-right">
-                                                                <span
-                                                                    className="text-black d-block lh-18">{messages.question["last-vote"]}</span>
-                                                                <span
-                                                                    className="d-block lh-18 fs-12">{formatDistance(question.lastVoteDate)}</span>
-                                                            </small>
-                                                            }
-                                                            <small className="meta d-block text-right ps-3">
-                                                                <span
-                                                                    className="text-black d-block lh-18">{messages.question["asked-since"]}</span>
-                                                                <span
-                                                                    className="d-block lh-18 fs-12">{formatDistance(question.createdOn)}</span>
-                                                            </small>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        }
+                                        {question.closed &&
+                                        <div className={`answer-block ${question.closed ? 'closed' : 'answered'} my-2`}>
+                                            <span className="answer-text d-block fs-13 lh-18">{messages.question.closed}</span>
+                                            <span className="answer-counts d-block lh-20 fw-medium">{formatDistance(question.closingDate)}</span>
+                                        </div>
+                                        }
+                                    </div>
+                                    <div className="media-body d-flex w-100 flex-column flex-fill">
+                                        <h5 className="mb-2 fw-medium">
+                                            <Link href={`/b/${b.name}/q/${question.id}`}><a>{question.name}</a></Link>
+                                        </h5>
+
+                                        <Link href={`/b/${b.name}/q/${question.id}`}>
+                                            <div className="mb-2 lh-20 fs-15 link-pointer">{question.shortDescription}</div>
+                                        </Link>
+
+                                        <div className="question-meta-list-item">
+                                            <div className="tags">
+                                                {question.tags.map((tag) =>
+                                                    <span key={tag.id} className="tag-link">{tag.name}</span>)}
+                                            </div>
+                                            <div className="meta-dates">
+                                                {!question.closed && question.lastVoteDate &&
+                                                    <small>
+                                                        <span className="meta-label">{messages.question["last-vote"]}</span>
+                                                        <span className="meta-value">{formatDistance(question.lastVoteDate)}</span>
+                                                    </small>
+                                                }
+                                                <small>
+                                                    <span className="meta-label">{messages.question["asked-since"]}</span>
+                                                    <span className="meta-value">{formatDistance(question.createdOn)}</span>
+                                                </small>
+                                                {!question.closed && question.closingDate && <small>
+                                                    <span className="meta-label">{messages.question["closes-in"]}</span>
+                                                    <span className={`meta-value ${!question.userAnswered ? 'meta-red' : ''}`}>{formatDistance(question.closingDate)}</span>
+                                                </small>
+                                                }
+
                                             </div>
                                         </div>
-                                    })}
+                                    </div>
                                 </div>
-                            </div>
+                            })}
                         </div>
-                    </section>
+                    </div>
+                </section>
             }
 
         </>

@@ -13,7 +13,7 @@ export const messages = {
         'your-biotopes': "Vos biotopes",
     },
     'biotope': {
-        'private-no-user-error': "Ce biotope est privé et requiert une invitation. Veuillez contacter le(s) modérateur(s) de ce biotope."
+        'private-error': "Ce biotope est privé et requiert une invitation. Veuillez contacter le(s) modérateur(s) de ce biotope."
     },
     'results': {
         'vote': 'vote',
@@ -60,7 +60,7 @@ export const messages = {
         'edit-answers-lead': "Modifier les réponses proposées",
         'closed': "Close",
         'answered': "Répondue",
-        'closes-in': "Clôt",
+        'closes-in': "Clôture",
         'last-vote': "Dernier vote",
         'asked-since': "Publiée",
         'asked-by': "par",

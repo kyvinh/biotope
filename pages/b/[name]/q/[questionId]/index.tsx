@@ -89,7 +89,7 @@ export default function QuestionHome() {
                                             {question.tags.map((tag) => <span className="tag-link"
                                                                               key={tag.id}>{tag.name}</span>)}
                                         </div>
-                                        <div className="question-meta">
+                                        <div className="question-meta-full-width">
                                             <div>
                                                 <span className="pe-1">{messages.question["asked-since"]}</span>
                                                 <span
