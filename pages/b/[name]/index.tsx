@@ -100,6 +100,7 @@ Voici quelques projets de l'APCJ en cours :
                     <Link href="/api/auth/signin" locale={false}>{messages.user["signin-action"]}</Link> pour accéder à ce biotope.
                 </div>
             }
+
             {b.isAuthorized &&
                 <section className="question-area">
                     <div className="container">
@@ -108,6 +109,13 @@ Voici quelques projets de l'APCJ en cours :
                                 <ReactMarkdown className="markdown" children={ctaTest} />
                             </div>
                         </div>
+                    </div>
+                    <div className="hero-btn-box py-4">
+                        <Link href={`/b/${b.name}/q/create`}>
+                            <a className="btn theme-btn theme-btn-white">
+                                Ask a Question <i className="la la-arrow-right icon ml-1" />
+                            </a>
+                        </Link>
                     </div>
                     {anonUser &&
                         <div className="container">

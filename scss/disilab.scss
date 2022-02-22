@@ -119,6 +119,27 @@ $color-green: #0ba31f;
   color: $color-green;
 }
 
+.question-area {
+  @extend .pt-2;
+  @extend .pb-5;
+}
+
+.question-edit {
+  .input-box {
+    margin-bottom: 1rem;
+    label {
+      @extend .fs-16;
+      @extend .text-black;
+      @extend .fw-medium;
+      @extend .mb-0;
+    }
+    .label-text {
+      @extend .fs-13;
+      @extend .pb-3;
+      @extend .lh-20;
+    }
+  }
+}
 .question-meta-list-item {
   @extend .media;
   @extend .pt-1;

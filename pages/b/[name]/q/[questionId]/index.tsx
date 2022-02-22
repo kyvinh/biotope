@@ -77,7 +77,7 @@ export default function QuestionHome() {
 
         <QuestionHeader biotope={b} />
 
-        <section className="question-area pt-2 pb-5">
+        <section className="question-area">
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-lg-10 offset-lg-1">

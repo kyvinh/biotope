@@ -5,13 +5,35 @@ import {useRouter} from 'next/router'
 import QuestionEditForm from "../../../../components/QuestionEditForm";
 import {QuestionEditDto} from "../../../../lib/constants";
 import messages from "../../../../lib/messages.fr";
+import {getSession} from "next-auth/react";
+import {fetchBiotope} from "../../../api/b/[name]";
+import {QuestionHeader} from "../../../../components/question/QuestionHeader";
 
-// TODO: Test that user has enough rights to create a question?!
+export async function getServerSideProps({params, req}) {
+    const session = await getSession({req})
+    const userId = session?.user?.id;
+    const b = await fetchBiotope(userId, params.name);
 
-export default function BiotopeCreateQuestion() {
+    if (!b.isAuthorized) {
+        return {
+            redirect: {
+                destination: `/b/${params.name}/`,
+                permanent: false,
+            },
+        };
+    } else {
+        return {
+            props: {
+                b
+            }
+        }
+    }
+}
+
+export default function BiotopeCreateQuestion({b}) {
 
     const router = useRouter()
-    const { name } = router.query
+    const name = b.name
 
     // Question create form
     const { register, handleSubmit, formState: { errors }, control} = useForm();
@@ -24,12 +46,32 @@ export default function BiotopeCreateQuestion() {
         }
     };
 
-    return <div className="container">
-        <h3>{messages.question["create-question-header"]}:</h3>
-        <form onSubmit={handleSubmit(onSubmit)} className="question-edit">
-            <QuestionEditForm register={register} errors={errors} control={control} />
-            <input className="btn btn-primary" type="submit" value={messages.question["create-question-action"]} />
-            <button className="btn btn-link" onClick={() => router.back()}>{messages.general.cancel}</button>
-        </form>
-    </div>
+    return <>
+        <QuestionHeader biotope={b} showDescription={false} />
+
+        If no email then question to review
+        Check if private, etc...
+
+        <section className="shadow-sm mb-2">
+            <div className="container">
+                <div className="py-2 px-3">
+                    <h2 className="section-title">{messages.question["create-question-header"]}</h2>
+                </div>
+            </div>
+        </section>
+
+        <section className="question-area">
+            <div className="container">
+                <div className="card card-item p-3">
+                    <form onSubmit={handleSubmit(onSubmit)} className="question-edit card-body p-0">
+                        <QuestionEditForm register={register} errors={errors} control={control} />
+                        <div className="mt-2">
+                            <input className="btn btn-primary" type="submit" value={messages.question["create-question-action"]} />
+                            <button className="btn btn-link" onClick={() => router.back()}>{messages.general.cancel}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </>
 }
