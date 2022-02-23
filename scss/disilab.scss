@@ -122,6 +122,10 @@ $color-green: #0ba31f;
 .question-area {
   @extend .pt-2;
   @extend .pb-5;
+
+  .card-item {
+    @extend .mb-2;
+  }
 }
 
 .question-edit {

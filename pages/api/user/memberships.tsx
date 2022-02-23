@@ -2,6 +2,34 @@ import {createHandler, Get, Query} from "@storyofams/next-api-decorators";
 import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
 import prisma from "../../../lib/prismaClient";
 
+export function fetchLastMembership(userId: string) {
+    return prisma.invitation.findFirst({
+        where: {
+            invitedId: userId,
+            cercle: {private: true},
+        },
+        include: {cercle: true},
+        orderBy: {createdOn: 'desc'}
+    });
+}
+
+export function fetchMemberships(userId: string) {
+    // Return: circles created + private circles invited + public circles
+
+    return prisma.cercle.findMany({
+        where: {
+            OR: [
+                {creatorId: userId},
+                {
+                    private: true,
+                    invitations: {some: {invitedId: userId}}
+                },
+                {private: false}
+            ]
+        },
+    })
+}
+
 @HasUserIdAuthGuard()
 class Memberships {
 
@@ -12,33 +40,11 @@ class Memberships {
 
         if (fetchFirstOnly) {
             // We should use this only for the first time the user has joined a biotope... there should only be one invitation here?
-            const lastInvitation = await prisma.invitation.findFirst({
-                where: {
-                    invitedId: userId,
-                    cercle: {private: true},
-                },
-                include: {cercle: true},
-                orderBy: {createdOn: 'desc'}
-            })
-
+            const lastInvitation = await fetchLastMembership(userId);
             return {redirect: `/b/${lastInvitation.cercle.name}`}
 
         } else {
-
-            // Return: circles created + private circles invited + public circles
-
-            return await prisma.cercle.findMany({
-                where: {
-                    OR: [
-                        {creatorId: userId},
-                        {
-                            private: true,
-                            invitations: {some: {invitedId: userId}}
-                        },
-                        {private: false}
-                    ]
-                },
-            })
+            return await fetchMemberships(userId);
         }
     }
 }

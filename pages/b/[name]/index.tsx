@@ -105,21 +105,31 @@ Voici quelques projets de l'APCJ en cours :
                 <section className="question-area">
                     <div className="container">
                         <div className="card card-item">
-                            <div className="card-body">
+                            <div className="card-body pt-3 pb-0">
                                 <ReactMarkdown className="markdown" children={ctaTest} />
                             </div>
                         </div>
                     </div>
-                    <div className="hero-btn-box py-4">
-                        <Link href={`/b/${b.name}/q/create`}>
-                            <a className="btn theme-btn theme-btn-white">
-                                Ask a Question <i className="la la-arrow-right icon ml-1" />
-                            </a>
-                        </Link>
-                    </div>
                     {anonUser &&
                         <div className="container">
                             <EmailJoinForm />
+                        </div>
+                    }
+                    {!anonUser &&
+                        <div className="container">
+                            <div className="card card-item text-center">
+                                <div className="card-body d-flex py-2 px-4 justify-content-between">
+                                    <div>
+                                        <img src="/images/bubble.png" alt="discuss"/>
+                                    </div>
+                                    <div>
+                                        <h5 className="card-title pt-2 pb-1 fs-18">{messages.question["create-question-cta-label"]}</h5>
+                                        <Link href={`/b/${b.name}/q/create`}>
+                                            <a className="btn theme-btn theme-btn-white">{messages.question["create-question-cta"]} <i className="la la-arrow-right icon ml-1"/></a>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     }
                     <div className="container">

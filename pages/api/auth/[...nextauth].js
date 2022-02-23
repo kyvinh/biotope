@@ -33,6 +33,22 @@ const createOptions = (req) => ({
 
     // https://next-auth.js.org/configuration/callbacks
     callbacks: {
+        // Redirect to first biotope or profile page
+        /* Hangs app: need to filter when to execute this callback! Dangerous method: might hang the signin process if error! need to try/catch
+                async redirect({url, baseUrl}) {
+                    const session = await getSession({req})
+                    const userId = session?.user?.id;
+                    if (userId) {
+                        const lastMembership = await fetchLastMembership(userId);
+                        // !! lastMembership might be null if we are circleCreator and have no invitation! -> need to fetch all memberships...
+                        if (lastMembership) {
+                            console.log('redirect callback from:', url)
+                            return new URL(`/b/${lastMembership.cercle.name}`, baseUrl).toString();
+                        }
+                    }
+                    return url;
+                },
+        */
         // Add user object to JWT token (created once, upon login)
         async jwt({token, user}) {
             if(req.url === "/api/auth/session?update" && token?.user?.id){

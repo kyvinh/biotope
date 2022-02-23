@@ -45,6 +45,8 @@ export const messages = {
         'post-anonymously-label': "Publier anonymement (votre nom sera caché et chiffré en base de donnée)"
     },
     'question': {
+        'create-question-cta': 'Publier une question',
+        'create-question-cta-label': 'Sondez les avis des autres membres:',
         'create-question-header': "Poser une question",
         'create-question-action': "Poser la question",
         'description': "Description",
