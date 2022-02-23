@@ -1,6 +1,6 @@
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import prisma from "../../../lib/prismaClient";
-import {QuestionType} from "@prisma/client";
+import {ActionType, QuestionType} from "@prisma/client";
 import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
 import {QuestionEditDto} from "../../../lib/constants";
 
@@ -26,6 +26,13 @@ class AddNewQuestionHandler {
                 cercleId: b.id,
                 creatorId: userId,
                 closingDate: newQuestionInput.closingDate,
+            }
+        })
+
+        await prisma.reputationAction.create({
+            data: {
+                actionType: ActionType.CREATE_QUESTION,
+                userId: userId,
             }
         })
 

@@ -20,9 +20,7 @@ export default function Profile() {
                 }
             </div>
 
-            {!!session.user.isAnon &&
-                <EmailJoinForm/>
-            }
+            <EmailJoinForm/>
 
             <div className="main-biotope-cards my-2">
                 <h2>{messages.user["your-biotopes"]}:</h2>

@@ -3,6 +3,7 @@ import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators"
 import {EmailSubDto} from "../../../lib/constants";
 import prisma from "../../../lib/prismaClient";
 import messages from "../../../lib/messages.fr";
+import {ActionType} from "@prisma/client";
 
 @HasUserIdAuthGuard()
 class SaveEmail {
@@ -14,7 +15,10 @@ class SaveEmail {
             const user = await prisma.user.update({
                 where: { id: userId},
                 data: {
-                    email: emailInput.email
+                    email: emailInput.email,
+                    reputationActions: {
+                        create: [{actionType: ActionType.REGISTER_EMAIL}]
+                    }
                 }
             })
 

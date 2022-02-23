@@ -210,7 +210,7 @@ enum ActionType {
   FLAG_ARGUMENT
   EDIT_ARGUMENT
   // Question actions
-
+  CREATE_QUESTION
 }
 
 model ReputationAction {
