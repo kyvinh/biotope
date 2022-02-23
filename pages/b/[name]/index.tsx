@@ -105,7 +105,7 @@ Voici quelques projets de l'APCJ en cours :
                 <section className="question-area">
                     <div className="container">
                         <div className="row">
-                            <div className="card card-item col-12 col-md-8">
+                            <div className={`card card-item col-12 ${anonUser? 'cold-md-12': 'col-md-8'}`}>
                                 <div className="card-body pt-3 pb-0">
                                     <ReactMarkdown className="markdown" children={ctaTest} />
                                 </div>
