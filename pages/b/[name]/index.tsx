@@ -104,32 +104,34 @@ Voici quelques projets de l'APCJ en cours :
             {b.isAuthorized &&
                 <section className="question-area">
                     <div className="container">
-                        <div className="card card-item">
-                            <div className="card-body pt-3 pb-0">
-                                <ReactMarkdown className="markdown" children={ctaTest} />
+                        <div className="row">
+                            <div className="card card-item col-12 col-md-8">
+                                <div className="card-body pt-3 pb-0">
+                                    <ReactMarkdown className="markdown" children={ctaTest} />
+                                </div>
                             </div>
+                            {!anonUser &&
+                                <div className="card card-item text-center col-12 col-md-4">
+                                    <div className="container card-body py-2 px-4 justify-content-between">
+                                        <div className="row">
+                                            <div className="col-4 col-md-12">
+                                                <img src="/images/bubble.png" alt="discuss"/>
+                                            </div>
+                                            <div className="col-8 col-md-12">
+                                                <h5 className="card-title pt-2 pb-1 fs-18">{messages.question["create-question-cta-label"]}</h5>
+                                                <Link href={`/b/${b.name}/q/create`}>
+                                                    <a className="btn theme-btn theme-btn-white">{messages.question["create-question-cta"]} <i className="la la-arrow-right icon ml-1"/></a>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                     {anonUser &&
                         <div className="container">
                             <EmailJoinForm />
-                        </div>
-                    }
-                    {!anonUser &&
-                        <div className="container">
-                            <div className="card card-item text-center">
-                                <div className="card-body d-flex py-2 px-4 justify-content-between">
-                                    <div>
-                                        <img src="/images/bubble.png" alt="discuss"/>
-                                    </div>
-                                    <div>
-                                        <h5 className="card-title pt-2 pb-1 fs-18">{messages.question["create-question-cta-label"]}</h5>
-                                        <Link href={`/b/${b.name}/q/create`}>
-                                            <a className="btn theme-btn theme-btn-white">{messages.question["create-question-cta"]} <i className="la la-arrow-right icon ml-1"/></a>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     }
                     <div className="container">
