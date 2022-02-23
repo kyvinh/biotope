@@ -53,29 +53,41 @@ export default function QuestionEditHome() {
 
     return b && question && answersWithCount ?
         <>
-            <QuestionHeader biotope={b}/>
+            <QuestionHeader biotope={b} showDescription={false}/>
 
-            <form onSubmit={handleSubmit(onQuestionSubmit)} className="question-edit">
+            <section className="shadow-sm mb-2">
+                <div className="container">
+                    <div className="py-2 px-3">
+                        <h2 className="section-title">{messages.question["create-question-header"]}</h2>
+                    </div>
+                </div>
+            </section>
 
-                <QuestionEditForm errors={errors} register={register} questionId={question.id} defaultValues={question}
-                                  control={control}/>
+            <section className="question-area">
+                <div className="container">
+                    <div className="card card-item p-3">
+                        <form onSubmit={handleSubmit(onQuestionSubmit)} className="question-edit card-body p-0">
+                            <QuestionEditForm errors={errors} register={register} questionId={question.id}
+                                              defaultValues={question}
+                                              control={control}/>
+                            <input className="btn btn-primary" type="submit" value={messages.question["update-question-action"]}/>
+                            <Link href={`/b/${b.name}/q/${question.id}`}><a className="btn btn-link">{messages.general.cancel}</a></Link>
+                        </form>
+                    </div>
+                </div>
 
-                <input className="btn btn-primary" type="submit" value="Update question"/>
-
-                <Link href={`/b/${b.name}/q/${question.id}`}>
-                    <a className="btn btn-link">Cancel</a>
-                </Link>
-
-            </form>
-
-            <div className="answers-edit">
-                <h6>{messages.question["edit-answers-lead"]}</h6>
-                {answersWithCount.map(answer =>
-                    <AnswerEditListItem answer={answer} key={answer.id} onAnswerEdit={onAnswerEdit}/>
-                )}
-            </div>
-
-            <NewAnswerForm question={question} onAnswerEdit={onAnswerEdit}/>
+                <div className="container">
+                    <div className="card card-item p-3">
+                        <div className="answers-edit">
+                            <h6>{messages.question["edit-answers-lead"]}</h6>
+                            {answersWithCount.map(answer =>
+                                <AnswerEditListItem answer={answer} key={answer.id} onAnswerEdit={onAnswerEdit}/>
+                            )}
+                        </div>
+                        <NewAnswerForm question={question} onAnswerEdit={onAnswerEdit}/>
+                    </div>
+                </div>
+            </section>
         </>
         : null;
 };

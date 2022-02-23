@@ -49,9 +49,6 @@ export default function BiotopeCreateQuestion({b}) {
     return <>
         <QuestionHeader biotope={b} showDescription={false} />
 
-        If no email then question to review
-        Check if private, etc...
-
         <section className="shadow-sm mb-2">
             <div className="container">
                 <div className="py-2 px-3">

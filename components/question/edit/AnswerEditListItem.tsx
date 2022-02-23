@@ -5,14 +5,14 @@ import {fetcher} from "../../util/fetcher";
 import messages from "../../../lib/messages.fr";
 
 export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
-    const [answerFormShown, setAnswerFormShown] = useState(false)
+    const [editAnswerFormShown, setEditAnswerFormShown] = useState(false)
     const {register, handleSubmit, formState: {errors}} = useForm();
 
     const onEditAnswer = async (answerDto: PossibleAnswerInput) => {
         const res = await fetcher(`/api/pa/${answer.id}/edit`, answerDto);
         if (res?.status == 'ok') {
             onAnswerEdit();
-            setAnswerFormShown(false)
+            setEditAnswerFormShown(false)
         }
     }
 
@@ -25,14 +25,14 @@ export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
     }
 
     return <div>
-        {!answerFormShown ?
+        {!editAnswerFormShown ?
             <div className="row">
-                <div className="col-9">
+                <div className="col-7">
                     {answer.possibleText}
                 </div>
-                <div className="col-3">
+                <div className="col-5">
                     <button className="btn btn-outline-dark"
-                            onClick={() => setAnswerFormShown(!answerFormShown)}>{messages["answer-edit"].edit}
+                            onClick={() => setEditAnswerFormShown(!editAnswerFormShown)}>{messages["answer-edit"].edit}
                     </button>
                     {answer.count === 0 &&
                         <input className="btn btn-outline-danger" type="button" value={messages["answer-edit"].delete} onClick={onDeleteAnswer}/>
@@ -48,7 +48,7 @@ export const AnswerEditListItem = ({answer, onAnswerEdit}) => {
                         <div className="invalid-feedback">{messages["answer-edit"]["edit-answer-required-error"]}</div>
                     </div>
                     <input className="btn btn-outline-primary" type="submit" value={messages["answer-edit"]["edit-answer-rename"]} />
-                    <input className="btn btn-link" type="button" value={messages.general.cancel} onClick={() => setAnswerFormShown(!answerFormShown)} />
+                    <input className="btn btn-link" type="button" value={messages.general.cancel} onClick={() => setEditAnswerFormShown(!editAnswerFormShown)} />
                 </form>
             </div>
         }
