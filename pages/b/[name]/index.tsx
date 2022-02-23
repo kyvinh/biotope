@@ -31,7 +31,6 @@ export async function getServerSideProps({params, req}) {
 
 export default function BiotopeHome({b}) {
 
-    // Required = false -> session might be null
     const {data: session} = useSession({required: false})
     const anonUser = !!session?.user.isAnon
 
@@ -129,11 +128,9 @@ Voici quelques projets de l'APCJ en cours :
                             }
                         </div>
                     </div>
-                    {anonUser &&
-                        <div className="container">
-                            <EmailJoinForm />
-                        </div>
-                    }
+                    <div className="container">
+                        <EmailJoinForm />
+                    </div>
                     <div className="container">
                         <div className="questions-snippet border-top border-top-gray">
 

@@ -24,11 +24,11 @@ export default function DirectJoin() {
         } else if (userLoggedIn) {
             // Should add invitation to existing user. Disabled for now. See CodeJoinForm.tsx
             // setCodeError("Please sign out before using this code")
-            router.push('/user/profile')
+            void router.push('/user/profile')
         } else if (!joinCode || joinCode.length !== CODE_LENGTH) {
             setCodeError(messages.invitation["code-join-invalid"])
         } else {
-            join()  // Careful of race conditions -> useEffect should not use async functions
+            void join()  // Careful of race conditions -> useEffect should not use async functions
         }
     }, [status, userLoggedIn, joinCode]);
 
