@@ -1,4 +1,4 @@
-// noinspection JSUnusedLocalSymbols
+// noinspection JSUnusedLocalSymbols,JSUnresolvedVariable
 
 const {PrismaClient, PossibleAnswerType, QuestionType, InvitationType} = require('@prisma/client')
 const {add, addDays, addHours, set} = require("date-fns");
@@ -70,9 +70,17 @@ async function main() {
         longName: "Association des Parents de l'école Claire-Joie",
         description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
 
-Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.
+Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.`,
+        introText: `_Cette enquête est anonyme!_`,
+        introConclusion: `#### Merci pour votre participation ! Vos avis et commentaires sont précieux.
 
-_Cette enquête est anonyme!_`,
+Bien que nous ne puissions pas organiser de festivités (Halloween, brocante, etc...) à cause des mesures sanitaires, nous restons actifs.
+
+Voici quelques projets de l'APCJ en cours :
+- Activités : contes et histoires lus par des parents, fête de fin d'année (juin 2022)
+- Bâtiments : [NeTournonsPasAutourDuPot.be](https://netournonspasautourdupot.be/)
+- Alimentation : présence à la commission des menus
+- Sécurité : création de zones Kiss & Ride, rue scolaire et de lignes de Pédibus`,
         contact: 'kyvinh@gmail.com',
         creatorId: admin.id,
         private: true,
@@ -116,15 +124,16 @@ _Cette enquête est anonyme!_`,
     const apcjQuestions = [
         {
             answers: miniLikert,
-            name: 'Accueil parascolaire',
-            description: "Comment jugez-vous l'accueil le matin, le midi et le soir?",
+            name: 'Accueil extra-scolaire et garderie',
+            description: "Claire-Joie propose des activités parascolaires, des garderies, des heures d'études, école des devoirs, et des garderies. Comment jugez-vous ces activités?",
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
         {
             answers: miniLikert,
@@ -136,23 +145,25 @@ _Cette enquête est anonyme!_`,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
         {
             answers: budgetLikert,
             name: 'Frais scolaires',
-            description: 'Les frais scolaires et parascolaires (équipement, cantine, sorties, etc...) sont :',
+            description: 'Les frais scolaires et parascolaires (fournitures scolaires, cantine, sorties, etc...) sont :',
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
         {
             answers: miniLikert,
-            name: 'Cantine : repas chaud et repas tartine',
+            name: 'Cantine scolaire',
             description: `Nos enfants doivent pouvoir s'alimenter correctement dans un environnement propice. Comment jugez-vous la qualité du temps de repas à l'école ?`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
@@ -160,7 +171,8 @@ _Cette enquête est anonyme!_`,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
         {
             answers: infraLikert,
@@ -172,7 +184,8 @@ _Cette enquête est anonyme!_`,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
         {
             answers: infraLikert,
@@ -184,7 +197,8 @@ _Cette enquête est anonyme!_`,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
         {
             answers: infraLikert,
@@ -196,7 +210,8 @@ _Cette enquête est anonyme!_`,
             closingDate: closingDate,
             tags: {
                 connect: { id: tagEnquete.id }
-            }
+            },
+            introFlag: true,
         },
     ]
 

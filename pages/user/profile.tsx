@@ -28,7 +28,7 @@ export default function Profile() {
                         <div className="main-card">
                             <div className="card-body">
                                 <h5 className="card-title"><Link href={`/b/${b.name}`}>{b.longName}</Link> &rarr;</h5>
-                                <div className="card-text markdown"><ReactMarkdown>{b.description || ''}</ReactMarkdown></div>
+                                <div className="card-text markdown"><ReactMarkdown linkTarget="_blank">{b.description || ''}</ReactMarkdown></div>
                             </div>
                         </div>
                     </div>

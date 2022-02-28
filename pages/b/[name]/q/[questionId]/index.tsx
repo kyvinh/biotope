@@ -41,8 +41,9 @@ export default function QuestionHome() {
     const {biotope: b, reloadBiotope} = useBiotope(name as string)
     const question = b?.questions?.find((element) => element.id === questionId)
 
-    const nextQuestion = b?.questions?.find(element => element?.id !== questionId && element.starred && !element.userAnswered && !element.closed)
-    const numStarredUnanswered = b?.questions?.reduce((previous, current) => (current.starred && !current.userAnswered && !current.closed) ? (previous + 1) : previous, 0)
+    const nextQuestion = b?.questions?.find(element => element?.id !== questionId && element.introFlag && !element.userAnswered && !element.closed)
+    const numIntroUnanswered = b?.questions?.reduce((previous, current) => (current.introFlag && !current.userAnswered && !current.closed) ? (previous + 1) : previous, 0)
+    const additionalHeaderText = question?.introFlag ? b.introText : null;
 
     // Results of the votes (include comments?) on this questionnaire
     // Type of resultsObject = { questionId: { average: Int }
@@ -75,7 +76,7 @@ export default function QuestionHome() {
 
     return (b && question) ? <>
 
-        <QuestionHeader biotope={b} />
+        <QuestionHeader biotope={b} additionalText={additionalHeaderText}/>
 
         <section className="question-area">
             <div className="container-fluid">
@@ -128,7 +129,7 @@ export default function QuestionHome() {
                             <div className="question d-flex">
                                 <div className="question-post-body-wrap flex-grow-1">
                                     <div className="question-post-body markdown">
-                                        <ReactMarkdown>{question.description || ''}</ReactMarkdown>
+                                        <ReactMarkdown linkTarget="_blank">{question.description || ''}</ReactMarkdown>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +145,7 @@ export default function QuestionHome() {
                                             }
                                         </div>
                                         <div className="d-flex align-items-center">
-                                            <NextPager b={b} nextQuestion={nextQuestion} question={question} unansweredNum={numStarredUnanswered} />
+                                            <NextPager b={b} nextQuestion={nextQuestion} question={question} unansweredNum={numIntroUnanswered} />
                                         </div>
                                     </div>
                                 </div>
@@ -165,11 +166,13 @@ export default function QuestionHome() {
                                              onArgumentUpdated={onArgumentAdded} />
                         }
 
-                        <div className="question-post-user-action d-flex flex-row-reverse mt-3">
-                            <div className="post-menu d-flex justify-content-between">
-                                <NextPager b={b} nextQuestion={nextQuestion} question={question} />
+                        {question.userAnswered &&   // Only show Next Question and Finished Intro Questionnaire
+                            <div className="question-post-user-action d-flex flex-row-reverse mt-3">
+                                <div className="post-menu d-flex justify-content-between">
+                                    <NextPager b={b} nextQuestion={nextQuestion} question={question} />
+                                </div>
                             </div>
-                        </div>
+                        }
 
                     </div>
                 </div>

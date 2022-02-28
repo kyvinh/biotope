@@ -137,13 +137,6 @@ export async function fetchBiotope(userId: string, biotopeName: string) {
 
     b.questions = await addVoteMetadata(b.questions, userId);
 
-    // Favorite questions are the ones created by the biotope creator
-
-    b.questions.forEach((question) => {
-        // @ts-ignore
-        question.starred = question.creatorId === b.creatorId;
-    })
-
     return b
 }
 

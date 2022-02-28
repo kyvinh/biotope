@@ -12,7 +12,7 @@ export async function getServerSideProps({params, req}) {
     const session = await getSession({req})
     const userId = session?.user?.id;
     const b = await fetchBiotope(userId, params.name);
-    const redirectQuestion = b.questions?.find(element => element.starred && !element.userAnswered && !element.closed)
+    const redirectQuestion = b.questions?.find(element => element.introFlag && !element.userAnswered && !element.closed)
     if (redirectQuestion) {
         return {
             redirect: {
@@ -33,17 +33,6 @@ export default function BiotopeHome({b}) {
 
     const {data: session} = useSession({required: false})
     const anonUser = !!session?.user.isAnon
-
-    const ctaTest = `#### Merci pour votre participation ! Vos avis et commentaires sont précieux.
-
-Bien que nous ne puissions pas organiser de festivités (Halloween, brocante, etc...) à cause des mesures sanitaires, nous restons actifs.
-
-Voici quelques projets de l'APCJ en cours :
-- Activités : contes et histoires lus par des parents
-- Bâtiments : NeTournonsPasAutourDuPot.be
-- Alimentation : présence à la commission des menus
-- Sécurité : création de zones Kiss & Ride, rue scolaire et de lignes de Pédibus
-`
 
     return !b ? <></> :
         <>
@@ -104,9 +93,9 @@ Voici quelques projets de l'APCJ en cours :
                 <section className="question-area">
                     <div className="container">
                         <div className="row">
-                            <div className={`card card-item col-12 ${anonUser? 'cold-md-12': 'col-md-8'}`}>
+                            <div className={`card card-item col-12 ${anonUser? 'col-md-12': 'col-md-8'}`}>
                                 <div className="card-body pt-3 pb-0">
-                                    <ReactMarkdown className="markdown" children={ctaTest} />
+                                    <ReactMarkdown className="markdown" children={b.introConclusion} linkTarget="_blank" />
                                 </div>
                             </div>
                             {!anonUser &&

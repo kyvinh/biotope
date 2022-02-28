@@ -79,7 +79,7 @@ export const messages = {
         'code-join-action': "Rejoindre",
         'code-join-invalid': "Ce code est invalide.",
         'email-join-success': "Merci pour votre inscription. Vous recevrez des nouvelles par email.",
-        'email-join-info': "Pour être notifié-e des résultats finaux, de nouvelles questions, publier des questions ou revenir changer vos réponses, veuillez renseigner votre email",
+        'email-join-info': "Pour être notifié·e des résultats finaux, de nouvelles questions, publier des questions ou revenir changer vos réponses, veuillez renseigner votre email",
         'email-duplicate-error': "Cet email est déjà utilisé.",
         'expire-2-weeks': "2 semaines",
         'expire-1-month': "1 mois",

@@ -72,6 +72,8 @@ model Cercle {
   id          String       @id @default(cuid())
   name        String       @unique
   longName    String?
+  introText          String?   @db.VarChar(2000)
+  introConclusion    String?   @db.VarChar(2000)
   private     Boolean      @default(true)
   contact     String?
   headerPic   String?
@@ -136,6 +138,7 @@ model Question {
   closingDate  DateTime?
   closed       Boolean        @default(false)
   tags         Tag[]
+  introFlag    Boolean        @default(false)
 
   @@unique([cercleId, name])
 }
