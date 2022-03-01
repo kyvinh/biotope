@@ -79,6 +79,10 @@ $color-green: #0ba31f;
 
 .progress {
   border-radius: 0;
+
+  .progress-bar {
+    min-width: 1.25rem;
+  }
 }
 
 .bg-progress-other {
