@@ -18,6 +18,7 @@ export const messages = {
     'results': {
         'vote': 'vote',
         'votes': 'votes',
+        'header': 'Résultats'
     },
     'answer-edit': {
         'add-answer-lead': 'Ajouter une proposition de réponse',

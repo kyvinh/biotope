@@ -49,9 +49,9 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
     }
 
     return <>
-        <div className="subheader">
+        <div className="subheader results-subheader">
             <div className="subheader-title">
-                <h3 className="fs-16">Results: {totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote}</h3>
+                <h3 className="fs-16">{messages.results.header}: {totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote}</h3>
             </div>
         </div>
         {answersWithCount.map(answerResult =>
@@ -62,7 +62,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                     </div>
                 </div>
                 <div key={answerResult.id} className="answer-body-wrap flex-grow-1">
-                    <ProgressBar variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`} />
+                    <ProgressBar variant={`${answerResult.order + 1}`} now={answerResult.percent > 3 ? answerResult.percent : 3} label={`${answerResult.percent}%`} />
                     <div className="answer-post-progress-wrap">
                         <div className="answer-body">
                             <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>

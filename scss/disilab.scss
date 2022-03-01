@@ -85,6 +85,12 @@ $color-green: #0ba31f;
   background-color: gray !important;
 }
 
+.results-subheader {
+  h3 {
+    color: $theme-color-4;
+  }
+}
+
 .answer-post-progress-wrap {
   @extend .px-4;
   @extend .pt-3;
@@ -144,6 +150,7 @@ $color-green: #0ba31f;
     }
   }
 }
+
 .question-meta-list-item {
   @extend .media;
   @extend .pt-1;
