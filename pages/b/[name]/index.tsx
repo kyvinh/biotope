@@ -34,6 +34,8 @@ export default function BiotopeHome({b}) {
     const {data: session} = useSession({required: false})
     const anonUser = !!session?.user.isAnon
 
+    const unansweredCount = b?.questions.filter(question => !question.userAnswered && !question.closed).length
+
     return !b ? <></> :
         <>
             <QuestionHeader biotope={b} />
@@ -121,12 +123,17 @@ export default function BiotopeHome({b}) {
                         <EmailJoinForm />
                     </div>
                     <div className="container">
+                        <div className="questions-header border-top border-top-gray px-2 py-3 my-2 d-flex d-flex-column justify-content-between">
+                            <h3 className="fs-22 fw-medium">{messages.question['list-header']}:</h3>
+                            <div className="pt-1 fs-15 fw-medium lh-20">{b.questions.length} {b.questions.length > 1 ? messages.question["question-plural"]: messages.question.question}
+                                , {unansweredCount} {unansweredCount > 1 ? messages.question["question-unanswered-plural"]: messages.question['question-unanswered']}</div>
+                        </div>
                         <div className="questions-snippet border-top border-top-gray">
 
                             {b.questions && b.questions.map((question) => {
 
                                 const maxShortDescriptionLength = 200;
-                                question.shortDescription = question.description.substring(0, maxShortDescriptionLength) + '…';
+                                question.shortDescription = question.description.substring(0, maxShortDescriptionLength) + (question.description.length > maxShortDescriptionLength ? '…' : '');
 
                                 return <div key={question.id}
                                             className="media d-flex align-items-start media-card rounded-0 shadow-none my-3 bg-transparent p-2 border-bottom border-bottom-gray">

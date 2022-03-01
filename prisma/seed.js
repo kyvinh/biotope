@@ -80,7 +80,11 @@ Voici quelques projets de l'APCJ en cours :
 - Activités : contes et histoires lus par des parents, fête de fin d'année (juin 2022)
 - Bâtiments : [NeTournonsPasAutourDuPot.be](https://netournonspasautourdupot.be/)
 - Alimentation : présence à la commission des menus
-- Sécurité : création de zones Kiss & Ride, rue scolaire et de lignes de Pédibus`,
+- Sécurité : création de zones Kiss & Ride, rue scolaire et de lignes de Pédibus
+
+[Contactez l'APCJ](mailto:apcj@googlegroups.com)
+
+D'autres questions sont disponibles ci-dessous. Vous pouvez aussi publier une question si vous désirez sonder les autres parents.`,
         contact: 'kyvinh@gmail.com',
         creatorId: admin.id,
         private: true,
