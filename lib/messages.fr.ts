@@ -54,8 +54,8 @@ export const messages = {
         'post-anonymously-label': "Publier anonymement (votre nom sera caché et chiffré en base de donnée)"
     },
     'question': {
-        'create-question-cta': 'Publier une question',
-        'create-question-cta-label': 'Sondez les avis des autres membres:',
+        'create-question-cta': 'Poser une question',
+        'create-question-cta-label': "Sondez l'avis d'autres parents:",
         'create-question-header': "Poser une question",
         'create-question-action': "Poser la question",
         'update-question-action': "Sauvegarder",
@@ -98,14 +98,21 @@ export const messages = {
         'expire-2-weeks': "2 semaines",
         'expire-1-month': "1 mois",
         'expire-3-months': "3 mois",
-        'invite-header': "Inviter quelqu'un à",
-        'invite-to-label': "Envoyer l'invitation à cet email",
-        'invite-action': "Inviter"
+        'invite-header': "Inviter un parent au questionnaire de l'",
+        'invite-to-label': "Adresse email de l'invité",
+        'invite-action': "Inviter",
+        'invite-from-label': "De la part de",
+        'invite-email-cta': 'Inviter par email',
+        'invite-whatsapp-cta': 'Inviter par Whatsapp',
+        'invite-cta-label': "Vous connaissez d'autres parents?",
+        'invite-success': "Une invitation a été envoyée à",
+        'invite-success-cta': "Inviter un autre parent?",
+        'inviterName-not-recorded': 'Votre nom ne sera pas enregistré pour votre confidentialité.'
     },
     'email': {
         'subject': "Invitation de",
         'body-invited-by': "vous avez été invité par",
-        'body-invited-to': "à répondre à un sondage de proximité sur",
+        'body-invited-to': "à répondre à un sondage de proximité par",
         'body-action': "Rejoindre",
         'body-context': "propose des débats et questions concernant la vie à l'école Claire-Joie.",
     },

@@ -1,8 +1,11 @@
 import {useBiotope} from "../../../components/util/hooks"
 import {useRouter} from 'next/router'
-import {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {fetcher} from "../../../components/util/fetcher";
 import messages from "../../../lib/messages.fr";
+import {QuestionHeader} from "../../../components/question/QuestionHeader";
+import Link from "next/link";
+import {useSession} from "next-auth/react";
 
 export const INVITE_CODE_EXPIRATIONS = [
     { name: 'exp_14d', value: 14, label: messages.invitation["expire-2-weeks"]},
@@ -14,11 +17,17 @@ export default function BiotopeInvite() {
 
     const inviteEmail = async (event) => {
         event.preventDefault()
+        setSuccessEmail(null)
+        setLoading(true)
         const res = await fetcher(`/api/b/${name}/invite`, {
-            email: event.target.email.value,
+            email: invitedEmail,
+            inviterName
         })
-        // TODO: Handle errors
-        console.log('Result from Invite API', res)
+        setLoading(false)
+        if (res?.status == 'ok') {
+            setSuccessEmail(invitedEmail)
+            setInvitedEmail("")
+        }
     }
 
     const inviteCode = async (event) => {
@@ -33,19 +42,75 @@ export default function BiotopeInvite() {
 
     const {name} = useRouter().query
     const {biotope: b} = useBiotope(name as string)
+    const {data: session} = useSession({required: true})
+    console.log(session)
+    const inviterDefaultName = session?.user?.isAnon ? "" : session?.user?.name
 
     const [invitedEmail, setInvitedEmail] = useState("");
+    const [inviterName, setInviterName] = useState(inviterDefaultName);
     const [customCode, setCustomCode] = useState("");
     const [codeExpiration, setCodeExpiration] = useState(30);
+    const [successEmail, setSuccessEmail] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    return b ? <>
-        {messages.invitation["invite-header"]} {b.name}:
-        <form onSubmit={inviteEmail}>
-            <label htmlFor="email">{messages.invitation["invite-to-label"]}:</label>
-            <input id="email" type="email" autoComplete="email" required
-                   value={invitedEmail} onChange={e => setInvitedEmail(e.target.value)}/>
-            <button type="submit">{messages.invitation["invite-action"]}</button>
-        </form>
+    useEffect(() => {
+        setInviterName(inviterDefaultName)
+    }, [inviterDefaultName])
+
+    return b && session? <>
+        <QuestionHeader biotope={b} showDescription={false} />
+
+        <section className="question-area">
+            <div className="container">
+                <div className="card card-item p-3">
+                    <h4>{messages.invitation["invite-header"]}{b.longName}</h4>
+
+                    {successEmail &&
+                        <div className="alert alert-success mt-4" role="alert">
+                            {messages.invitation["invite-success"]} {successEmail}. {messages.invitation["invite-success-cta"]}
+                        </div>
+                    }
+
+                    <form onSubmit={inviteEmail} className="question-edit card-body p-0 mt-4">
+
+                        <div className="row mb-3">
+                            <label htmlFor="email" className="col-4 col-form-label">{messages.invitation["invite-to-label"]}:</label>
+                            <div className="col-8">
+                                <input id="email" type="email" autoComplete="email" required className="form-control"
+                                       value={invitedEmail} onChange={e => setInvitedEmail(e.target.value)}/>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <label htmlFor="inviterName" className="col-4 col-form-label">{messages.invitation["invite-from-label"]}:</label>
+                            <div className="col-8">
+                                <input required className="form-control" id="inviterName"
+                                       value={inviterName} onChange={e => setInviterName(e.target.value)}/>
+                                {(session.user.isAnon || inviterDefaultName === null || inviterDefaultName.length === 0) &&
+                                    <div className="form-text">{messages.invitation['inviterName-not-recorded']}</div>
+                                }
+                            </div>
+                        </div>
+
+                        <div className="mt-2">
+                            {loading ?
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                                :
+                                <>
+                                    <button className="btn btn-primary me-2"
+                                            type="submit">{messages.invitation["invite-action"]}</button>
+                                    <Link href={`/b/${b.name}`}><a
+                                        className="btn btn-link">{messages.general.cancel}</a></Link>
+                                </>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        {/*
         <hr />
         Create invitation code:
         <form onSubmit={inviteCode}>
@@ -67,5 +132,6 @@ export default function BiotopeInvite() {
 
             <button type="submit">Create code</button>
         </form>
+        */}
     </> : null;
 }

@@ -180,19 +180,6 @@ D'autres questions sont disponibles ci-dessous. Vous pouvez aussi publier une qu
         },
         {
             answers: infraLikert,
-            name: 'Bâtiments et locaux',
-            description: `Dans quel état sont les bâtiments et locaux de l'école ?`,
-            creatorId: cercleAPCJ.creatorId,
-            cercleId: cercleAPCJ.id,
-            type: QuestionType.DYNAMIC,
-            closingDate: closingDate,
-            tags: {
-                connect: { id: tagEnquete.id }
-            },
-            introFlag: true,
-        },
-        {
-            answers: infraLikert,
             name: 'Couloirs et toilettes',
             description: `Dans quel état sont les couloirs et toilettes de l'école?`,
             creatorId: cercleAPCJ.creatorId,
@@ -206,8 +193,8 @@ D'autres questions sont disponibles ci-dessous. Vous pouvez aussi publier une qu
         },
         {
             answers: infraLikert,
-            name: 'Classes et salles de sport',
-            description: `Dans quel état sont les classes et salles de sport de l'école?`,
+            name: 'Bâtiments et locaux',
+            description: `Dans quel état sont les bâtiments et locaux de l'école ?`,
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,

@@ -33,7 +33,7 @@ export default function BiotopeHome({b}) {
 
     const {data: session} = useSession({required: false})
     const anonUser = !!session?.user.isAnon
-
+    const whatsappText = `L'Association des Parents de Claire-Joie a créé un sondage. Participez aussi: https://biotope.brussels/code/apcj22`
     const unansweredCount = b?.questions.filter(question => !question.userAnswered && !question.closed).length
 
     return !b ? <></> :
@@ -93,30 +93,52 @@ export default function BiotopeHome({b}) {
 
             {b.isAuthorized &&
                 <section className="question-area">
-                    <div className="container">
+                    <div className="container-fluid">
                         <div className="row">
-                            <div className={`card card-item col-12 ${anonUser? 'col-md-12': 'col-md-8'}`}>
-                                <div className="card-body pt-3 pb-0">
-                                    <ReactMarkdown className="markdown" children={b.introConclusion} linkTarget="_blank" />
+                            <div className="col-12 col-md-8">
+                                <div className="card card-item">
+                                    <div className="card-body pt-3 pb-0">
+                                        <ReactMarkdown className="markdown" children={b.introConclusion} linkTarget="_blank" />
+                                    </div>
                                 </div>
                             </div>
-                            {!anonUser &&
-                                <div className="card card-item text-center col-12 col-md-4">
+                            <div className="col-12 col-md-4">
+                                <div className="card card-item text-center">
                                     <div className="container card-body py-2 px-4 justify-content-between">
                                         <div className="row">
                                             <div className="col-4 col-md-12">
-                                                <img src="/images/bubble.png" alt="discuss"/>
+                                                <i className="las la-users fs-70 text-color-5" />
                                             </div>
                                             <div className="col-8 col-md-12">
-                                                <h5 className="card-title pt-2 pb-1 fs-18">{messages.question["create-question-cta-label"]}</h5>
-                                                <Link href={`/b/${b.name}/q/create`}>
-                                                    <a className="btn theme-btn theme-btn-white">{messages.question["create-question-cta"]} <i className="la la-arrow-right icon ml-1"/></a>
+                                                <h5 className="card-title pt-2 pb-1 fs-18">{messages.invitation["invite-cta-label"]}</h5>
+                                                <Link href={`/b/${b.name}/invite`}>
+                                                    <a className="btn theme-btn theme-btn-white mb-2">{messages.invitation["invite-email-cta"]} <i className="la la-envelope-open-text icon fs-20"/></a>
+                                                </Link>
+                                                <Link href={`https://wa.me/?text=${encodeURI(whatsappText)}`}>
+                                                    <a className="btn theme-btn theme-btn-white">{messages.invitation["invite-whatsapp-cta"]} <i className="la la-whatsapp icon fs-20"/></a>
                                                 </Link>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            }
+                                {!anonUser &&
+                                    <div className="card card-item text-center">
+                                        <div className="container card-body py-2 px-4 justify-content-between">
+                                            <div className="row">
+                                                <div className="col-4 col-md-12">
+                                                    <img src="/images/bubble.png" height="70" alt="discuss"/>
+                                                </div>
+                                                <div className="col-8 col-md-12">
+                                                    <h5 className="card-title pt-2 pb-1 fs-18">{messages.question["create-question-cta-label"]}</h5>
+                                                    <Link href={`/b/${b.name}/q/create`}>
+                                                        <a className="btn theme-btn theme-btn-white">{messages.question["create-question-cta"]} <i className="la la-arrow-right icon"/></a>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                     <div className="container">

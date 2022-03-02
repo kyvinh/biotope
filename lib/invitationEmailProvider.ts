@@ -41,7 +41,7 @@ const html = (data: invitationEmailData) => {
     // clients like Outlook and Apple mail, as this is confusing because it seems
     // like they are supposed to click on their email address to sign in.
     const escapedInvitedEmail = `${data.invitedEmail.replace(/\./g, "&#8203;.")}`
-    const escapedInviterEmail = `${data.inviterEmail.replace(/\./g, "&#8203;.")}`
+    const escapedInviterEmail = data.inviterEmail ? `${data.inviterEmail.replace(/\./g, "&#8203;.")}` : ""
     const escapedSite = `${data.site.replace(/\./g, "&#8203;.")}`
 
     // Some simple styling options
@@ -58,14 +58,14 @@ const html = (data: invitationEmailData) => {
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedSite} - ${data.biotopeName}</strong>
+        <strong>${data.biotopeName}</strong>
       </td>
     </tr>
   </table>
   <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: ${mainBackgroundColor}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${escapedInvitedEmail}</strong>, ${messages.email["body-invited-by"]} <strong>${data.inviterName} (${escapedInviterEmail})</strong> ${messages.email["body-invited-to"]} <strong>${data.biotopeName}</strong>
+        <strong>${escapedInvitedEmail}</strong>, ${messages.email["body-invited-by"]} <strong>${data.inviterName} ${escapedInviterEmail ? `(${escapedInviterEmail})` : ""}</strong> ${messages.email["body-invited-to"]} <strong>${data.biotopeName}</strong>
       </td>
     </tr>
     <tr>
@@ -79,7 +79,7 @@ const html = (data: invitationEmailData) => {
     </tr>
     <tr>
       <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
-        <strong>${data.biotopeName}</strong> ${messages.email["body-context"]}
+        <strong>${escapedSite}</strong> ${messages.email["body-context"]}
       </td>
     </tr>
   </table>

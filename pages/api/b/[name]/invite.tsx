@@ -6,14 +6,14 @@ import {prismaAdapter} from "../../../../lib/prismaAdapter";
 import {sendInvitationEmail} from '../../../../lib/invitationEmailProvider';
 import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
 import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
-import {baseEmailConfig} from '../../../../lib/constants';
+import {ANON_EMAIL_DOMAIN, baseEmailConfig} from '../../../../lib/constants';
 
 const adapter = prismaAdapter
 
 @HasUserIdAuthGuard()
 class EmailInvitationHandler {
     @Post()
-    async invite(@Body() {email}:{email: string}, @Query('name') biotopeName: string, @Query('userId') userId: string) {
+    async invite(@Body() {email, inviterName}:{email: string, inviterName: string}, @Query('name') biotopeName: string, @Query('userId') userId: string) {
 
         // Check config
 
@@ -58,6 +58,8 @@ class EmailInvitationHandler {
 
         // Create invitation
 
+        let biotopeLongName = null;
+
         try {
 
             const b = await prisma.cercle.findUnique({
@@ -66,6 +68,7 @@ class EmailInvitationHandler {
                 },
                 rejectOnNotFound: true,
             })
+            biotopeLongName = b.longName
 
             await prisma.invitation.upsert({
                 where: {
@@ -115,9 +118,9 @@ class EmailInvitationHandler {
             await sendInvitationEmail({
                 provider: baseEmailConfig,
                 emailRefData: {
-                    biotopeName: biotopeName,
-                    inviterEmail: inviter.email,
-                    inviterName: inviter.name,
+                    biotopeName: biotopeLongName,
+                    inviterEmail: inviter.email.endsWith(ANON_EMAIL_DOMAIN) ? null : inviter.email,
+                    inviterName: inviterName,
                     invitedEmail: email,
                     callbackUrl: url,
                 }
@@ -132,7 +135,7 @@ class EmailInvitationHandler {
             throw new Error("SEND_VERIFICATION_EMAIL_ERROR");
         }
 
-        return result
+        return { status: 'ok', token: result }
     }
 }
 
