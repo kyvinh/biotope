@@ -3,6 +3,14 @@ export const messages = {
         'cancel': "Annuler",
         'short-slug': "Sondages de proximité",
     },
+    'info': {
+        'read-more': "Plus d'info",
+        'about-header': "À propos de Biotope",
+        'contact-us': "Contactez-nous",
+        'about-text': `Biotope est une plateforme de sondage de proximité. 
+                        L'outil a été créé originellement pour l'Association des Parents de l'École Claire-Joie, 
+                        dans le but de récolter les avis de tous les parents et susciter leur participation.`,
+    },
     'user': {
         'anonymous-name': 'Anonyme',
         'signout-action': "Se déconnecter",
