@@ -121,7 +121,7 @@ D'autres questions sont disponibles ci-dessous. Vous pouvez aussi publier une qu
         create: { name: 'Enquête 2022' }
     })
 
-    let closingDate = addDays(new Date(), 14)
+    let closingDate = addDays(new Date(), 15)
     closingDate = addHours(closingDate, 1)
     closingDate = set(closingDate, { minutes: 0, seconds: 0, milliseconds: 0})
 
