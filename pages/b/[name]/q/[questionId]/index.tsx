@@ -37,7 +37,8 @@ export default function QuestionHome() {
 
     // Ref data
     const {data: session} = useSession({required: false})
-    const {questionId, name} = useRouter().query
+    const router = useRouter();
+    const {questionId, name} = router.query
     const {biotope: b, reloadBiotope} = useBiotope(name as string)
     const question = b?.questions?.find((element) => element.id === questionId)
 
@@ -72,6 +73,14 @@ export default function QuestionHome() {
 
     const onShowAnswerFormClick = () => {
         setShowAnswerForm(!showAnswerForm);
+    }
+
+    const onCancelAnswerFormClick = () => {
+        if (question.userAnswered) {
+            setShowAnswerForm(false)
+        } else {
+            void router.push(`/b/${b.name}`)
+        }
     }
 
     return (b && question) ? <>
@@ -151,14 +160,16 @@ export default function QuestionHome() {
                                 </div>
                         </div>
 
-                        {showAnswerForm && question.userAnswered &&
-                            <div className="alert alert-info fs-15 py-1 px-2" role="alert">
-                                {messages.question["change-answers-info"]}
-                            </div>
-                        }
                         {showAnswerForm &&
-                            <QuestionAnswerForm question={question}
-                                                onAnswerSubmitted={onAnswer} cancelForm={() => { setShowAnswerForm(false)}}/>
+                            <>
+                                {question.userAnswered &&
+                                    <div className="alert alert-info fs-15 py-1 px-2" role="alert">
+                                        {messages.question["change-answers-info"]}
+                                    </div>
+                                }
+                                <QuestionAnswerForm question={question}
+                                                    onAnswerSubmitted={onAnswer} cancelForm={onCancelAnswerFormClick}/>
+                            </>
                         }
 
                         {((question.userAnswered || question.closed) && answerResults && !showAnswerForm && session) &&

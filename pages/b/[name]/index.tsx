@@ -111,12 +111,14 @@ export default function BiotopeHome({b}) {
                                             </div>
                                             <div className="col-8 col-md-12">
                                                 <h5 className="card-title pt-2 pb-1 fs-18">{messages.invitation["invite-cta-label"]}</h5>
-                                                <Link href={`/b/${b.name}/invite`}>
-                                                    <a className="btn theme-btn theme-btn-white mb-2">{messages.invitation["invite-email-cta"]} <i className="la la-envelope-open-text icon fs-20"/></a>
-                                                </Link>
-                                                <Link href={`https://wa.me/?text=${encodeURI(whatsappText)}`}>
-                                                    <a className="btn theme-btn theme-btn-white">{messages.invitation["invite-whatsapp-cta"]} <i className="la la-whatsapp icon fs-20"/></a>
-                                                </Link>
+                                                <div className="d-flex flex-wrap justify-content-center">
+                                                    <Link href={`/b/${b.name}/invite`}>
+                                                        <a className="btn theme-btn theme-btn-white m-1">{messages.invitation["invite-email-cta"]} <i className="la la-envelope-open-text icon fs-20"/></a>
+                                                    </Link>
+                                                    <Link href={`https://wa.me/?text=${encodeURI(whatsappText)}`}>
+                                                        <a className="btn theme-btn theme-btn-white m-1">{messages.invitation["invite-whatsapp-cta"]} <i className="la la-whatsapp icon fs-20"/></a>
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
