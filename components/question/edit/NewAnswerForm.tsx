@@ -25,6 +25,6 @@ export const NewAnswerForm = ({question, onAnswerEdit}) => {
                    {...register("newAnswer", {required: true, maxLength: ANSWER_MAX_LENGTH})} />
             <div className="invalid-feedback">{messages["answer-edit"]["edit-answer-required-error"]}</div>
         </div>
-        <input className="btn btn-outline-primary" type="submit" value="Add new answer"/>
+        <input className="btn btn-outline-primary" type="submit" value={messages["answer-edit"]['add-answer-action']}/>
     </form>
 }

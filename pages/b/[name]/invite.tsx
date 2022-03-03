@@ -6,6 +6,7 @@ import messages from "../../../lib/messages.fr";
 import {QuestionHeader} from "../../../components/question/QuestionHeader";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
+import {whatsappText} from "./index";
 
 export const INVITE_CODE_EXPIRATIONS = [
     { name: 'exp_14d', value: 14, label: messages.invitation["expire-2-weeks"]},
@@ -63,7 +64,7 @@ export default function BiotopeInvite() {
         <section className="question-area">
             <div className="container">
                 <div className="card card-item p-3">
-                    <h4>{messages.invitation["invite-header"]}{b.longName}</h4>
+                    <h4>{messages.invitation["invite-header-email"]}{b.longName}:</h4>
 
                     {successEmail &&
                         <div className="alert alert-success mt-4" role="alert">
@@ -99,7 +100,7 @@ export default function BiotopeInvite() {
                                 :
                                 <>
                                     <button className="btn btn-primary me-2"
-                                            type="submit">{messages.invitation["invite-action"]}</button>
+                                            type="submit">{messages.invitation["invite-action"]} <i className="la la-envelope icon fs-18"/></button>
                                     <Link href={`/b/${b.name}`}><a
                                         className="btn btn-link">{messages.general.cancel}</a></Link>
                                 </>
@@ -107,6 +108,19 @@ export default function BiotopeInvite() {
                         </div>
                     </form>
                 </div>
+
+                <div className="card card-item p-3 mt-3">
+                    <h4>{messages.invitation["invite-header-whatsapp"]}:</h4>
+
+                    <div className="card-body p-0 mt-3">
+                        <Link href={`https://wa.me/?text=${encodeURI(whatsappText)}`}>
+                            <a className="btn btn-primary">{messages.invitation["invite-action"]} <i className="la la-whatsapp icon fs-18"/></a>
+                        </Link>
+                        <Link href={`/b/${b.name}`}><a
+                            className="btn btn-link">{messages.general.cancel}</a></Link>
+                    </div>
+                </div>
+
             </div>
         </section>
 

@@ -85,6 +85,7 @@ export default function QuestionEditHome() {
                             )}
                         </div>
                         <NewAnswerForm question={question} onAnswerEdit={onAnswerEdit}/>
+                        <Link href={`/b/${b.name}/q/${question.id}`}><a className="btn btn-link">{messages.question["edit-question-back"]}</a></Link>
                     </div>
                 </div>
             </section>

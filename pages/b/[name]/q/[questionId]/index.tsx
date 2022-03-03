@@ -87,6 +87,13 @@ export default function QuestionHome() {
 
         <QuestionHeader biotope={b} additionalText={additionalHeaderText}/>
 
+        {!question.closed && question.creatorId === session?.user.id &&
+            <div className="alert alert-success mb-0" role="alert">
+                {messages.question["create-success-1"]} <Link href={`/b/${b.name}/invite`}>{messages.question["create-success-invite"]}</Link>
+                {messages.question["create-success-2"]}
+            </div>
+        }
+
         <section className="question-area">
             <div className="container-fluid">
                 <div className="row">

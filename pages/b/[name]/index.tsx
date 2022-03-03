@@ -29,11 +29,12 @@ export async function getServerSideProps({params, req}) {
     }
 }
 
+export const whatsappText = `L'Association des Parents de Claire-Joie a créé un sondage. Participez aussi: https://biotope.brussels/code/apcj22`
+
 export default function BiotopeHome({b}) {
 
     const {data: session} = useSession({required: false})
     const anonUser = !!session?.user.isAnon
-    const whatsappText = `L'Association des Parents de Claire-Joie a créé un sondage. Participez aussi: https://biotope.brussels/code/apcj22`
     const unansweredCount = b?.questions.filter(question => !question.userAnswered && !question.closed).length
 
     return !b ? <></> :

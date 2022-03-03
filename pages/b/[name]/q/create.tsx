@@ -41,8 +41,8 @@ export default function BiotopeCreateQuestion({b}) {
     const onSubmit = async (questionDto:QuestionEditDto) => {
         const res = await fetcher(`/api/q/new?b=${name}`, questionDto);
         if (res?.status == 'ok') {
-            // const question = res.question
-            await router.push(`/b/${name}`)
+            const question = res.question
+            await router.push(`/b/${name}/q/${question.id}`)
         }
     };
 
