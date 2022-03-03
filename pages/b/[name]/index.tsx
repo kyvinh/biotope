@@ -172,7 +172,7 @@ export default function BiotopeHome({b}) {
                                             <div className="vote-block">
                                             <span className="vote-counts d-block text-center text-color-3 mt-3 fs-30 fw-medium">
                                                 <i className="las la-vote-yea"/></span>
-                                                <span className="vote-text d-block fs-13 lh-18 text-nowrap">A voté</span>
+                                                <span className="vote-text d-block fs-13 lh-18 text-nowrap">{messages.question.answered}</span>
                                             </div>
                                         }
                                         {question.closed &&
