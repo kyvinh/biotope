@@ -29,7 +29,7 @@ export async function getServerSideProps({params, req}) {
     }
 }
 
-export const whatsappText = `L'Association des Parents de Claire-Joie a créé un sondage. Participez aussi: https://biotope.brussels/code/apcj22`
+export const whatsappText = `L'Association des Parents de Claire Joie a créé un sondage. Participez aussi: https://biotope.brussels/code/apcj22`
 
 export default function BiotopeHome({b}) {
 

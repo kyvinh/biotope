@@ -67,7 +67,7 @@ async function main() {
     const apcj1040 = 'apcj-1040';
     const apcj1040Data = {
         headerPic: 'clairejoie-band_oketqg',
-        longName: "Association des Parents de l'école Claire-Joie",
+        longName: "Association des Parents de l'école Claire Joie",
         description: `L’**APCJ** souhaite susciter la participation de tous les parents de l’école et récolter **vos avis/commentaires** afin d'améliorer la qualité de vie de tous à l'école.
 
 Tout parent d’un enfant inscrit à Claire Joie est membre de droit de l’association de parents, **gratuitement**.`,
@@ -129,7 +129,7 @@ D'autres questions sont disponibles ci-dessous. Vous pouvez aussi publier une qu
         {
             answers: miniLikert,
             name: 'Accueil extra-scolaire et garderie',
-            description: "Claire-Joie propose des activités parascolaires, des garderies, des heures d'études, école des devoirs, et des garderies. Comment jugez-vous ces activités?",
+            description: "Claire Joie propose des activités parascolaires, des garderies, des heures d'études, et école des devoirs. Comment jugez-vous ces activités?",
             creatorId: cercleAPCJ.creatorId,
             cercleId: cercleAPCJ.id,
             type: QuestionType.DYNAMIC,
