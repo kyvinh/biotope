@@ -58,7 +58,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
                 <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
                     <div className="form-group">
                         <label className="form-text" htmlFor={`argument-${possibleAnswerId}-text`}>{messages.arguments["add-argument-info"]}</label>
-                        <textarea className="form-control" id={`argument-${possibleAnswerId}-text`}
+                        <textarea className="form-control" id={`argument-${possibleAnswerId}-text`} maxLength={190}
                                   rows={3} {...register("argumentText", {required: true})} />
                         {errors.argumentText && <div className="invalid-feedback">{messages.arguments["add-argument-required-error"]}</div>}
                     </div>
