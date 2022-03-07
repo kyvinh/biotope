@@ -1107,6 +1107,14 @@ div.upvotejs {
       @include box-shadow(none);
     }
   }
+  .btn-primary {
+    font-size: $fs-16;
+    color: $white;
+    @include border-radius(0.25rem);
+    &:hover {
+      color: $color-gray;
+    }
+  }
 }
 /*======= question-highlight =======*/
 .question-highlight {

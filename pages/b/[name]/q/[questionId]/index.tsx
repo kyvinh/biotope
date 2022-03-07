@@ -22,12 +22,12 @@ const NextPager = ({b, question, nextQuestion, unansweredNum = 0}) => {
             }
             {nextQuestion && question.userAnswered &&
                 <Link href={`/b/${b.name}/q/${nextQuestion.id}/`}>
-                    <a className="btn fs-16"><u>{messages.question["next-question-link"]} <i className="las la-arrow-circle-right"/></u></a>
+                    <a className="btn btn-primary"><u>{messages.question["next-question-link"]} <i className="las la-arrow-circle-right"/></u></a>
                 </Link>
             }
             {!nextQuestion && question.userAnswered &&
                 <Link href={`/b/${b.name}/`}>
-                    <a className="btn fs-16"><u>{messages.question["finished-questionnaire-link"]} <i className="las la-arrow-circle-right"/></u></a>
+                    <a className="btn btn-primary"><u>{messages.question["finished-questionnaire-link"]} <i className="las la-arrow-circle-right"/></u></a>
                 </Link>
             }
         </>
