@@ -1,8 +1,8 @@
 import prisma from '../../../../lib/prismaClient'
 import {hashUid} from "../../../../lib/user";
 import {createNewPossibleAnswer, fetchQuestion} from "./newAnswer";
-import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
-import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
+import {Body, Catch, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../../lib/serverAnnotations";
 
 export interface AnswerDto {
     possibleAnswerId?: string,  // Either 1 answer here OR multiple in possibleAnswerIds
@@ -12,6 +12,7 @@ export interface AnswerDto {
     possibleAnswerIds?: string[]
 }
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class AnswerHandler {
 

@@ -1,10 +1,11 @@
-import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
-import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../../lib/serverAnnotations";
+import {Body, Catch, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import {PossibleAnswerDeleteInput} from "../../../../lib/constants";
 import {checkCreator} from "./edit";
 import prisma from "../../../../lib/prismaClient";
 import {fetchQuestion} from "../../q/[q]/newAnswer";
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class DeletePossibleAnswerHandler {
     @Post()

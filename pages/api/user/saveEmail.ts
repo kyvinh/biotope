@@ -1,10 +1,11 @@
-import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
-import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../lib/serverAnnotations";
+import {Body, Catch, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import {EmailSubDto} from "../../../lib/constants";
 import prisma from "../../../lib/prismaClient";
 import messages from "../../../lib/messages.fr";
 import {ActionType} from "@prisma/client";
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class SaveEmail {
 

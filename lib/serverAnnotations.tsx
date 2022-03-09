@@ -1,4 +1,9 @@
-import {createMiddlewareDecorator, NextFunction, UnauthorizedException} from "@storyofams/next-api-decorators";
+import {
+    createMiddlewareDecorator,
+    HttpException,
+    NextFunction,
+    UnauthorizedException
+} from "@storyofams/next-api-decorators";
 import {NextApiRequest, NextApiResponse} from "next";
 import {getSession} from "next-auth/react";
 import {Question} from ".prisma/client";
@@ -42,3 +47,18 @@ export const QuestionCreatorAuthGuard = createMiddlewareDecorator(
         next();
     }
 );
+
+export function internalServerErrorLogger(
+    error: unknown,
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    console.error('API Error: ' + message)
+    console.error(error)
+    if (error instanceof HttpException) {
+        res.status(error.statusCode).json(error);
+    } else {
+        res.status(500).json({ status: 'ko', error: message});
+    }
+}

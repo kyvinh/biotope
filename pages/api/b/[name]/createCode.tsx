@@ -1,5 +1,5 @@
-import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
-import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../../lib/serverAnnotations";
+import {Body, Catch, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import prisma from "../../../../lib/prismaClient";
 import {InvitationType} from "@prisma/client";
 import {add} from 'date-fns'
@@ -10,6 +10,7 @@ export interface CreateCodeDto {
     expiration: number  // expiration in days
 }
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class CreateInvitationCode {
     @Post()

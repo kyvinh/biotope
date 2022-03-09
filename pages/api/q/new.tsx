@@ -1,11 +1,12 @@
-import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {Body, Catch, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import prisma from "../../../lib/prismaClient";
 import {ActionType, QuestionType} from "@prisma/client";
-import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../lib/serverAnnotations";
 import {QuestionEditDto} from "../../../lib/constants";
 
 // TODO: Test that user has enough rights to create a question?!
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class AddNewQuestionHandler {
     @Post()

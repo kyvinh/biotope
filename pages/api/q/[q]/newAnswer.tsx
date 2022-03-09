@@ -1,7 +1,11 @@
-import {Body, createHandler, Post, Query} from '@storyofams/next-api-decorators';
+import {Body, Catch, createHandler, Post, Query} from '@storyofams/next-api-decorators';
 import prisma from "../../../../lib/prismaClient";
 import {questionIncludeBiotopeQuery} from "../../b/[name]";
-import {HasUserIdAuthGuard, QuestionCreatorAuthGuard} from "../../../../lib/serverAnnotations";
+import {
+    HasUserIdAuthGuard,
+    internalServerErrorLogger,
+    QuestionCreatorAuthGuard
+} from "../../../../lib/serverAnnotations";
 import {PossibleAnswerType} from "@prisma/client";
 import {NewAnswerInput} from "../../../../lib/constants";
 
@@ -37,6 +41,7 @@ export async function fetchQuestion(questionId: string) {
     });
 }
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 @QuestionCreatorAuthGuard()
 class AddNewAnswerHandler {

@@ -1,6 +1,6 @@
 import prisma from '../../../../lib/prismaClient'
-import {HasUserIdAuthGuard} from "../../../../lib/serverAnnotations";
-import {Body, createHandler, Post, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../../lib/serverAnnotations";
+import {Body, Catch, createHandler, Post, Query} from "@storyofams/next-api-decorators";
 import {hashUid} from "../../../../lib/user";
 
 export const ARG_HASH_PREFIX = 'argument'
@@ -10,6 +10,7 @@ export class NewArgumentInput {
     argumentAnonymous: boolean
 }
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class AddArgumentHandler {
     @Post()

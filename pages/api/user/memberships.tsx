@@ -1,5 +1,5 @@
-import {createHandler, Get, Query} from "@storyofams/next-api-decorators";
-import {HasUserIdAuthGuard} from "../../../lib/serverAnnotations";
+import {Catch, createHandler, Get, Query} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../lib/serverAnnotations";
 import prisma from "../../../lib/prismaClient";
 
 export function fetchLastMembership(userId: string) {
@@ -30,6 +30,7 @@ export function fetchMemberships(userId: string) {
     })
 }
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class Memberships {
 

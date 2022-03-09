@@ -1,11 +1,12 @@
 import prisma from '../../../../lib/prismaClient'
 import {Prisma} from "@prisma/client";
 import {parseISO} from "date-fns";
-import {createHandler, Get, Query, Req} from "@storyofams/next-api-decorators";
+import {Catch, createHandler, Get, Query, Req} from "@storyofams/next-api-decorators";
 import {getSession} from "next-auth/react";
 import {NextApiRequest} from "next";
 import {Question} from ".prisma/client";
 import {hashUid} from "../../../../lib/user";
+import {internalServerErrorLogger} from "../../../../lib/serverAnnotations";
 
 export const questionIncludeBiotopeQuery = {
     include: {
@@ -140,8 +141,8 @@ export async function fetchBiotope(userId: string, biotopeName: string) {
     return b
 }
 
+@Catch(internalServerErrorLogger)
 class FetchBiotope {
-
     @Get()
     async fetchBiotope(@Query('name') biotopeName: string, @Req() req: NextApiRequest) {
         const session = await getSession({req})

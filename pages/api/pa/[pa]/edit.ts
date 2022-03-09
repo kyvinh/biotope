@@ -1,5 +1,5 @@
-import {HasUserIdAuthGuard, isQuestionCreator} from "../../../../lib/serverAnnotations";
-import {Body, createHandler, Post, Query, UnauthorizedException} from "@storyofams/next-api-decorators";
+import {HasUserIdAuthGuard, internalServerErrorLogger, isQuestionCreator} from "../../../../lib/serverAnnotations";
+import {Body, Catch, createHandler, Post, Query, UnauthorizedException} from "@storyofams/next-api-decorators";
 import {PossibleAnswerInput} from "../../../../lib/constants";
 import {fetchQuestion} from "../../q/[q]/newAnswer";
 import prisma from "../../../../lib/prismaClient";
@@ -16,6 +16,7 @@ export const checkCreator = async (possibleAnswerId: string, userId: string) => 
     }
 }
 
+@Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
 class EditPossibleAnswerHandler {
     @Post()
