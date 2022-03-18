@@ -1,11 +1,8 @@
 import React from "react";
 import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
-import {Argument, PossibleAnswer} from ".prisma/client";
 import messages from "../lib/messages.fr";
-
-export type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[]}
-export type PossibleAnswerWithCount = PossibleAnswerWithArguments & { count: number; percent: number, arguments: Argument[]}
+import {PossibleAnswerWithArguments, PossibleAnswerWithCount} from "../lib/constants";
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)

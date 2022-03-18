@@ -26,6 +26,8 @@ export const messages = {
     'results': {
         'vote': 'vote',
         'votes': 'votes',
+        'respondent': 'répondant',
+        'respondents': 'répondants',
         'header': 'Résultats'
     },
     'answer-edit': {

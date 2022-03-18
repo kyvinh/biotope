@@ -1,4 +1,5 @@
 import _crypto from "crypto";
+import {Argument, PossibleAnswer, Question, Tag, User} from ".prisma/client";
 
 export const cloudinaryUrl = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD}`;
 
@@ -21,6 +22,10 @@ export const baseEmailConfig = {
     },
 };
 
+/*
+ * API Input types:
+ */
+
 export class NewAnswerInput {
     newAnswer: string;
 }
@@ -42,3 +47,17 @@ export class QuestionEditDto {
 export class EmailSubDto {
     email: string;
 }
+
+/*
+ * API Return types:
+ */
+export type QuestionWithMetadata =
+    Question
+    & { votes: number, creator: User, lastVoteDate: Date, userAnswered: boolean, lastUserAnswer: Date, shortDescription: string
+    , tags: Tag[]
+    , possibleAnswers: PossibleAnswerWithArguments[]
+}
+export type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[] }
+export type PossibleAnswerWithCount =
+    PossibleAnswerWithArguments
+    & { count: number; percent: number, arguments: Argument[] }
