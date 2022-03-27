@@ -2,15 +2,14 @@ import React, {useState} from "react";
 import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 import messages from "../lib/messages.fr";
-import {PossibleAnswerWithArguments, PossibleAnswerWithCount} from "../lib/constants";
-import {PossibleAnswer} from "@prisma/client";
+import {PossibleAnswerWithArguments, PossibleAnswerWithArgumentsAndCount} from "../lib/constants";
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
-    const resultsWithCount: PossibleAnswerWithCount[] = rawResults.reduce(
+    const resultsWithCount: PossibleAnswerWithArgumentsAndCount[] = rawResults.reduce(
         (acc, rawResult) => {
             const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
-            const answerResult:PossibleAnswerWithCount = {count: 0, percent: undefined, sameUserVotes: rawResult.sameUserVotes, ...possibleAnswer}
+            const answerResult:PossibleAnswerWithArgumentsAndCount = {count: 0, percent: undefined, sameUserVotes: rawResult.sameUserVotes, ...possibleAnswer}
             answerResult.count = rawResult._count.answers
             answerResult.percent = Number((answerResult.count / totalVotesCount * 100).toFixed(0))
             return [...acc, answerResult]
@@ -55,8 +54,8 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
         {answersWithCount.map(answerResult => {
             const [showMergeAnswer, setShowMergeAnswer] = useState(false)
             const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
-                const otherAnswer:PossibleAnswer = question.possibleAnswers.find(pa => pa.id === votes.possibleAnswerId)
-                return [...acc, { possibleText: otherAnswer.possibleText, ...votes}]
+                const otherAnswer:PossibleAnswerWithArguments = question.possibleAnswers.find(pa => pa.id === votes.possibleAnswerId)
+                return [...acc, { possibleText: otherAnswer.possibleText, arguments: otherAnswer.arguments, ...votes}]
             }, [])
             return <div className="answer-wrap d-flex" key={`results-${answerResult.id}`}>
                         <div className="votes votes-styled w-auto">
@@ -71,14 +70,17 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                                     <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>
                                 </div>
                                 <div className="comments-wrap">
+
                                     <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments}
                                                onArgumentAdded={onArgumentAdded}/>
+
                                     {question.closed &&
                                         <div className="comment-form">
                                             {showMergeAnswer ? <>
                                                     Combinaisons possibles:
                                                     {combinations.map(combination => <div key={`combo-${answerResult.id}-${combination.possibleAnswerId}`}>
                                                         {combination.possibleAnswerId}-{combination.sameUserVotes}-{combination.possibleText}
+                                                        <Arguments possibleAnswerId={combination.possibleAnswerId} answerArguments={combination.arguments} />
                                                     </div>)}
                                                 </>
                                                 :
@@ -87,6 +89,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                                             }
                                         </div>
                                     }
+
                                 </div>
                             </div>
                         </div>

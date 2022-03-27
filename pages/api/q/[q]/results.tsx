@@ -56,7 +56,7 @@ class GetResultsHandler {
                 })
             }
 
-            console.log("API Results", question.possibleAnswers)
+            //console.log("API Results", question.possibleAnswers)
 
             return {status: 'ok', results: question.possibleAnswers};
 

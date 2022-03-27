@@ -63,6 +63,6 @@ export type QuestionWithMetadata =
     , possibleAnswers: PossibleAnswerWithArguments[]
 }
 export type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[] }
-export type PossibleAnswerWithCount =
+export type PossibleAnswerWithArgumentsAndCount =
     PossibleAnswerWithArguments
     & { count: number; percent: number, sameUserVotes: SameUserVotesDto[], arguments: Argument[] }
