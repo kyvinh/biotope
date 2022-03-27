@@ -48,6 +48,11 @@ export class EmailSubDto {
     email: string;
 }
 
+export class SameUserVotesDto {
+    possibleAnswerId: string;
+    sameUserVotes: number;
+}
+
 /*
  * API Return types:
  */
@@ -60,4 +65,4 @@ export type QuestionWithMetadata =
 export type PossibleAnswerWithArguments = PossibleAnswer & { arguments: Argument[] }
 export type PossibleAnswerWithCount =
     PossibleAnswerWithArguments
-    & { count: number; percent: number, arguments: Argument[] }
+    & { count: number; percent: number, sameUserVotes: SameUserVotesDto[], arguments: Argument[] }

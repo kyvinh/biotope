@@ -1,15 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 import messages from "../lib/messages.fr";
 import {PossibleAnswerWithArguments, PossibleAnswerWithCount} from "../lib/constants";
+import {PossibleAnswer} from "@prisma/client";
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
     const resultsWithCount: PossibleAnswerWithCount[] = rawResults.reduce(
         (acc, rawResult) => {
             const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
-            const answerResult:PossibleAnswerWithCount = {count: 0, percent: undefined, ...possibleAnswer}
+            const answerResult:PossibleAnswerWithCount = {count: 0, percent: undefined, sameUserVotes: rawResult.sameUserVotes, ...possibleAnswer}
             answerResult.count = rawResult._count.answers
             answerResult.percent = Number((answerResult.count / totalVotesCount * 100).toFixed(0))
             return [...acc, answerResult]
@@ -51,26 +52,45 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                 <h3 className="fs-16">{messages.results.header}: {totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote}</h3>
             </div>
         </div>
-        {answersWithCount.map(answerResult =>
-            <div className="answer-wrap d-flex" key={answerResult.id}>
-                <div className="votes votes-styled w-auto">
-                    <div id="vote2" className="upvotejs text-center">
-                        <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? messages.results.votes : messages.results.vote}</span>
-                    </div>
-                </div>
-                <div key={answerResult.id} className="answer-body-wrap flex-grow-1">
-                    <ProgressBar variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`} />
-                    <div className="answer-post-progress-wrap">
-                        <div className="answer-body">
-                            <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>
+        {answersWithCount.map(answerResult => {
+            const [showMergeAnswer, setShowMergeAnswer] = useState(false)
+            const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
+                const otherAnswer:PossibleAnswer = question.possibleAnswers.find(pa => pa.id === votes.possibleAnswerId)
+                return [...acc, { possibleText: otherAnswer.possibleText, ...votes}]
+            }, [])
+            return <div className="answer-wrap d-flex" key={`results-${answerResult.id}`}>
+                        <div className="votes votes-styled w-auto">
+                            <div id="vote2" className="upvotejs text-center">
+                                <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? messages.results.votes : messages.results.vote}</span>
+                            </div>
                         </div>
-                        <div className="comments-wrap">
-                            <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments}
-                                       onArgumentAdded={onArgumentAdded}/>
+                        <div className="answer-body-wrap flex-grow-1">
+                            <ProgressBar variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`} />
+                            <div className="answer-post-progress-wrap">
+                                <div className="answer-body">
+                                    <h3>{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h3>
+                                </div>
+                                <div className="comments-wrap">
+                                    <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments}
+                                               onArgumentAdded={onArgumentAdded}/>
+                                    {question.closed &&
+                                        <div className="comment-form">
+                                            {showMergeAnswer ? <>
+                                                    Combinaisons possibles:
+                                                    {combinations.map(combination => <div key={`combo-${answerResult.id}-${combination.possibleAnswerId}`}>
+                                                        {combination.possibleAnswerId}-{combination.sameUserVotes}-{combination.possibleText}
+                                                    </div>)}
+                                                </>
+                                                :
+                                                <button className="btn btn-link comment-link"
+                                                        onClick={() => setShowMergeAnswer(true)}>{messages.results["answer-merge"]}</button>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+            </div>}
         )}
     </>
 }

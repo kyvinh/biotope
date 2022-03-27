@@ -28,7 +28,8 @@ export const messages = {
         'votes': 'votes',
         'respondent': 'répondant',
         'respondents': 'répondants',
-        'header': 'Résultats'
+        'header': 'Résultats',
+        'answer-merge': 'Combiner la réponse',
     },
     'answer-edit': {
         'add-answer-lead': 'Ajouter une proposition de réponse',

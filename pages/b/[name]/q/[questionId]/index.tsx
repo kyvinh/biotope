@@ -51,7 +51,7 @@ export default function QuestionHome() {
     const {
         data: answerResults,
         mutate: reloadAnswerResults
-    } = useSWR(session && question?.id ? `/api/q/${question.id}/results` : null, fetcher);
+    } = useSWR(session && question?.id ? `/api/q/${question.id}/results?combinations=true` : null, fetcher);
 
     // Component state
     const [showAnswerForm, setShowAnswerForm] = useState(false)

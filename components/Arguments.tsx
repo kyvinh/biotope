@@ -31,7 +31,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded}) 
     return <>
         <ul className="comments-list">
             { answerArguments && answerArguments.map((argument) =>
-                <li key={argument.id}>
+                <li key={`comment-${possibleAnswerId}-${argument.id}`}>
                     <div className="comment-actions">
                         <span className="comment-score">
                             {argument.anonymous ?
