@@ -6,6 +6,7 @@ import {PossibleAnswerWithArguments, PossibleAnswerWithArgumentsAndCount} from "
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
+    const maxVotersCount = rawResults.reduce((acc, rawResult) => rawResult.votersCount > acc ? rawResult.votersCount : acc, 0);
     const resultsWithCount: PossibleAnswerWithArgumentsAndCount[] = rawResults.reduce(
         (acc, rawResult) => {
             const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
@@ -16,7 +17,7 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
         }
         , [])
     return {
-        totalVotesCount, resultsWithCount
+        totalVotesCount, resultsWithCount, maxVotersCount
     }
 }
 
@@ -36,7 +37,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
         ]
     */
 
-    const {totalVotesCount, resultsWithCount: answersWithCount} = computeResults(question.possibleAnswers, rawResults)
+    const {totalVotesCount, resultsWithCount: answersWithCount, maxVotersCount} = computeResults(question.possibleAnswers, rawResults)
     answersWithCount.sort((n1, n2) => n2.count - n1.count)
 
     const onArgumentAdded = (possibleAnswerId, argument) => {
@@ -48,7 +49,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
     return <>
         <div className="subheader results-subheader">
             <div className="subheader-title">
-                <h3 className="fs-16">{messages.results.header}: {totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote}</h3>
+                <h3 className="fs-16">{messages.results.header}: {maxVotersCount} {maxVotersCount > 1 ? messages.results.respondents : messages.results.respondent} ({totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote})</h3>
             </div>
         </div>
         {answersWithCount.map(answerResult => {
@@ -61,6 +62,9 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                         <div className="votes votes-styled w-auto">
                             <div id="vote2" className="upvotejs text-center">
                                 <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? messages.results.votes : messages.results.vote}</span>
+                            </div>
+                            <div id="vote2" className="upvotejs text-center mt-2">
+                                <span className="count">{answerResult.votersCount}<br /> {answerResult.votersCount > 1 ? messages.results.respondents : messages.results.respondent}</span>
                             </div>
                         </div>
                         <div className="answer-body-wrap flex-grow-1">
