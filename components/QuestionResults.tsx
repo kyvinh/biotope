@@ -9,9 +9,9 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
     const resultsWithCount: PossibleAnswerWithArgumentsAndCount[] = rawResults.reduce(
         (acc, rawResult) => {
             const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
-            const answerResult:PossibleAnswerWithArgumentsAndCount = {count: 0, percent: undefined, sameUserVotes: rawResult.sameUserVotes, ...possibleAnswer}
+            const answerResult:PossibleAnswerWithArgumentsAndCount = {count: 0, percent: undefined, sameUserVotes: rawResult.sameUserVotes, votersCount: rawResult.votersCount, ...possibleAnswer}
             answerResult.count = rawResult._count.answers
-            answerResult.percent = Number((answerResult.count / totalVotesCount * 100).toFixed(0))
+            answerResult.percent = Number((answerResult.count / answerResult.votersCount * 100).toFixed(0))
             return [...acc, answerResult]
         }
         , [])
@@ -54,8 +54,8 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
         {answersWithCount.map(answerResult => {
             const [showMergeAnswer, setShowMergeAnswer] = useState(false)
             const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
-                const otherAnswer:PossibleAnswerWithArguments = question.possibleAnswers.find(pa => pa.id === votes.possibleAnswerId)
-                return [...acc, { possibleText: otherAnswer.possibleText, arguments: otherAnswer.arguments, ...votes}]
+                const otherAnswer = answersWithCount.find(pa => pa.id === votes.possibleAnswerId)
+                return [...acc, { ...otherAnswer, ...votes}]
             }, [])
             return <div className="answer-wrap d-flex" key={`results-${answerResult.id}`}>
                         <div className="votes votes-styled w-auto">
@@ -78,10 +78,12 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                                         <div className="comment-form">
                                             {showMergeAnswer ? <>
                                                     Combinaisons possibles:
-                                                    {combinations.map(combination => <div key={`combo-${answerResult.id}-${combination.possibleAnswerId}`}>
-                                                        {combination.possibleAnswerId}-{combination.sameUserVotes}-{combination.possibleText}
-                                                        <Arguments possibleAnswerId={combination.possibleAnswerId} answerArguments={combination.arguments} />
-                                                    </div>)}
+                                                    <ul>
+                                                        {combinations.map(combination => <li key={`combo-${answerResult.id}-${combination.possibleAnswerId}`}>
+                                                            {combination.possibleText}: {combination.sameUserVotes} votes en commun ({combination.count} total)
+                                                            <Arguments possibleAnswerId={combination.possibleAnswerId} answerArguments={combination.arguments} />
+                                                        </li>)}
+                                                    </ul>
                                                 </>
                                                 :
                                                 <button className="btn btn-link comment-link"

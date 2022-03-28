@@ -34,9 +34,25 @@ class GetResultsHandler {
                 rejectOnNotFound: true,
             })
 
+            // For each PossibleAnswer, find the number of respondents reached since creation of the PA
+            // TODO: Optimize this query!
+            const votersCountMap = {}
+            for (const possibleAnswer of question.possibleAnswers) {
+                const counterResult = await prisma.$queryRaw`select count(distinct hashUid) as votersCount, questionId
+                                                                        from answer
+                                                                        where answer.questionId = ${possibleAnswer.questionId}
+                                                                          and answer.createdOn >= ${possibleAnswer.createdOn}
+                                                                        group by questionId`
+                votersCountMap[possibleAnswer.id] = counterResult[0]
+            }
+            question.possibleAnswers = question.possibleAnswers.map(possibleAnswer => {
+                const {votersCount} = votersCountMap[possibleAnswer.id]
+                return {votersCount, ...possibleAnswer}
+            });
+
             if (returnCombinations) {
                 // For each PossibleAnswer, find the other PossibleAnswer users have voted for also
-                const sameUserVoteMap = {}
+                const sameUserVoteMap = {};
                 for (const possibleAnswer of question.possibleAnswers) {
                     sameUserVoteMap[possibleAnswer.id] = await prisma.$queryRaw`select possibleAnswerId, count(hashUid) as sameUserVotes
                                                                        from answer
@@ -53,10 +69,10 @@ class GetResultsHandler {
                 question.possibleAnswers = question.possibleAnswers.map(possibleAnswer => {
                     const sameUserVotes = sameUserVoteMap[possibleAnswer.id]
                     return {sameUserVotes, ...possibleAnswer}
-                })
+                });
             }
 
-            //console.log("API Results", question.possibleAnswers)
+            // console.log("API Results", question.possibleAnswers)
 
             return {status: 'ok', results: question.possibleAnswers};
 
