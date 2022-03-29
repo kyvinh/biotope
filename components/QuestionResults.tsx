@@ -14,7 +14,7 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
             const answerResult:PossibleAnswerWithArgumentsAndCount = {
                 count: rawResult._count.answers,
                 percent: Number((rawResult._count.answers / rawResult.votersCount * 100).toFixed(0)),
-                incomplete: rawResult.votersCount < maxVotersCount / 5,
+                incomplete: rawResult.votersCount <= 3 || rawResult.votersCount < maxVotersCount / 5,
                 sameUserVotes: rawResult.sameUserVotes,
                 votersCount: rawResult.votersCount,
                 ...possibleAnswer

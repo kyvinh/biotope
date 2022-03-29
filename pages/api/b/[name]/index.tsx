@@ -131,9 +131,11 @@ export async function fetchBiotope(userId: string, biotopeName: string) {
             cercleId: b.id
         },
         include: questionIncludeBiotopeQuery.include,
-        orderBy: {
-            createdOn: 'desc',
-        }
+        orderBy: [
+            {introFlag: 'desc'},
+            {createdOn: 'desc'},
+        ]
+
     });
 
     b.questions = await addVoteMetadata(b.questions, userId);
