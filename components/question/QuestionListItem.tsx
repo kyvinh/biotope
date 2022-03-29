@@ -22,12 +22,6 @@ export const QuestionListItem = ({question, b}: {question: QuestionWithMetadata,
                     <span className="vote-text d-block fs-13 lh-18 text-nowrap">{messages.question.answered}</span>
                 </div>
             }
-            {question.closed &&
-                <div className={`answer-block ${question.closed ? 'closed' : 'answered'} my-2`}>
-                    <span className="answer-text d-block fs-13 lh-18">{messages.question.closed}</span>
-                    <span className="answer-counts d-block lh-20 fw-medium">{formatDistance(question.closingDate)}</span>
-                </div>
-            }
         </div>
         <div className="media-body d-flex w-100 flex-column flex-fill">
             <h5 className="mb-2 fw-medium">
@@ -59,9 +53,15 @@ export const QuestionListItem = ({question, b}: {question: QuestionWithMetadata,
                         <span className={`meta-value ${!question.userAnswered ? 'meta-red' : ''}`}>{formatDistance(question.closingDate)}</span>
                     </small>
                     }
+                    {question.closed &&
+                        <small>
+                            <span className="meta-label">{messages.question.closed}</span>
+                            <span className="meta-value">{formatDistance(question.closingDate)}</span>
+                        </small>
+                    }
+
                 </div>
             </div>
         </div>
     </div>
-
 }

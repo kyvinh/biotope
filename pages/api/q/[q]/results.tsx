@@ -1,10 +1,6 @@
 import prisma from '../../../../lib/prismaClient'
 import {Catch, createHandler, Get, Query} from "@storyofams/next-api-decorators";
-import {
-    HasUserIdAuthGuard,
-    internalServerErrorLogger,
-    QuestionCreatorAuthGuard
-} from "../../../../lib/serverAnnotations";
+import {HasUserIdAuthGuard, internalServerErrorLogger} from "../../../../lib/serverAnnotations";
 
 // TODO Should also check whether the user is authorized:
 //      - user is a constituent, eligible for voting?
@@ -12,7 +8,6 @@ import {
 
 @Catch(internalServerErrorLogger)
 @HasUserIdAuthGuard()
-@QuestionCreatorAuthGuard()
 class GetResultsHandler {
     @Get()
     async fetchResults(@Query('combinations') returnCombinations = false, @Query('q') questionId: string, @Query('userId') userId: string) {

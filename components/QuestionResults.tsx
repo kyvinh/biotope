@@ -30,6 +30,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
     const {totalVotesCount, resultsWithCount: answersWithCount, maxVotersCount} = computeResults(question.possibleAnswers, rawResults)
     answersWithCount.sort((n1, n2) => n2.percent - n1.percent)
 
+    const argumentsCount = question.possibleAnswers.reduce((acc, answer) => acc + answer.arguments.length, 0)
     const onArgumentAdded = (possibleAnswerId, argument) => {
         const possibleAnswer = question.possibleAnswers.find(element => element.id === possibleAnswerId)
         possibleAnswer.arguments.push(argument)
@@ -57,7 +58,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
             {answersWithCount.map(answerResult => {
                 return <div className="row mb-2">
                     <div className="col-5">
-                        <h5 className="text-end">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
+                        <h5 className="text-end border-bottom border-bottom-gray">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
                     </div>
                     <div className="col d-flex align-items-center">
                         <ProgressBar className="flex-fill" variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`} />
@@ -66,22 +67,24 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
             })}
         </div>
 
-        <div className="subheader results-subheader mt-4">
-            <div className="subheader-title">
-                <h3 className="fs-16">{messages.arguments["arguments-list-header"]}:</h3>
+        {argumentsCount > 0 && <>
+            <div className="subheader results-subheader mt-4">
+                <div className="subheader-title">
+                    <h3 className="fs-16">{messages.arguments["arguments-list-header"]}:</h3>
+                </div>
             </div>
-        </div>
-        <div className="container-fluid mt-3">
-            {answersWithCount.map(answerResult => {
-                if (answerResult.arguments.length === 0) {
-                    return null
-                }
-                return <div className="row mb-4 mt-3">
+            <div className="container-fluid mt-3">
+                {answersWithCount.map(answerResult => {
+                    if (answerResult.arguments.length === 0) {
+                        return null
+                    }
+                    return <div className="row mb-4 mt-3">
                         <h5 className="text-center">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
                         <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments} />
-                </div>
-            })}
-        </div>
+                    </div>
+                })}
+            </div>
+        </>}
 
         {showDebug && answersWithCount.map(answerResult => {
             const [showMergeAnswer, setShowMergeAnswer] = useState(false)
