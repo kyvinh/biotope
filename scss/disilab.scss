@@ -83,6 +83,12 @@ $color-green: #0ba31f;
   .progress-bar {
     min-width: 1.25rem;
   }
+
+  &.progress-incomplete {
+    .progress-bar {
+      color: $theme-color-4;
+    }
+  }
 }
 
 .bg-progress-other {
