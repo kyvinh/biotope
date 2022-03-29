@@ -3,6 +3,7 @@ import {ProgressBar} from "react-bootstrap";
 import {Arguments} from "./Arguments";
 import messages from "../lib/messages.fr";
 import {PossibleAnswerWithArguments, PossibleAnswerWithArgumentsAndCount} from "../lib/constants";
+import {fetcher} from "./util/fetcher";
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
@@ -21,7 +22,7 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
     }
 }
 
-export const QuestionResults = ({question, results: rawResults, onArgumentUpdated}) => {
+export const QuestionResults = ({question, results: rawResults, onArgumentUpdated, showDebug = false}) => {
     if (!rawResults) {
         return null
     }
@@ -35,22 +36,27 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
         onArgumentUpdated()
     }
 
+    const combine = async (event, sourceAnswer, targetAnswer) => {
+        event.preventDefault()
+        const res = await fetcher(`/api/pa/${sourceAnswer}/combine`, {
+            sourcePossibleAnswer: sourceAnswer,
+            targetPossibleAnswer: targetAnswer
+        });
+        if (res?.status == 'ok') {
+            console.log(res)
+        }
+    }
+
     return <>
         <div className="subheader results-subheader">
             <div className="subheader-title">
                 <h3 className="fs-16">{messages.results.header}: {maxVotersCount} {maxVotersCount > 1 ? messages.results.respondents : messages.results.respondent} ({totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote})</h3>
             </div>
         </div>
-
         <div className="container-fluid mt-3 ps-0 pe-0">
             {answersWithCount.map(answerResult => {
-                const [showMergeAnswer, setShowMergeAnswer] = useState(false)
-                const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
-                    const otherAnswer = answersWithCount.find(pa => pa.id === votes.possibleAnswerId)
-                    return [...acc, {...otherAnswer, ...votes}]
-                }, [])
                 return <div className="row mb-2">
-                    <div className="col">
+                    <div className="col-5">
                         <h5 className="text-end">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
                     </div>
                     <div className="col d-flex align-items-center">
@@ -60,13 +66,30 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
             })}
         </div>
 
-        {answersWithCount.map(answerResult => {
+        <div className="subheader results-subheader mt-4">
+            <div className="subheader-title">
+                <h3 className="fs-16">{messages.arguments["arguments-list-header"]}:</h3>
+            </div>
+        </div>
+        <div className="container-fluid mt-3">
+            {answersWithCount.map(answerResult => {
+                if (answerResult.arguments.length === 0) {
+                    return null
+                }
+                return <div className="row mb-4 mt-3">
+                        <h5 className="text-center">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
+                        <Arguments possibleAnswerId={answerResult.id} answerArguments={answerResult.arguments} />
+                </div>
+            })}
+        </div>
+
+        {showDebug && answersWithCount.map(answerResult => {
             const [showMergeAnswer, setShowMergeAnswer] = useState(false)
             const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
                 const otherAnswer = answersWithCount.find(pa => pa.id === votes.possibleAnswerId)
                 return [...acc, { ...otherAnswer, ...votes}]
             }, [])
-            return <div className="answer-wrap d-flex" key={`results-${answerResult.id}`}>
+            return <div className="answer-wrap d-flex mt-5" key={`results-${answerResult.id}`}>
                         <div className="votes votes-styled w-auto">
                             <div id="vote2" className="upvotejs text-center">
                                 <span className="count">{answerResult.count}<br /> {answerResult.count > 1 ? messages.results.votes : messages.results.vote}</span>
@@ -93,6 +116,7 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                                                     <ul>
                                                         {combinations.map(combination => <li key={`combo-${answerResult.id}-${combination.possibleAnswerId}`}>
                                                             {combination.possibleText}: {combination.sameUserVotes} votes en commun ({combination.count} total)
+                                                            <a className="btn btn-outline-primary ms-2" onClick={e => combine(e, answerResult.id, combination.possibleAnswerId)}>{messages.results["answer-merge"]}</a>
                                                             <Arguments possibleAnswerId={combination.possibleAnswerId} answerArguments={combination.arguments} />
                                                         </li>)}
                                                     </ul>

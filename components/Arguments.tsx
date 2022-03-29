@@ -10,7 +10,7 @@ import messages from "../lib/messages.fr";
 export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded = null}) => {
 
     const {data: session} = useSession({required: false})
-    const [showAddArgument, setShowAddArgument] = useState(false)
+    const [showAddArgumentForm, setShowAddArgumentForm] = useState(false)
     const formEnabled = !!onArgumentAdded
 
     // New argument form
@@ -23,7 +23,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded = 
         }
         const res = await fetcher(`/api/pa/${possibleAnswerId}/argument`, newArgument);
         if (res?.status == 'ok') {
-            setShowAddArgument(false)
+            setShowAddArgumentForm(false)
             reset()
             onArgumentAdded(possibleAnswerId, res.argument)
         }
@@ -33,8 +33,10 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded = 
         <ul className="comments-list">
             { answerArguments && answerArguments.map((argument) =>
                 <li key={`comment-${possibleAnswerId}-${argument.id}`}>
-                    <div className="comment-actions">
-                        <span className="comment-score">
+                    <div className="comment-body">
+                        <span className="comment-copy">{argument.text}</span>
+                        <span className="comment-separated">-</span>
+                        <span className="comment-date">
                             {argument.anonymous ?
                                 <UserFlair user={{
                                     name: messages.user["anonymous-name"],
@@ -42,13 +44,9 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded = 
                                 }} theme="none" />
                                 :
                                 <UserFlair user={argument.creator} theme="none" />
-                            }
+                            },
                         </span>
-                    </div>
-                    <div className="comment-body">
-                        <span className="comment-copy">{argument.text}</span>
-                        <span className="comment-separated">-</span>
-                        <span className="comment-date">{formatDistance(argument.createdOn)}</span>
+                        <span className="comment-date"> {formatDistance(argument.createdOn)}</span>
                     </div>
                 </li>
             )}
@@ -56,7 +54,7 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded = 
 
         {formEnabled &&
             <div className="comment-form">
-                { showAddArgument ?
+                { showAddArgumentForm ?
                     <form onSubmit={handleSubmit(onAddArgument)} className="argument-add">
                         <div className="form-group">
                             <label className="form-text" htmlFor={`argument-${possibleAnswerId}-text`}>{messages.arguments["add-argument-info"]}</label>
@@ -72,10 +70,10 @@ export const Arguments = ({answerArguments, possibleAnswerId, onArgumentAdded = 
                             </label>
                         </div>
                         <input type="submit" value={messages.arguments["add-argument-action"]} className="btn btn-primary" />
-                        <button className="btn btn-link" onClick={() => setShowAddArgument(false)}>{messages.general.cancel}</button>
+                        <button className="btn btn-link" onClick={() => setShowAddArgumentForm(false)}>{messages.general.cancel}</button>
                     </form>
                     :
-                    <button className="btn btn-link comment-link" onClick={() => setShowAddArgument(true)}>{messages.arguments["add-argument-form-toggle"]}</button>
+                    <button className="btn btn-link comment-link" onClick={() => setShowAddArgumentForm(true)}>{messages.arguments["add-argument-form-toggle"]}</button>
                 }
             </div>
         }

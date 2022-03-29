@@ -190,7 +190,7 @@ export default function QuestionHome() {
 
                         {((question.userAnswered || question.closed) && answerResults && !showAnswerForm && session) &&
                             <QuestionResults question={question} results={answerResults.results}
-                                             onArgumentUpdated={onArgumentAdded} />
+                                             onArgumentUpdated={onArgumentAdded} /*showDebug={isQuestionCreator}*/ />
                         }
 
                         {question.userAnswered &&   // Only show Next Question and Finished Intro Questionnaire

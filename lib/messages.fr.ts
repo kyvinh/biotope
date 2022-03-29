@@ -49,6 +49,7 @@ export const messages = {
         'answer-signin-suffix': "pour voter and consulter les résultats.",
     },
     'arguments': {
+        'arguments-list-header': 'Arguments et Observations',
         'argument-no-user-error': "Il n'est pas possible de rentrer un argument sans être inscrit.",
         'add-argument-info': "Veuillez rajouter un argument ou une observation qui a mené à votre vote.",
         'add-argument-required-error': "Veuillez rentrer du texte pour cet argument.",
