@@ -79,7 +79,7 @@ export const messages = {
         'edit-closing-date-info': "Jusqu'à quelle date les membres peuvent-ils répondre?",
         'edit-closing-date-error': "Veuillez vérifier la date!",
         'edit-answers-lead': "Modifier les réponses proposées",
-        'closed': "Close",
+        'closed': "Clôturée",
         'answered': "Répondue",
         'closes-in': "Clôture",
         'last-vote': "Dernier vote",

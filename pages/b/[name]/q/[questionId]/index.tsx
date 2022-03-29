@@ -56,6 +56,10 @@ export default function QuestionHome() {
     // Component state
     const [showAnswerForm, setShowAnswerForm] = useState(false)
 
+    const isQuestionCreator = question && session && question.creatorId === session.user.id;
+    const showEditQuestionLink = isQuestionCreator && !question.closed;
+    const showChangeAnswerLink = question && question.userAnswered && !showAnswerForm;
+
     useEffect(() => {
         setShowAnswerForm(question && !question.closed && !question.userAnswered)
     }, [question])
@@ -87,7 +91,7 @@ export default function QuestionHome() {
 
         <QuestionHeader biotope={b} additionalText={additionalHeaderText}/>
 
-        {!question.closed && question.creatorId === session?.user.id &&
+        {!question.closed && isQuestionCreator &&
             <div className="alert alert-success mb-0" role="alert">
                 {messages.question["create-success-1"]} <Link href={`/b/${b.name}/invite`}>{messages.question["create-success-invite"]}</Link>
                 {messages.question["create-success-2"]}
@@ -150,21 +154,26 @@ export default function QuestionHome() {
                                 </div>
                             </div>
 
+                            {(showEditQuestionLink || showChangeAnswerLink || nextQuestion) &&
                                 <div className="question-post-user-action">
                                     <div className="post-menu d-flex justify-content-between">
                                         <div>
-                                            {question.creator.id === session?.user.id && !question.closed &&
-                                                <Link href={`/b/${b.name}/q/${question.id}/edit`}><a className="btn">{messages.question["edit-question-link"]}</a></Link>
+                                            {showEditQuestionLink &&
+                                                <Link href={`/b/${b.name}/q/${question.id}/edit`}><a
+                                                    className="btn">{messages.question["edit-question-link"]}</a></Link>
                                             }
-                                            {question.userAnswered && !showAnswerForm &&
-                                                <a className="btn" onClick={onShowAnswerFormClick}>{messages.question["change-answers-link"]}</a>
+                                            {showChangeAnswerLink &&
+                                                <a className="btn"
+                                                   onClick={onShowAnswerFormClick}>{messages.question["change-answers-link"]}</a>
                                             }
                                         </div>
                                         <div className="d-flex align-items-center">
-                                            <NextPager b={b} nextQuestion={nextQuestion} question={question} unansweredNum={numIntroUnanswered} />
+                                            <NextPager b={b} nextQuestion={nextQuestion} question={question}
+                                                       unansweredNum={numIntroUnanswered}/>
                                         </div>
                                     </div>
                                 </div>
+                            }
                         </div>
 
                         {showAnswerForm &&

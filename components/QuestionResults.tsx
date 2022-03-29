@@ -6,7 +6,7 @@ import {PossibleAnswerWithArguments, PossibleAnswerWithArgumentsAndCount} from "
 
 export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], rawResults) => {
     const totalVotesCount: number = rawResults.reduce((acc, result) => acc + result._count.answers, 0)
-    const maxVotersCount = rawResults.reduce((acc, rawResult) => rawResult.votersCount > acc ? rawResult.votersCount : acc, 0);
+    const maxVotersCount: number = rawResults.reduce((acc, rawResult) => rawResult.votersCount > acc ? rawResult.votersCount : acc, 0);
     const resultsWithCount: PossibleAnswerWithArgumentsAndCount[] = rawResults.reduce(
         (acc, rawResult) => {
             const possibleAnswer: PossibleAnswerWithArguments = possibleAnswers.find(element => element.id === rawResult.id)
@@ -25,20 +25,9 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
     if (!rawResults) {
         return null
     }
-    /* rawResults:
-        PossibleAnswers[
-            id: "ckweupyty0084p0uz1ugb3zcy"
-            order: 1
-            possibleNumber: 1
-            possibleText: "Insalubre"
-            questionId: "ckweupytg0076p0uz3j7ygwm2"
-            type: "NUMBER"
-            _count: {answers: 0}
-        ]
-    */
 
     const {totalVotesCount, resultsWithCount: answersWithCount, maxVotersCount} = computeResults(question.possibleAnswers, rawResults)
-    answersWithCount.sort((n1, n2) => n2.count - n1.count)
+    answersWithCount.sort((n1, n2) => n2.percent - n1.percent)
 
     const onArgumentAdded = (possibleAnswerId, argument) => {
         const possibleAnswer = question.possibleAnswers.find(element => element.id === possibleAnswerId)
@@ -52,6 +41,25 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
                 <h3 className="fs-16">{messages.results.header}: {maxVotersCount} {maxVotersCount > 1 ? messages.results.respondents : messages.results.respondent} ({totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote})</h3>
             </div>
         </div>
+
+        <div className="container-fluid mt-3 ps-0 pe-0">
+            {answersWithCount.map(answerResult => {
+                const [showMergeAnswer, setShowMergeAnswer] = useState(false)
+                const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
+                    const otherAnswer = answersWithCount.find(pa => pa.id === votes.possibleAnswerId)
+                    return [...acc, {...otherAnswer, ...votes}]
+                }, [])
+                return <div className="row mb-2">
+                    <div className="col">
+                        <h5 className="text-end">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
+                    </div>
+                    <div className="col d-flex align-items-center">
+                        <ProgressBar className="flex-fill" variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`} />
+                    </div>
+                </div>
+            })}
+        </div>
+
         {answersWithCount.map(answerResult => {
             const [showMergeAnswer, setShowMergeAnswer] = useState(false)
             const combinations = answerResult.sameUserVotes.reduce((acc, votes) => {
