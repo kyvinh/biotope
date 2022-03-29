@@ -18,6 +18,7 @@ export const CodeCredentialsProviderConfig = {
             throw new Error(messages.invitation["code-join-invalid"])
         }
         // Check whether this code is linked to an Invite
+        // TODO: Should check whether it is expired!
         const invite = await prisma.invitation.findUnique({
             where: {
                 type_code: {type: InvitationType.CODE, code: code}
