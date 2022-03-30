@@ -35,7 +35,7 @@ export default function BiotopeHome({b}) {
 
     const {data: session} = useSession({required: false})
     const anonUser = !!session?.user.isAnon
-    const unansweredCount = b?.questions.filter(question => !question.userAnswered && !question.closed).length
+    const unansweredCount = b?.questions?.filter(question => !question.userAnswered && !question.closed).length
 
     return !b ? <></> :
         <>
