@@ -26,6 +26,7 @@ export async function createNewPossibleAnswer(questionId: string, newAnswerInput
                 possibleText: newAnswerInput.newAnswer,
                 creatorId: userId,
                 order: possibleAnswersCount + 1,
+                standard: newAnswerInput.standard ? newAnswerInput.standard : false,
             }
         })
     })
@@ -48,7 +49,10 @@ class AddNewAnswerHandler {
     @Post()
     async create(@Body() newAnswerInput: NewAnswerInput, @Query('q') questionId: string, @Query('userId') userId: string) {
 
-        await createNewPossibleAnswer(questionId, newAnswerInput, userId);
+        await createNewPossibleAnswer(questionId, {
+            standard: true,
+            ...newAnswerInput
+        }, userId);
         const updatedQuestion = await fetchQuestion(questionId);
 
         return {status: 'ok', updatedQuestion}

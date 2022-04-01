@@ -27,13 +27,33 @@ export const computeResults = (possibleAnswers: PossibleAnswerWithArguments[], r
     }
 }
 
+function ResultListItem({result: answerResult, showDetails=false}) {
+    return <div className="row mb-2">
+        <div className="col-5">
+            <h5 className="text-end border-bottom border-bottom-gray">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
+        </div>
+        <div className="col d-flex align-items-center">
+            {answerResult.incomplete ?
+                <ProgressBar className="flex-fill progress-incomplete" variant={`none`} now={100} label={messages.results.incomplete}/>
+                :
+                <ProgressBar className="flex-fill" variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`}/>
+            }
+        </div>
+        {showDetails &&
+            <div className="col-1 d-flex align-items-center">
+                <small>{answerResult.count} / {answerResult.votersCount}</small>
+            </div>
+        }
+    </div>
+}
+
 export const QuestionResults = ({question, results: rawResults, onArgumentUpdated, showDebug = false}) => {
     if (!rawResults) {
         return null
     }
 
     const argumentsCount = question.possibleAnswers.reduce((acc, answer) => acc + answer.arguments.length, 0)
-    const {totalVotesCount, resultsWithCount: answersWithCount, maxVotersCount} = computeResults(question.possibleAnswers, rawResults)
+    const {resultsWithCount: answersWithCount, maxVotersCount} = computeResults(question.possibleAnswers, rawResults)
     answersWithCount.sort((n1, n2) => n1.incomplete ? 1 : n2.percent - n1.percent)
 
     const [showDetails, setShowDetails] = useState(false)
@@ -59,33 +79,22 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
         <div className="subheader results-subheader">
             <div className="subheader-title">
                 <div className="d-flex align-items-center justify-content-between">
-                    <h3 className="fs-16">{messages.results.header}: {maxVotersCount} {maxVotersCount > 1 ? messages.results.respondents : messages.results.respondent} ({totalVotesCount} {totalVotesCount > 1 ? messages.results.votes : messages.results.vote})</h3>
+                    <h3 className="fs-16">{messages.results["header-results"]}: {maxVotersCount} {maxVotersCount > 1 ? messages.results.respondents : messages.results.respondent}</h3>
                     <a className="btn btn-outline-secondary" onClick={() => setShowDetails(!showDetails)}>{showDetails ? messages.results["details-hide"] : messages.results["details-show"]}</a>
                 </div>
             </div>
         </div>
-        <div className="container-fluid mt-3 ps-0 pe-0">
+        <div className="container-fluid results-wrap">
+            <h4>{messages.results["header-standard"]}:</h4>
             {showDetails &&
                 <div className="text-end"><small>{messages.results["details-legend"]}</small></div>
             }
-            {answersWithCount.map(answerResult => {
-                return <div className="row mb-2">
-                    <div className="col-5">
-                        <h5 className="text-end border-bottom border-bottom-gray">{answerResult.possibleText ? answerResult.possibleText : answerResult.possibleNumber}</h5>
-                    </div>
-                    <div className="col d-flex align-items-center">
-                        {answerResult.incomplete ?
-                            <ProgressBar className="flex-fill progress-incomplete" variant={`none`} now={100} label={messages.results.incomplete}/>
-                            :
-                            <ProgressBar className="flex-fill" variant={`${answerResult.order + 1}`} now={answerResult.percent} label={`${answerResult.percent}%`}/>
-                        }
-                    </div>
-                    {showDetails &&
-                        <div className="col-1 d-flex align-items-center">
-                            <small>{answerResult.count} / {answerResult.votersCount}</small>
-                        </div>
-                    }
-                </div>
+            {answersWithCount.filter(e => e.standard).map(answerResult => {
+                return <ResultListItem result={answerResult} showDetails={showDetails} />
+            })}
+            <h4>{messages.results["header-custom"]}:</h4>
+            {answersWithCount.filter(e => !e.standard).map(answerResult => {
+                return <ResultListItem result={answerResult} showDetails={showDetails} />
             })}
         </div>
 

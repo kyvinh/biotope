@@ -28,6 +28,7 @@ export const baseEmailConfig = {
 
 export class NewAnswerInput {
     newAnswer: string;
+    standard?: boolean;
 }
 
 export class PossibleAnswerInput {

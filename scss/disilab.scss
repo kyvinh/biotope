@@ -101,6 +101,15 @@ $color-green: #0ba31f;
   }
 }
 
+.results-wrap {
+  @extend .mt-3;
+  @extend .ps-0;
+  @extend .pe-0;
+  h4 {
+    @extend .mb-3;
+  }
+}
+
 .answer-post-progress-wrap {
   @extend .px-4;
   @extend .pt-3;

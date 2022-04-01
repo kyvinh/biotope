@@ -161,6 +161,7 @@ model PossibleAnswer {
   creator      User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId    String
   arguments    Argument[]
+  standard     Boolean        @default(false)
 
   @@unique([questionId, possibleText, possibleNumber])
   @@unique([questionId, order])
