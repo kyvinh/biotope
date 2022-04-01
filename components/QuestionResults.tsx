@@ -55,6 +55,8 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
     const argumentsCount = question.possibleAnswers.reduce((acc, answer) => acc + answer.arguments.length, 0)
     const {resultsWithCount: answersWithCount, maxVotersCount} = computeResults(question.possibleAnswers, rawResults)
     answersWithCount.sort((n1, n2) => n1.incomplete ? 1 : n2.percent - n1.percent)
+    const standardAnswerResults = answersWithCount.filter(e => e.standard);
+    const customAnswerResults = answersWithCount.filter(e => !e.standard);
 
     const [showDetails, setShowDetails] = useState(false)
 
@@ -85,15 +87,19 @@ export const QuestionResults = ({question, results: rawResults, onArgumentUpdate
             </div>
         </div>
         <div className="container-fluid results-wrap">
-            <h4>{messages.results["header-standard"]}:</h4>
             {showDetails &&
                 <div className="text-end"><small>{messages.results["details-legend"]}</small></div>
             }
-            {answersWithCount.filter(e => e.standard).map(answerResult => {
+            {standardAnswerResults.length > 0 &&
+                <h4>{messages.results["header-standard"]}:</h4>
+            }
+            {standardAnswerResults.map(answerResult => {
                 return <ResultListItem result={answerResult} showDetails={showDetails} />
             })}
-            <h4>{messages.results["header-custom"]}:</h4>
-            {answersWithCount.filter(e => !e.standard).map(answerResult => {
+            {customAnswerResults.length > 0 &&
+                <h4>{messages.results["header-custom"]}:</h4>
+            }
+            {customAnswerResults.map(answerResult => {
                 return <ResultListItem result={answerResult} showDetails={showDetails} />
             })}
         </div>
